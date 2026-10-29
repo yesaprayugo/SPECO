@@ -30,7 +30,7 @@
   --glass-edge:rgba(13,148,136,0.20);
 }
 *{margin:0;padding:0;box-sizing:border-box}
-html{scroll-behavior:smooth}
+html{scroll-behavior:smooth;scroll-padding-top:86px}
 html,body{background:#EFF8F7;color:var(--ink)}
 body{overflow-x:hidden;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}
 a{text-decoration:none;color:inherit}
@@ -72,18 +72,26 @@ button{font-family:inherit}
 .stars{left:0;top:0;width:1px;height:1px;border-radius:50%;background:var(--teal)}
 
 /* =====================================================================
-   NAVIGATION BAR — CLEAN FLEXBOX LAYOUT (ZERO OVERLAP GUARANTEE)
+   NAVIGATION BAR — FIXED FROSTED GLASS DOCK (PERSISTS ON SCROLL ACROSS SITE)
    ===================================================================== */
 .nav{
-  left:136px;top:12px;width:900px;height:62px;border-radius:20px;z-index:400;
-  background:rgba(255,255,255,.72);
+  position:fixed;top:12px;left:0;right:0;margin-left:auto;margin-right:auto;
+  width:min(900px, calc(100vw - 32px));height:62px;border-radius:20px;z-index:9000;
+  background:rgba(255,255,255,.82);
   border:1px solid rgba(255,255,255,.92);
   outline:1px solid rgba(13,148,136,.18);
-  -webkit-backdrop-filter:blur(22px) saturate(170%);
-  backdrop-filter:blur(22px) saturate(170%);
+  -webkit-backdrop-filter:blur(24px) saturate(170%);
+  backdrop-filter:blur(24px) saturate(170%);
   box-shadow:0 14px 36px rgba(13,148,136,.10), inset 0 1px 0 #FFFFFF;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 12px 0 20px;
+  transition:background-color .25s ease, box-shadow .25s ease, border-color .25s ease;
+}
+.nav.scrolled{
+  background:rgba(255,255,255,.94);
+  border-color:rgba(255,255,255,.98);
+  outline-color:rgba(13,148,136,.26);
+  box-shadow:0 18px 44px rgba(13,148,136,.15), 0 4px 16px rgba(15,23,42,.06), inset 0 1px 0 #FFFFFF;
 }
 .brand-link{
   height:44px;display:flex;align-items:center;flex-shrink:0;
@@ -369,7 +377,7 @@ button{font-family:inherit}
   .nav .btn{width:100%;height:46px;margin-top:10px;font-size:15px}
   .stage{
     height:auto !important;min-height:100svh;overflow-x:hidden;overflow-y:visible;
-    padding:12px 14px 28px;display:flex;flex-direction:column;
+    padding:76px 14px 28px !important;display:flex;flex-direction:column;
   }
   .canvas{
     position:relative;left:auto;top:auto;width:100%;height:auto;
@@ -383,9 +391,11 @@ button{font-family:inherit}
   }
   .stack>*{position:static;transform:none !important}
   .nav{
-    position:relative !important;left:auto !important;top:auto !important;
-    width:100% !important;height:56px;padding:0 10px 0 14px;border-radius:16px;
-    margin-bottom:20px;
+    position:fixed !important;top:10px !important;left:0 !important;right:0 !important;
+    margin-left:auto !important;margin-right:auto !important;
+    width:calc(100vw - 20px) !important;max-width:440px !important;
+    height:54px !important;padding:0 8px 0 14px !important;border-radius:16px !important;
+    z-index:9000 !important;margin-bottom:0 !important;
   }
   .brand-logo-only{height:32px}
   .h1{
@@ -1234,6 +1244,33 @@ html.intro .browser{opacity:0;translate:0 26px}
 </head>
 <body id="top">
 <!-- =====================================================================
+     FIXED NAVIGATION BAR — REMAINS FIXED ON SCROLL ACROSS ENTIRE PAGE
+     ===================================================================== -->
+<nav class="nav" id="nav">
+  <a href="#top" class="brand-link" aria-label="SPECO — Spec for You">
+    <img src="/assets/aistudio/speco_logo_dark_transparent.png" alt="SPECO — Spec for You" class="brand-logo-only">
+  </a>
+  <div class="navmenu" id="navmenu">
+    <div class="links" id="links">
+      <a href="#top" class="active">Beranda</a>
+      <a href="#mulai">Simulasi Budget</a>
+      <a href="#cara">Cara Kerja</a>
+      <a href="#kuis">Kuis AI</a>
+      <a href="#contoh-hasil">Skor &amp; Hasil</a>
+      <a href="#brand">Brand Laptop</a>
+      <a href="#tentang">Tentang</a>
+    </div>
+    <a class="btn" href="#mulai">
+      <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+      <span id="ctaLabel">Cari Laptop</span>
+    </a>
+  </div>
+  <button class="burger" id="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navmenu">
+    <span></span><span></span><span></span>
+  </button>
+</nav>
+
+<!-- =====================================================================
      HERO STAGE — FIXED CANVAS + COMPACT FROSTED AI DOCK
      ===================================================================== -->
 <div class="stage" id="stage">
@@ -1243,30 +1280,6 @@ html.intro .browser{opacity:0;translate:0 26px}
   <div class="stars" id="stB"></div>
 
   <div class="stack">
-    <div class="nav" id="nav">
-      <a href="#top" class="brand-link" aria-label="SPECO — Spec for You">
-        <img src="/assets/aistudio/speco_logo_dark_transparent.png" alt="SPECO — Spec for You" class="brand-logo-only">
-      </a>
-      <div class="navmenu" id="navmenu">
-        <div class="links" id="links">
-          <a href="#top" class="active">Beranda</a>
-          <a href="#mulai">Simulasi Budget</a>
-          <a href="#cara">Cara Kerja</a>
-          <a href="#kuis">Kuis AI</a>
-          <a href="#contoh-hasil">Skor &amp; Hasil</a>
-          <a href="#brand">Brand Laptop</a>
-          <a href="#tentang">Tentang</a>
-        </div>
-        <a class="btn" href="#mulai">
-          <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
-          <span id="ctaLabel">Cari Laptop</span>
-        </a>
-      </div>
-      <button class="burger" id="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navmenu">
-        <span></span><span></span><span></span>
-      </button>
-    </div>
-
     <div class="h1" id="h1a">Laptop yang Pas Buat</div>
     <div class="h1" id="h1b"><em>Kebutuhan Kuliahmu</em></div>
     <div class="sub" id="sub1"><b>Rekomendasi laptop berbasis AI</b> yang dihitung objektif sesuai</div>
@@ -2200,12 +2213,34 @@ burger.addEventListener('click',function(e){e.stopPropagation();toggle(!nav.clas
 document.addEventListener('click',function(e){if(!nav.contains(e.target)||e.target.closest('.links a'))toggle(false)});
 document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('open')){toggle(false);burger.focus()}});
 
-/* Highlight active navigation item on click */
-[].forEach.call(document.querySelectorAll('#links a'),function(link){
-  link.addEventListener('click',function(){
-    [].forEach.call(document.querySelectorAll('#links a'),function(a){a.classList.toggle('active',a===link)});
-  });
-});
+/* Highlight active navigation item on click + Scroll-spy */
+var navLinks=document.querySelectorAll('#links a');
+var spySections=[
+  {id:'#top',el:$('#stage')},
+  {id:'#mulai',el:$('#mulai')},
+  {id:'#cara',el:$('#cara')},
+  {id:'#kuis',el:$('#kuis')},
+  {id:'#contoh-hasil',el:$('#contoh-hasil')},
+  {id:'#brand',el:$('#brand')},
+  {id:'#tentang',el:$('#tentang')}
+];
+function onScroll(){
+  var y=window.scrollY||document.documentElement.scrollTop;
+  nav.classList.toggle('scrolled',y>18);
+  var cur='#top';
+  for(var i=0;i<spySections.length;i++){
+    var sec=spySections[i];
+    if(sec.el&&(sec.el.offsetTop-140)<=y){
+      cur=sec.id;
+    }
+  }
+  for(var j=0;j<navLinks.length;j++){
+    var a=navLinks[j];
+    a.classList.toggle('active',a.getAttribute('href')===cur);
+  }
+}
+window.addEventListener('scroll',onScroll,{passive:true});
+onScroll();
 
 addEventListener('resize',resize);
 if(window.visualViewport)visualViewport.addEventListener('resize',resize);
