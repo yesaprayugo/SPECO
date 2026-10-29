@@ -1,0 +1,2612 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>SPECO — Spec for You</title>
+<meta name="description" content="Rekomendasi laptop berbasis AI khusus mahasiswa Indonesia, dihitung sesuai budget, jurusan, dan kebutuhanmu.">
+<meta property="og:title" content="SPECO — Spec for You">
+<meta property="og:description" content="Rekomendasi laptop berbasis AI khusus mahasiswa Indonesia, dihitung sesuai budget, jurusan, dan kebutuhanmu.">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Fraunces:ital,opsz,wght@0,9..144,600;0,9..144,700;1,9..144,600&family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --teal:#0D9488;
+  --teal-dark:#0F766E;
+  --teal-light:#14B8A6;
+  --teal-soft:#CCFBF1;
+  --teal-tint:#F0FDFA;
+  --sky:#0284C7;
+  --sky-soft:#E0F2FE;
+  --ink:#0F172A;
+  --ink-2:#1E293B;
+  --muted:#475569;
+  --muted-2:#64748B;
+  --glass-bg:rgba(255,255,255,0.68);
+  --glass-border:rgba(255,255,255,0.88);
+  --glass-edge:rgba(13,148,136,0.20);
+}
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}
+html,body{background:#EFF8F7;color:var(--ink)}
+body{overflow-x:hidden;font-family:'Plus Jakarta Sans',-apple-system,BlinkMacSystemFont,sans-serif;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+button{font-family:inherit}
+
+/* =====================================================================
+   SVG ICON UTILITY
+   ===================================================================== */
+.ico-svg{
+  width:16px;height:16px;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0;
+  display:inline-block;vertical-align:middle;
+}
+.ico-svg-lg{
+  width:20px;height:20px;stroke:currentColor;stroke-width:2;
+  stroke-linecap:round;stroke-linejoin:round;fill:none;flex-shrink:0;
+}
+
+/* =====================================================================
+   HERO STAGE — VIBRANT TEAL/SKY LIGHT THEME + FULLSCREEN SAFE SCALE
+   ===================================================================== */
+.stage{position:relative;height:100vh;overflow:hidden;background:#EAF6F6}
+.canvas{
+  position:absolute;left:50%;top:0;width:1172px;height:690px;
+  transform:translateX(-50%) scale(var(--k,1));transform-origin:50% 0;
+}
+.canvas>*{position:absolute}
+.stack{position:absolute;inset:0;z-index:300;pointer-events:none}
+.stack>*{position:absolute;pointer-events:auto}
+.burger{display:none}
+
+.bg{
+  inset:0;
+  background:
+    radial-gradient(ellipse 68% 52% at 50% 15%, rgba(20,184,166,.22) 0%, rgba(14,165,233,.12) 48%, transparent 75%),
+    radial-gradient(ellipse 65% 48% at 50% 72%, rgba(13,148,136,.20) 0%, rgba(56,189,248,.12) 55%, transparent 82%),
+    linear-gradient(180deg, #F8FEFD 0%, #EBF8F7 52%, #DFF2F6 100%);
+}
+.stars{left:0;top:0;width:1px;height:1px;border-radius:50%;background:var(--teal)}
+
+/* =====================================================================
+   NAVIGATION BAR — CLEAN FLEXBOX LAYOUT (ZERO OVERLAP GUARANTEE)
+   ===================================================================== */
+.nav{
+  left:136px;top:12px;width:900px;height:62px;border-radius:20px;z-index:400;
+  background:rgba(255,255,255,.72);
+  border:1px solid rgba(255,255,255,.92);
+  outline:1px solid rgba(13,148,136,.18);
+  -webkit-backdrop-filter:blur(22px) saturate(170%);
+  backdrop-filter:blur(22px) saturate(170%);
+  box-shadow:0 14px 36px rgba(13,148,136,.10), inset 0 1px 0 #FFFFFF;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:0 12px 0 20px;
+}
+.brand-link{
+  height:44px;display:flex;align-items:center;flex-shrink:0;
+}
+.brand-logo-only{
+  height:38px;width:auto;display:block;object-fit:contain;
+}
+.navmenu{
+  display:flex;align-items:center;justify-content:space-between;flex:1;margin-left:24px;
+}
+.links{
+  display:flex;align-items:center;gap:6px;
+}
+.links a{
+  font-size:12.5px;font-weight:700;color:var(--ink-2);white-space:nowrap;
+  padding:7px 11px;border-radius:10px;
+  transition:color .18s, background-color .18s;
+}
+.links a:hover,.links a.active{
+  color:var(--teal-dark);
+  background:rgba(13,148,136,.10);
+}
+
+/* =====================================================================
+   BUTTONS — SPECO TEAL & FROSTED GLASS
+   ===================================================================== */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  position:relative;overflow:hidden;
+  background:var(--teal);
+  color:#FFFFFF;
+  font-weight:700;
+  border:1px solid var(--teal-dark);
+  box-shadow:0 8px 20px rgba(13,148,136,.26), inset 0 1px 0 rgba(255,255,255,.25);
+  transition:transform .2s cubic-bezier(.16,1,.3,1), background-color .2s, box-shadow .2s;
+  cursor:pointer;
+}
+.btn span{position:relative;z-index:2;display:block;line-height:1;white-space:nowrap}
+.btn:hover{
+  transform:translateY(-2px);
+  background:var(--teal-dark);
+  box-shadow:0 12px 26px rgba(13,148,136,.36);
+}
+.btn:active{transform:translateY(0)}
+
+.btn-teal-lg{
+  display:inline-flex;align-items:center;justify-content:center;gap:10px;
+  background:linear-gradient(135deg, #0D9488 0%, #0F766E 100%);
+  color:#FFFFFF;
+  font-weight:700;font-size:14.5px;
+  padding:14px 26px;border-radius:14px;
+  border:1px solid rgba(255,255,255,.25);
+  box-shadow:0 10px 24px rgba(13,148,136,.28), inset 0 1px 0 rgba(255,255,255,.35);
+  transition:transform .2s, box-shadow .2s, filter .2s;
+  cursor:pointer;
+}
+.btn-teal-lg:hover{
+  transform:translateY(-2px);
+  filter:brightness(1.05);
+  box-shadow:0 14px 30px rgba(13,148,136,.38);
+}
+
+.nav .btn{
+  height:40px;padding:0 16px;
+  border-radius:12px;font-size:12.5px;letter-spacing:-.01em;flex-shrink:0;
+}
+.cta2{
+  left:586px;top:292px;transform:translateX(-50%);
+  height:48px;padding:0 26px;border-radius:14px;
+  font-size:15px;letter-spacing:-.01em;z-index:300;
+}
+.cta2:hover{transform:translateX(-50%) translateY(-2px)}
+
+/* =====================================================================
+   HERO TYPOGRAPHY (PLUS JAKARTA SANS + FRAUNCES ITALIC)
+   ===================================================================== */
+.h1{
+  left:586px;transform:translateX(-50%);white-space:nowrap;
+  line-height:1.05;font-weight:800;font-size:48px;letter-spacing:-.025em;
+  color:var(--ink);z-index:300;text-align:center;
+}
+.h1 em{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--teal);
+}
+#h1a{top:98px}
+#h1b{top:154px}
+
+.sub{
+  left:586px;transform:translateX(-50%);white-space:nowrap;
+  line-height:1.4;font-size:14px;color:var(--muted);z-index:300;text-align:center;
+}
+.sub b{font-weight:700;color:var(--teal-dark)}
+#sub1{top:226px}
+#sub2{top:247px}
+
+/* =====================================================================
+   3D CAROUSEL RING — REAL LAPTOP PHOTOS (INTERACTIVE CLICKABLE)
+   ===================================================================== */
+.showcase{left:0;top:0;width:1172px;height:0}
+.ring{
+  left:0;top:0;width:1172px;height:690px;z-index:50;
+  perspective:891px;perspective-origin:586px 880px;
+  transform-style:preserve-3d;pointer-events:none;
+}
+.card{
+  position:absolute;left:586px;top:548px;width:136px;height:286px;margin:-143px 0 0 -68px;
+  border-radius:14px;overflow:hidden;background:rgba(255,255,255,.88);
+  box-shadow:0 20px 42px rgba(15,23,42,.16), 0 4px 12px rgba(13,148,136,.10);
+  backface-visibility:hidden;will-change:transform;
+  pointer-events:auto;cursor:pointer;
+  transition:box-shadow .2s;
+}
+.card:hover{
+  box-shadow:0 24px 50px rgba(13,148,136,.35), 0 0 0 2px var(--teal);
+}
+.card-photo-wrap{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
+.card-bg-img{width:100%;height:100%;object-fit:cover;display:block}
+.card-scrim{
+  position:absolute;inset:0;
+  background:linear-gradient(180deg, rgba(15,23,42,.58) 0%, rgba(15,23,42,.08) 38%, rgba(15,23,42,.20) 58%, rgba(255,255,255,.94) 76%, rgba(255,255,255,.98) 100%);
+}
+.card .edge{
+  position:absolute;inset:0;border-radius:14px;
+  box-shadow:inset 0 0 0 1px rgba(255,255,255,.65), inset 0 1px 0 rgba(255,255,255,.85);
+  pointer-events:none;
+}
+.c-top{
+  position:absolute;left:9px;right:9px;top:9px;
+  display:flex;justify-content:space-between;align-items:center;
+}
+.c-cat{
+  font-size:4.8px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;
+  color:var(--ink);background:rgba(255,255,255,.90);padding:2.5px 6px;border-radius:5px;
+  -webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+}
+.c-score{
+  font-size:5.2px;font-weight:800;background:var(--teal);
+  color:#FFFFFF;padding:2.5px 5.5px;border-radius:5px;
+}
+.c-title-wrap{position:absolute;left:9px;right:9px;top:28px}
+.c-title1{
+  font-size:10.8px;font-weight:800;color:#FFFFFF;line-height:1.08;letter-spacing:-.02em;
+  text-shadow:0 2px 8px rgba(0,0,0,.65);
+}
+.c-title2{
+  font-family:'Fraunces',serif;font-style:italic;font-size:10px;font-weight:600;
+  line-height:1.08;margin-top:2px;color:#CCFBF1;
+  text-shadow:0 1px 6px rgba(0,0,0,.65);
+}
+.c-specs{
+  position:absolute;left:9px;right:9px;top:190px;
+  background:rgba(240,253,250,.90);border:1px solid rgba(13,148,136,.20);
+  border-radius:8px;padding:5px 7px;
+  font-size:5.1px;font-weight:700;line-height:1.55;color:var(--ink-2);
+}
+.c-specs div{display:flex;align-items:center;gap:4px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.c-specs i{width:4px;height:4px;border-radius:50%;display:inline-block;flex-shrink:0}
+.c-foot{
+  position:absolute;left:9px;right:9px;bottom:10px;
+  display:flex;align-items:center;justify-content:space-between;
+}
+.c-price{
+  padding:4px 8px;border-radius:6px;background:var(--teal);color:#FFFFFF;
+  font-size:5.5px;font-weight:800;letter-spacing:.02em;
+}
+.c-tag{font-size:4.8px;font-weight:700;color:var(--muted)}
+
+/* =====================================================================
+   COMPACT FROSTED GLASS AI INSPECTOR DOCK AT BOTTOM OF HERO
+   Sleek, low-profile (top:546px, 144px tall), zero duplicate logos or
+   duplicate laptop photos, 100% interactive & clear in fullscreen!
+   ===================================================================== */
+.browser{
+  left:156px;top:546px;width:860px;height:calc(144px + var(--fill,0px));
+  border-radius:22px 22px 0 0;overflow:hidden;z-index:100;
+  background:rgba(255,255,255,.42);
+  -webkit-backdrop-filter:blur(26px) saturate(180%);
+  backdrop-filter:blur(26px) saturate(180%);
+  border:1px solid rgba(255,255,255,.90);
+  border-bottom:none;
+  box-shadow:
+    0 -16px 44px rgba(13,148,136,.15),
+    0 -4px 16px rgba(15,23,42,.06),
+    inset 0 1px 1px rgba(255,255,255,.95);
+}
+.bar{
+  position:absolute;left:0;top:0;width:100%;height:34px;
+  background:linear-gradient(180deg, rgba(255,255,255,.72), rgba(255,255,255,.46));
+  border-bottom:1px solid rgba(255,255,255,.70);
+  display:flex;align-items:center;justify-content:space-between;padding:0 16px;
+}
+.dots{display:flex;gap:5.5px;align-items:center}
+.dots i{width:8px;height:8px;border-radius:50%;display:block}
+.omni{
+  padding:4px 16px;border-radius:7px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(13,148,136,.20);
+  display:flex;align-items:center;gap:6px;
+  font-size:9px;font-weight:700;color:var(--ink-2);
+}
+.bar-badge{
+  display:inline-flex;align-items:center;gap:5px;
+  padding:3px 9px;border-radius:999px;
+  background:rgba(13,148,136,.14);border:1px solid rgba(13,148,136,.25);
+  font-size:7.5px;font-weight:800;color:var(--teal-dark);letter-spacing:.02em;
+}
+.bar-badge b{width:5px;height:5px;border-radius:50%;background:var(--teal);display:inline-block}
+.dock-body{
+  position:absolute;left:10px;right:10px;top:38px;bottom:0;
+  padding:10px 16px;
+  display:flex;flex-direction:column;justify-content:space-between;
+}
+.dock-top{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+}
+.dock-label{
+  font-size:8.5px;font-weight:800;text-transform:uppercase;letter-spacing:.08em;color:var(--teal-dark);
+  display:flex;align-items:center;gap:5px;white-space:nowrap;
+}
+.dock-presets{
+  display:flex;align-items:center;gap:6px;flex:1;justify-content:center;
+}
+.dock-pill{
+  padding:4.5px 10px;border-radius:8px;
+  background:rgba(255,255,255,.72);border:1px solid rgba(13,148,136,.20);
+  font-size:8px;font-weight:700;color:var(--ink-2);cursor:pointer;
+  transition:all .15s;white-space:nowrap;
+}
+.dock-pill:hover{border-color:var(--teal);color:var(--teal-dark)}
+.dock-pill.active{
+  background:var(--teal);border-color:var(--teal-dark);color:#FFFFFF;
+  box-shadow:0 4px 10px rgba(13,148,136,.25);
+}
+.dock-jump{
+  padding:5px 11px;border-radius:8px;background:var(--ink);color:#FFFFFF;
+  font-size:8px;font-weight:800;white-space:nowrap;cursor:pointer;
+  transition:background .15s;
+}
+.dock-jump:hover{background:var(--teal-dark)}
+
+/* 4 Live AI Score Meters inside Hero Dock */
+.dock-meters{
+  display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:6px;
+}
+.d-meter{
+  background:rgba(255,255,255,.68);
+  border:1px solid rgba(255,255,255,.92);
+  border-radius:10px;padding:7px 10px;
+  display:flex;flex-direction:column;gap:4px;
+  box-shadow:0 4px 12px rgba(15,23,42,.04);
+}
+.dm-head{display:flex;justify-content:space-between;align-items:center;font-size:7.5px;font-weight:800;color:var(--ink-2)}
+.dm-head b{color:var(--teal-dark);font-size:8.5px}
+.dm-bar{height:4px;border-radius:4px;background:rgba(13,148,136,.15);overflow:hidden}
+.dm-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));border-radius:4px;transition:width .3s ease}
+.dm-sub{font-size:6.8px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+
+@media (max-width:1080px){
+  .burger{
+    display:grid;place-content:center;gap:4px;
+    width:42px;height:42px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer;
+  }
+  .burger span{display:block;width:19px;height:1.8px;border-radius:2px;background:var(--ink);transition:transform .28s,opacity .18s}
+  .burger:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
+  .nav.open .burger span:nth-child(1){transform:translateY(5.8px) rotate(45deg)}
+  .nav.open .burger span:nth-child(2){opacity:0}
+  .nav.open .burger span:nth-child(3){transform:translateY(-5.8px) rotate(-45deg)}
+  .navmenu{
+    display:block;position:absolute;left:0;right:0;top:70px;padding:14px;margin-left:0;
+    border-radius:18px;border:1px solid rgba(255,255,255,.85);
+    background:rgba(255,255,255,.95);
+    -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
+    box-shadow:0 26px 60px rgba(15,23,42,.18);
+    opacity:0;visibility:hidden;transform:translateY(-8px);
+    transition:opacity .24s,transform .28s,visibility .28s;
+  }
+  .nav.open .navmenu{opacity:1;visibility:visible;transform:none}
+  .links{display:flex;flex-direction:column;align-items:stretch;height:auto;gap:4px}
+  .links a{font-size:15px;padding:11px 14px;border-radius:10px}
+  .nav .btn{width:100%;height:46px;margin-top:10px;font-size:15px}
+  .nav{left:276px;width:620px}
+  .stack{transform:translateY(var(--stshift,0px))}
+  .showcase{transform:translateY(var(--sshift,0px))}
+  .ring{transform:scale(var(--rs,1));transform-origin:586px 548px}
+}
+
+/* =====================================================================
+   CONTENT SECTIONS — SPECO TEAL + FROSTED GLASS (KACA BURAM) DESIGN
+   ===================================================================== */
+.w2{max-width:1180px;margin:0 auto;padding:0 28px;position:relative;z-index:2}
+.sec{
+  position:relative;padding:96px 0;overflow:hidden;
+  background:#F6FBF9;
+}
+.sec-alt{
+  background:linear-gradient(180deg, #EDF8F7 0%, #EBF4FA 100%);
+  border-top:1px solid rgba(13,148,136,.12);
+  border-bottom:1px solid rgba(13,148,136,.12);
+}
+
+/* Ambient blurred orbs behind frosted glass cards */
+.orb{
+  position:absolute;border-radius:50%;filter:blur(70px);pointer-events:none;z-index:0;opacity:.55;
+}
+.orb-teal{background:#99F6E4;width:380px;height:380px}
+.orb-sky{background:#BAE6FD;width:360px;height:360px}
+
+/* Reusable Frosted Glass Surface */
+.glass-panel{
+  background:var(--glass-bg);
+  -webkit-backdrop-filter:blur(22px) saturate(160%);
+  backdrop-filter:blur(22px) saturate(160%);
+  border:1px solid var(--glass-border);
+  outline:1px solid var(--glass-edge);
+  box-shadow:0 18px 44px rgba(13,148,136,.08), inset 0 1px 0 #FFFFFF;
+}
+
+.kicker-pill{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:6px 14px;border-radius:999px;
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  border:1px solid rgba(13,148,136,.25);
+  font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;color:var(--teal-dark);
+  box-shadow:0 4px 12px rgba(13,148,136,.06);
+  margin-bottom:18px;
+}
+
+.sec-h2{
+  font-weight:800;font-size:clamp(32px,4.2vw,48px);line-height:1.08;letter-spacing:-.03em;color:var(--ink);
+}
+.sec-h2 .accent{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--teal);
+}
+
+.sec-lead{
+  font-size:15.5px;line-height:1.68;color:var(--muted);margin-top:14px;max-width:470px;
+}
+
+/* SECTION 1: BUDGET & KEBUTUHAN */
+.s1-grid{
+  display:grid;grid-template-columns:1fr 1.32fr;gap:40px;align-items:start;
+}
+.budget-widget-card{
+  border-radius:22px;padding:26px;margin-top:24px;
+}
+.bw-label{font-size:12px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em}
+.bw-val{
+  font-size:34px;font-weight:800;color:var(--teal);margin:4px 0 10px;letter-spacing:-.02em;
+}
+input[type=range].speco-range{
+  width:100%;accent-color:var(--teal);height:6px;cursor:pointer;margin:6px 0;
+}
+.bw-minmax{display:flex;justify-content:space-between;font-size:12px;font-weight:600;color:var(--muted-2);margin-bottom:20px}
+.need-chips{display:flex;flex-wrap:wrap;gap:9px;margin-top:10px}
+.n-chip{
+  display:inline-flex;align-items:center;gap:8px;
+  padding:10px 16px;border-radius:12px;
+  border:1px solid rgba(13,148,136,.22);
+  background:rgba(255,255,255,.82);color:var(--ink-2);font-size:13px;font-weight:700;
+  cursor:pointer;transition:all .18s;
+}
+.n-chip:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.n-chip[aria-pressed="true"]{
+  background:var(--teal);border-color:var(--teal-dark);color:#FFFFFF;
+  box-shadow:0 6px 16px rgba(13,148,136,.26);
+}
+.s1-actions{
+  display:flex;align-items:center;gap:20px;margin-top:24px;flex-wrap:wrap;
+}
+.play-link{
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:14px;font-weight:700;color:var(--ink);cursor:pointer;
+  transition:color .2s;
+}
+.play-link:hover{color:var(--teal)}
+.play-link i{
+  width:34px;height:34px;border-radius:50%;
+  border:1px solid rgba(13,148,136,.30);background:rgba(255,255,255,.85);
+  display:grid;place-items:center;font-style:normal;color:var(--teal);
+  box-shadow:0 4px 10px rgba(13,148,136,.10);
+}
+
+/* Right Frosted Showcase Panel in Section 1 */
+.s1-showcase{
+  border-radius:26px;padding:28px;position:relative;
+}
+.s1-sc-top{
+  display:flex;justify-content:space-between;align-items:flex-start;gap:12px;flex-wrap:wrap;
+}
+.s1-sc-kicker{font-size:12px;color:var(--muted);font-weight:600}
+.s1-sc-title{font-size:21px;font-weight:800;color:var(--ink);margin-top:3px;letter-spacing:-.02em}
+.s1-sc-title span{
+  font-family:'Fraunces',serif;font-style:italic;color:var(--teal);
+}
+.s1-sc-tag{
+  display:inline-flex;align-items:center;gap:7px;
+  margin-top:10px;padding:6px 13px;border-radius:9px;
+  background:var(--teal-soft);color:var(--teal-dark);font-size:12px;font-weight:800;
+}
+.s1-cards-grid{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-top:18px;
+}
+.mini-prod{
+  border:1px solid rgba(255,255,255,.90);
+  outline:1px solid rgba(13,148,136,.16);
+  border-radius:18px;padding:13px;
+  background:rgba(255,255,255,.80);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  display:flex;flex-direction:column;justify-content:space-between;position:relative;
+  transition:transform .22s, box-shadow .22s;
+}
+.mini-prod:hover{transform:translateY(-4px);box-shadow:0 14px 28px rgba(13,148,136,.14)}
+.mini-prod.featured{
+  outline:2px solid var(--teal);
+  background:rgba(255,255,255,.94);
+  box-shadow:0 16px 32px rgba(13,148,136,.16);
+}
+.mp-top-badge{
+  position:absolute;left:10px;top:10px;z-index:2;
+  background:var(--teal);color:#FFFFFF;font-size:9.5px;font-weight:800;
+  padding:3.5px 9px;border-radius:7px;box-shadow:0 4px 10px rgba(13,148,136,.30);
+}
+.mp-thumb{
+  position:relative;height:104px;border-radius:12px;background:#E2E8F0;
+  overflow:hidden;margin-bottom:10px;cursor:pointer;
+}
+.mp-thumb img{width:100%;height:100%;object-fit:cover;display:block;transition:transform .3s}
+.mini-prod:hover .mp-thumb img{transform:scale(1.04)}
+.mp-thumb-meta{
+  position:absolute;left:8px;right:8px;bottom:6px;
+  display:flex;justify-content:space-between;align-items:center;
+  font-size:9px;color:var(--ink-2);
+}
+.mp-thumb-meta span{
+  background:rgba(255,255,255,.88);-webkit-backdrop-filter:blur(6px);backdrop-filter:blur(6px);
+  padding:2.5px 6.5px;border-radius:5px;font-weight:700;
+}
+.mp-fav-btn{
+  width:26px;height:26px;border-radius:50%;background:rgba(255,255,255,.92);
+  border:1px solid rgba(13,148,136,.22);
+  display:grid;place-items:center;color:var(--muted);cursor:pointer;
+  transition:all .18s;
+}
+.mp-fav-btn:hover{transform:scale(1.1);color:var(--teal)}
+.mp-fav-btn.saved{background:var(--teal);color:#FFFFFF;border-color:var(--teal-dark)}
+.mp-name{font-size:12.5px;font-weight:800;color:var(--ink);line-height:1.3;cursor:pointer}
+.mp-name:hover{color:var(--teal)}
+.mp-price{font-size:12.5px;font-weight:800;color:var(--teal);margin-top:3px}
+.mp-match-row{
+  display:flex;justify-content:space-between;align-items:baseline;
+  margin-top:8px;font-size:10.5px;color:var(--muted);font-weight:600;
+}
+.mp-match-row b{font-size:13.5px;font-weight:800;color:var(--teal-dark)}
+.mp-bar{height:5px;border-radius:5px;background:#E2E8F0;margin:4px 0 10px;overflow:hidden}
+.mp-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));border-radius:5px}
+.mp-specs{
+  list-style:none;font-size:10.5px;color:var(--muted);line-height:1.65;
+  border-top:1px solid rgba(13,148,136,.12);padding-top:8px;margin-bottom:10px;font-weight:600;
+}
+.mp-specs li{display:flex;align-items:center;gap:5px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.mp-specs li::before{content:"•";color:var(--teal);font-weight:800}
+.mp-btn{
+  width:100%;display:inline-flex;align-items:center;justify-content:center;gap:5px;
+  padding:8.5px 10px;border-radius:9px;
+  background:var(--teal-tint);border:1px solid var(--teal-soft);
+  color:var(--teal-dark);font-size:11px;font-weight:800;cursor:pointer;
+  transition:all .15s;
+}
+.mp-btn:hover{background:var(--teal);color:#FFFFFF}
+
+/* Showcase Pagination Bar */
+.sc-pager{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:18px;padding-top:12px;border-top:1px solid rgba(13,148,136,.12);
+}
+.sc-dots{display:flex;gap:6px;align-items:center}
+.sc-dot{
+  height:6px;border-radius:4px;border:none;cursor:pointer;
+  background:rgba(13,148,136,.24);width:10px;transition:all .2s;
+}
+.sc-dot.active{width:24px;background:var(--teal)}
+.sc-nav-btns{display:flex;align-items:center;gap:8px}
+.sc-page-btn{
+  width:28px;height:28px;border-radius:8px;border:1px solid rgba(13,148,136,.24);
+  background:rgba(255,255,255,.85);color:var(--ink-2);font-weight:800;cursor:pointer;
+  display:grid;place-items:center;transition:all .15s;
+}
+.sc-page-btn:hover{background:var(--teal);color:#FFFFFF;border-color:var(--teal)}
+
+/* Bottom 3 Pillars Strip in Section 1 */
+.s1-pillars{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;
+  margin-top:44px;padding-top:28px;border-top:1px solid rgba(13,148,136,.16);
+}
+.s1-pillar{
+  display:flex;align-items:flex-start;gap:14px;
+  padding:18px 20px;border-radius:16px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.88);
+  -webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);
+  transition:transform .2s;
+}
+.s1-pillar:hover{transform:translateY(-2px)}
+.s1-pillar-ico{
+  width:40px;height:40px;border-radius:11px;background:var(--teal-soft);color:var(--teal-dark);
+  display:grid;place-items:center;flex-shrink:0;
+}
+.s1-pillar b{display:block;font-size:14px;font-weight:800;color:var(--ink)}
+.s1-pillar p{font-size:12.5px;color:var(--muted);line-height:1.5;margin-top:3px}
+
+/* SECTION 2: CARA KERJA */
+.s2-head{
+  display:flex;justify-content:space-between;align-items:flex-end;gap:32px;flex-wrap:wrap;
+}
+.s2-steps{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:24px;margin-top:40px;
+}
+.s2-step-wrap{display:flex;flex-direction:column;gap:14px;cursor:pointer}
+.s2-topline{height:3.5px;border-radius:4px;background:rgba(13,148,136,.18);transition:background .2s}
+.s2-step-wrap.active .s2-topline{background:linear-gradient(90deg,var(--teal),var(--sky))}
+.s2-card{
+  border-radius:22px;padding:28px;flex:1;
+  transition:transform .22s, box-shadow .22s, outline-color .22s;
+}
+.s2-card:hover{transform:translateY(-4px)}
+.s2-step-wrap.active .s2-card{
+  background:rgba(255,255,255,.90);
+  outline:2px solid var(--teal);
+  box-shadow:0 20px 44px rgba(13,148,136,.14);
+}
+.s2-num{
+  width:38px;height:38px;border-radius:11px;background:var(--teal-soft);color:var(--teal-dark);
+  display:grid;place-items:center;font-size:13px;font-weight:800;margin-bottom:18px;transition:all .2s;
+}
+.s2-step-wrap.active .s2-num{background:var(--teal);color:#FFFFFF;box-shadow:0 6px 16px rgba(13,148,136,.28)}
+.s2-card h3{font-size:18px;font-weight:800;color:var(--ink);margin-bottom:8px}
+.s2-card p{font-size:14px;color:var(--muted);line-height:1.65}
+
+.s2-banner{
+  margin-top:28px;border-radius:20px;padding:24px 30px;
+  display:flex;justify-content:space-between;align-items:center;gap:24px;flex-wrap:wrap;
+}
+.s2-tags{display:flex;flex-wrap:wrap;gap:8px;margin-top:12px}
+.s2-tag-btn{
+  padding:6px 14px;border-radius:999px;background:rgba(255,255,255,.85);
+  border:1px solid rgba(13,148,136,.25);
+  color:var(--teal-dark);font-size:12px;font-weight:700;cursor:pointer;
+  transition:all .16s;
+}
+.s2-tag-btn:hover,.s2-tag-btn.active{
+  background:var(--teal);color:#FFFFFF;border-color:var(--teal-dark);
+}
+.s2-crit-desc{
+  margin-top:12px;padding:10px 14px;border-radius:11px;
+  background:rgba(240,253,250,.9);border:1px solid rgba(13,148,136,.22);
+  font-size:12.5px;color:var(--ink-2);line-height:1.5;
+}
+
+/* SECTION 3: 5 PERTANYAAN. KURANG DARI 2 MENIT */
+.s3-grid{
+  display:grid;grid-template-columns:1fr 1.25fr;gap:48px;align-items:center;
+}
+.quiz-box{
+  border-radius:24px;padding:32px;
+}
+.qb-meta{display:flex;justify-content:space-between;font-size:12.5px;color:var(--muted);font-weight:700}
+.qb-meta b{color:var(--teal)}
+.qb-prog{height:5px;border-radius:5px;background:rgba(13,148,136,.15);margin:10px 0 24px;overflow:hidden}
+.qb-prog i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));transition:width .25s}
+.qb-q{font-size:21px;font-weight:800;color:var(--ink);margin-bottom:18px}
+.qb-opts{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-bottom:28px}
+.qb-opt{
+  padding:13px 14px;border-radius:12px;
+  border:1px solid rgba(13,148,136,.20);background:rgba(255,255,255,.82);
+  font-size:13.5px;font-weight:600;color:var(--ink-2);text-align:left;cursor:pointer;
+  transition:all .15s;
+}
+.qb-opt:hover{border-color:var(--teal);color:var(--teal);transform:translateY(-1px)}
+.qb-opt.selected{
+  border-color:var(--teal);background:var(--teal);color:#FFFFFF;font-weight:700;
+  box-shadow:0 6px 16px rgba(13,148,136,.24);
+}
+.qb-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  padding-top:16px;border-top:1px solid rgba(13,148,136,.14);
+}
+.qb-back{
+  background:none;border:none;color:var(--muted);font-size:13.5px;font-weight:700;cursor:pointer;
+}
+.qb-back:hover{color:var(--ink)}
+.qb-next{
+  background:var(--teal);color:#FFFFFF;border:none;padding:11px 20px;border-radius:11px;
+  font-size:13.5px;font-weight:700;cursor:pointer;transition:background .15s;
+  box-shadow:0 6px 16px rgba(13,148,136,.24);
+}
+.qb-next:hover{background:var(--teal-dark)}
+
+/* SECTION 4: DARI JAWABANMU, KAMI MENEMUKAN KECOCOKAN */
+.s4-grid{
+  display:grid;grid-template-columns:1.05fr 1fr;gap:48px;align-items:center;
+}
+.s4-list{list-style:none;margin-top:28px;display:grid;gap:14px}
+.s4-list li{
+  display:grid;grid-template-columns:30px 1fr;gap:12px;align-items:baseline;
+  padding:12px 16px;border-radius:14px;
+  background:rgba(255,255,255,.62);border:1px solid rgba(255,255,255,.88);
+}
+.s4-list .num{
+  width:26px;height:26px;border-radius:8px;background:var(--teal-soft);color:var(--teal-dark);
+  display:grid;place-items:center;font-size:12.5px;font-weight:800;
+}
+.s4-list b{display:block;font-size:14.5px;font-weight:800;color:var(--ink)}
+.s4-list span{display:block;font-size:13px;color:var(--muted);margin-top:2px;line-height:1.5}
+
+.bm-card{
+  border-radius:24px;overflow:hidden;
+}
+.bm-head{
+  position:relative;height:180px;
+  background:linear-gradient(135deg, rgba(204,251,241,.65) 0%, rgba(224,242,254,.65) 100%);
+  display:flex;align-items:center;justify-content:center;overflow:hidden;
+  border-bottom:1px solid rgba(255,255,255,.80);
+}
+.bm-head img{
+  width:254px;height:148px;object-fit:cover;border-radius:12px;
+  border:2px solid #FFFFFF;box-shadow:0 12px 28px rgba(15,23,42,.16);
+}
+.bm-badge{
+  position:absolute;right:16px;top:16px;background:var(--teal);color:#FFFFFF;
+  padding:5px 12px;border-radius:999px;font-size:11px;font-weight:800;
+  box-shadow:0 4px 12px rgba(13,148,136,.30);
+}
+.bm-ilu{
+  position:absolute;left:16px;bottom:10px;font-size:10px;font-weight:700;
+  color:var(--teal-dark);background:rgba(255,255,255,.85);padding:3px 9px;border-radius:6px;
+}
+.bm-body{padding:26px}
+.bm-title{font-size:19px;font-weight:800;color:var(--ink)}
+.bm-sub{font-size:13px;color:var(--muted);margin-top:3px;margin-bottom:18px}
+.bm-sub span{color:var(--teal-dark);font-weight:800}
+.bm-metric{margin-bottom:14px}
+.bm-m-top{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--ink-2)}
+.bm-m-bar{height:6px;border-radius:6px;background:#E2E8F0;margin:5px 0;overflow:hidden}
+.bm-m-bar i{display:block;height:100%;border-radius:6px;transition:width .35s}
+.bm-m-bot{display:flex;justify-content:space-between;font-size:11px;color:var(--muted)}
+.bm-m-bot .ok{color:var(--teal-dark);font-weight:800}
+.bm-chips{display:flex;flex-wrap:wrap;gap:6px;margin:16px 0}
+.bm-chips span{
+  padding:5px 11px;border-radius:8px;background:rgba(255,255,255,.85);
+  border:1px solid rgba(13,148,136,.20);
+  font-size:11.5px;font-weight:700;color:var(--teal-dark);
+}
+.bm-score-row{
+  display:flex;justify-content:space-between;align-items:baseline;margin-top:12px;
+}
+.bm-score-row span{font-size:12.5px;color:var(--muted);font-weight:700}
+.bm-score-row b{
+  font-family:'Fraunces',serif;font-size:38px;font-weight:700;color:var(--teal);line-height:1;
+}
+.bm-checks{
+  list-style:none;margin-top:14px;padding-top:14px;border-top:1px solid rgba(13,148,136,.15);
+  font-size:12.5px;color:var(--ink-2);line-height:1.8;font-weight:500;
+}
+.bm-checks li::before{content:"✓ ";color:var(--teal);font-weight:800;margin-right:5px}
+
+/* SECTION 5: KENAPA LAPTOP INI DIREKOMENDASIKAN (WEIGHT BARS) */
+.s5-grid{
+  display:grid;grid-template-columns:1fr 1.25fr;gap:48px;align-items:center;
+}
+.w-table-card{
+  border-radius:24px;padding:28px;
+}
+.w-preset-tabs{
+  display:flex;gap:8px;flex-wrap:wrap;margin-bottom:18px;
+}
+.w-tab{
+  padding:6px 12px;border-radius:9px;border:1px solid rgba(13,148,136,.22);
+  background:rgba(255,255,255,.80);font-size:11.5px;font-weight:700;color:var(--ink-2);
+  cursor:pointer;transition:all .15s;
+}
+.w-tab.active{background:var(--teal);color:#FFFFFF;border-color:var(--teal-dark)}
+.w-head{
+  display:grid;grid-template-columns:130px 1fr 48px;gap:16px;
+  font-size:11.5px;font-weight:800;color:var(--muted-2);padding-bottom:10px;
+  border-bottom:1px solid rgba(13,148,136,.16);text-transform:uppercase;letter-spacing:.05em;
+}
+.w-row{
+  display:grid;grid-template-columns:130px 1fr 48px;gap:16px;align-items:center;
+  padding:13px 0;border-bottom:1px solid rgba(13,148,136,.10);
+  font-size:14px;font-weight:700;color:var(--ink);
+}
+.w-bar{height:8px;border-radius:8px;background:rgba(13,148,136,.12);overflow:hidden}
+.w-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));border-radius:8px;transition:width .35s}
+.w-pct{text-align:right;font-weight:800;color:var(--teal-dark)}
+
+/* SECTION 6: KENAPA SPECO BERBEDA? (SPECO BUKAN TOKO) */
+.s6-top{
+  display:grid;grid-template-columns:1fr 1.1fr;gap:40px;align-items:center;
+}
+.s6-giant{
+  font-size:clamp(38px,5vw,60px);font-weight:800;line-height:1.05;letter-spacing:-.035em;color:var(--ink);
+}
+.s6-giant .thin{font-weight:400;display:block;color:var(--ink-2)}
+.s6-giant .u-teal{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:600;
+  color:var(--teal);display:inline-block;
+  border-bottom:6px solid #99F6E4;padding-bottom:2px;
+}
+.s6-visual{
+  position:relative;min-height:340px;display:flex;align-items:center;justify-content:center;
+}
+.s6-aura{
+  position:absolute;width:340px;height:340px;border-radius:50%;
+  background:radial-gradient(circle, rgba(20,184,166,.26) 0%, rgba(14,165,233,.12) 50%, transparent 72%);
+}
+.s6-laptop-img{
+  position:relative;z-index:2;width:340px;height:230px;object-fit:cover;
+  border-radius:20px;box-shadow:0 24px 50px rgba(15,23,42,.18);border:3px solid #FFFFFF;
+  transform:rotate(-3deg);
+}
+.s6-float{
+  position:absolute;z-index:3;
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:blur(16px);backdrop-filter:blur(16px);
+  border:1px solid rgba(255,255,255,.95);
+  outline:1px solid rgba(13,148,136,.22);
+  border-radius:14px;padding:11px 15px;font-size:12px;font-weight:700;color:var(--ink);
+  box-shadow:0 14px 32px rgba(13,148,136,.14);display:flex;align-items:center;gap:10px;
+}
+.s6-float i{
+  width:32px;height:32px;border-radius:9px;background:var(--teal-soft);color:var(--teal-dark);
+  display:grid;place-items:center;font-style:normal;flex-shrink:0;
+}
+
+.s6-cards{
+  display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:48px;
+}
+.s6-card{
+  border-radius:20px;padding:26px;transition:transform .2s;
+}
+.s6-card:hover{transform:translateY(-4px)}
+.s6-c-top{
+  display:flex;justify-content:space-between;font-size:11.5px;font-weight:800;color:var(--teal);
+  padding-bottom:14px;margin-bottom:18px;border-bottom:1px solid rgba(13,148,136,.14);
+}
+.s6-c-body{display:grid;grid-template-columns:42px 1fr;gap:14px;align-items:start}
+.s6-c-ico{
+  width:42px;height:42px;border-radius:12px;background:var(--teal-soft);
+  border:1px solid #99F6E4;
+  display:grid;place-items:center;color:var(--teal-dark);
+}
+.s6-c-body h4{font-size:17px;font-weight:800;color:var(--ink);margin-bottom:6px}
+.s6-c-body p{font-size:13px;color:var(--muted);line-height:1.6}
+
+/* SECTION 7: STATS STRIP + BOOK STACK PHOTO */
+.s7-strip{
+  margin-top:56px;border-radius:26px;
+  padding:26px 30px;display:grid;grid-template-columns:1fr 1fr 1fr 1.45fr;gap:24px;align-items:center;
+}
+.s7-stat{
+  display:flex;align-items:flex-start;gap:12px;padding-right:16px;
+  border-right:1px solid rgba(13,148,136,.16);
+}
+.s7-stat-ico{
+  width:34px;height:34px;border-radius:10px;background:var(--teal-soft);color:var(--teal-dark);
+  display:grid;place-items:center;flex-shrink:0;margin-top:4px;
+}
+.s7-stat .big-n{
+  font-family:'Fraunces',serif;font-size:38px;font-weight:700;color:var(--teal-dark);line-height:1;
+}
+.s7-stat b{display:block;font-size:13.5px;font-weight:800;color:var(--ink);margin-top:4px}
+.s7-stat p{font-size:12px;color:var(--muted);line-height:1.45;margin-top:2px}
+.s7-photo-card{
+  position:relative;height:148px;border-radius:18px;overflow:hidden;
+  background:linear-gradient(120deg, rgba(255,255,255,.90) 0%, rgba(204,251,241,.75) 100%);
+  border:1px solid rgba(13,148,136,.22);
+  display:flex;align-items:center;justify-content:space-between;padding:16px 20px;
+}
+.s7-quote{
+  font-family:'Caveat',cursive;font-size:19.5px;font-weight:700;line-height:1.2;
+  color:var(--teal-dark);max-width:175px;transform:rotate(-3deg);
+}
+.s7-photo-card img{
+  width:150px;height:116px;object-fit:cover;border-radius:12px;
+  border:2px solid #FFFFFF;box-shadow:0 8px 20px rgba(15,23,42,.12);
+}
+
+/* =====================================================================
+   NEW SECTION: BRAND LAPTOP DARI LOKAL HINGGA INTERNASIONAL (#brand)
+   ===================================================================== */
+.brand-filter-bar{
+  display:flex;gap:10px;flex-wrap:wrap;margin-top:24px;
+}
+.bf-tab{
+  padding:9px 18px;border-radius:999px;
+  border:1px solid rgba(13,148,136,.24);
+  background:rgba(255,255,255,.80);
+  font-size:13px;font-weight:700;color:var(--ink-2);cursor:pointer;
+  transition:all .18s;
+}
+.bf-tab:hover{border-color:var(--teal);color:var(--teal)}
+.bf-tab.active{
+  background:var(--teal);color:#FFFFFF;border-color:var(--teal-dark);
+  box-shadow:0 6px 16px rgba(13,148,136,.24);
+}
+.brands-grid{
+  display:grid;grid-template-columns:repeat(5,1fr);gap:16px;margin-top:28px;
+}
+.brand-card{
+  border-radius:18px;padding:18px;cursor:pointer;
+  background:rgba(255,255,255,.76);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  border:1px solid rgba(255,255,255,.92);
+  outline:1px solid rgba(13,148,136,.16);
+  transition:all .2s;position:relative;
+  display:flex;flex-direction:column;justify-content:space-between;min-height:132px;
+}
+.brand-card:hover{
+  transform:translateY(-4px);
+  box-shadow:0 14px 30px rgba(13,148,136,.14);
+}
+.brand-card.active{
+  background:rgba(255,255,255,.96);
+  outline:2px solid var(--teal);
+  box-shadow:0 16px 34px rgba(13,148,136,.20);
+}
+.bc-top{display:flex;justify-content:space-between;align-items:center}
+.bc-origin{
+  font-size:9.5px;font-weight:800;padding:3px 8px;border-radius:6px;
+  text-transform:uppercase;letter-spacing:.05em;
+}
+.bc-origin.lokal{background:#FEF3C7;color:#B45309;border:1px solid #FDE68A}
+.bc-origin.intl{background:var(--teal-soft);color:var(--teal-dark)}
+.bc-brand-row{
+  display:flex;align-items:center;gap:11px;margin-top:12px;
+}
+.bc-logo-box{
+  width:46px;height:42px;border-radius:11px;
+  background:#FFFFFF;
+  border:1px solid rgba(13,148,136,.18);
+  box-shadow:0 4px 10px rgba(15,23,42,.05);
+  display:flex;align-items:center;justify-content:center;
+  flex-shrink:0;overflow:hidden;padding:4px;
+}
+.bc-logo-box svg{
+  width:100%;height:100%;display:block;
+}
+.bc-name{
+  font-size:18.5px;font-weight:800;color:var(--ink);letter-spacing:-.03em;line-height:1.1;
+}
+.bc-sub-badge{
+  font-size:10px;font-weight:700;color:var(--muted-2);margin-top:2px;display:block;
+}
+.bc-series{
+  font-size:11.5px;color:var(--muted);font-weight:600;margin-top:9px;line-height:1.4;
+}
+.bc-foot{
+  display:flex;justify-content:space-between;align-items:center;
+  margin-top:12px;padding-top:8px;border-top:1px solid rgba(13,148,136,.12);
+  font-size:11px;font-weight:700;color:var(--teal-dark);
+}
+.brand-spotlight{
+  margin-top:24px;border-radius:22px;padding:24px 28px;
+  display:grid;grid-template-columns:1.15fr 1.85fr;gap:28px;align-items:center;
+}
+.bs-logo-lg{
+  width:62px;height:54px;border-radius:14px;background:#FFFFFF;
+  border:1px solid rgba(13,148,136,.22);
+  box-shadow:0 6px 16px rgba(15,23,42,.06);
+  display:flex;align-items:center;justify-content:center;padding:6px;flex-shrink:0;
+}
+.bs-logo-lg svg{width:100%;height:100%;display:block}
+.bs-models{
+  display:grid;grid-template-columns:repeat(2,1fr);gap:14px;
+}
+.bs-model-card{
+  background:rgba(255,255,255,.86);border:1px solid rgba(13,148,136,.20);
+  border-radius:14px;padding:14px;display:flex;gap:12px;align-items:center;cursor:pointer;
+  transition:all .18s;
+}
+.bs-model-card:hover{
+  border-color:var(--teal);transform:translateY(-2px);
+  box-shadow:0 10px 22px rgba(13,148,136,.12);
+}
+.bs-model-card img{
+  width:72px;height:56px;border-radius:9px;object-fit:cover;flex-shrink:0;
+}
+
+/* SECTION 8: BOTTOM FROSTED SKY/TEAL CTA BANNER */
+.s8-cta{
+  position:relative;border-radius:30px;overflow:hidden;
+  background:
+    radial-gradient(circle at 50% 0%, rgba(255,255,255,.92) 0%, rgba(204,251,241,.72) 52%, rgba(186,230,253,.82) 100%);
+  border:1px solid rgba(255,255,255,.95);
+  outline:1px solid rgba(13,148,136,.24);
+  padding:64px 32px 0;text-align:center;
+  box-shadow:0 24px 60px rgba(13,148,136,.12);
+}
+.s8-k1{font-size:11px;font-weight:800;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
+.s8-k2{font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--teal);text-transform:uppercase;margin-top:10px}
+.s8-title{
+  font-size:clamp(30px,4.2vw,46px);font-weight:800;line-height:1.12;letter-spacing:-.03em;
+  color:var(--ink);margin-top:12px;
+}
+.s8-title span{
+  font-family:'Fraunces',serif;font-style:italic;font-weight:600;color:var(--teal);display:block;
+}
+.s8-sub{
+  font-size:15px;color:var(--muted);max-width:490px;margin:14px auto 26px;line-height:1.65;
+}
+.s8-perks{
+  display:flex;justify-content:center;gap:32px;margin:28px auto 32px;flex-wrap:wrap;
+}
+.s8-perk{
+  background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  padding:12px 20px;border-radius:14px;border:1px solid rgba(255,255,255,.90);
+}
+.s8-perk b{display:block;font-size:13px;font-weight:800;color:var(--ink)}
+.s8-perk span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
+.s8-laptop-bottom{
+  max-width:520px;width:100%;height:200px;object-fit:cover;display:block;
+  margin:0 auto;border-radius:18px 18px 0 0;
+  box-shadow:0 -12px 36px rgba(15,23,42,.18);border:4px solid #FFFFFF;border-bottom:none;
+}
+
+.foot{
+  background:rgba(255,255,255,.82);
+  -webkit-backdrop-filter:blur(14px);backdrop-filter:blur(14px);
+  padding:36px 0 44px;font-size:12px;color:var(--muted);
+  border-top:1px solid rgba(13,148,136,.16);
+}
+
+/* =====================================================================
+   INTERACTIVE LAPTOP DETAIL & COMPARISON MODAL + SAVED TRAY
+   ===================================================================== */
+.modal-backdrop{
+  position:fixed;inset:0;z-index:9999;
+  background:rgba(15,23,42,.45);
+  -webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
+  display:flex;align-items:center;justify-content:center;padding:20px;
+  opacity:0;visibility:hidden;transition:opacity .22s, visibility .22s;
+}
+.modal-backdrop.open{opacity:1;visibility:visible}
+.modal-card{
+  max-width:680px;width:100%;max-height:90vh;overflow-y:auto;
+  border-radius:26px;padding:28px;
+  background:rgba(255,255,255,.94);
+  border:1px solid #FFFFFF;
+  box-shadow:0 28px 70px rgba(15,23,42,.28);
+  transform:translateY(12px) scale(.98);transition:transform .24s;
+}
+.modal-backdrop.open .modal-card{transform:none}
+.modal-top{display:flex;justify-content:space-between;align-items:flex-start;gap:16px}
+.modal-close{
+  width:36px;height:36px;border-radius:50%;border:1px solid rgba(13,148,136,.22);
+  background:#F8FAFC;color:var(--ink);font-size:18px;font-weight:700;cursor:pointer;
+  display:grid;place-items:center;
+}
+.modal-close:hover{background:var(--teal);color:#FFFFFF}
+.modal-hero{
+  display:grid;grid-template-columns:220px 1fr;gap:22px;margin-top:18px;align-items:center;
+}
+.modal-hero img{
+  width:100%;height:150px;object-fit:cover;border-radius:16px;border:2px solid #FFFFFF;
+  box-shadow:0 10px 24px rgba(15,23,42,.12);
+}
+.modal-bars{display:grid;grid-template-columns:repeat(2,1fr);gap:12px;margin-top:20px}
+.m-bar-item{
+  background:#F0FDFA;border:1px solid rgba(13,148,136,.18);
+  padding:10px 14px;border-radius:12px;
+}
+.m-bar-head{display:flex;justify-content:space-between;font-size:12px;font-weight:700;color:var(--ink-2)}
+.m-bar-track{height:6px;border-radius:5px;background:#E2E8F0;margin-top:6px;overflow:hidden}
+.m-bar-track i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));border-radius:5px}
+
+/* Floating Saved / Compare Pill */
+.compare-fab{
+  position:fixed;right:24px;bottom:24px;z-index:900;
+  background:var(--ink);color:#FFFFFF;
+  padding:12px 20px;border-radius:999px;
+  border:1px solid rgba(255,255,255,.20);
+  box-shadow:0 14px 34px rgba(15,23,42,.28);
+  display:inline-flex;align-items:center;gap:10px;
+  font-size:13px;font-weight:700;cursor:pointer;
+  transform:translateY(90px);opacity:0;transition:all .25s;
+}
+.compare-fab.show{transform:translateY(0);opacity:1}
+.compare-fab b{
+  background:var(--teal);color:#FFFFFF;padding:2px 8px;border-radius:999px;font-size:11.5px;
+}
+
+@media(max-width:900px){
+  .s1-grid,.s2-steps,.s3-grid,.s4-grid,.s5-grid,.s6-top,.s6-cards,.s7-strip,.brand-spotlight{grid-template-columns:1fr}
+  .s1-cards-grid,.bs-models{grid-template-columns:1fr}
+  .brands-grid{grid-template-columns:repeat(2,1fr)}
+  .s1-pillars{grid-template-columns:1fr}
+  .s7-stat{border-right:none;border-bottom:1px solid rgba(13,148,136,.16);padding-bottom:14px}
+  .modal-hero,.modal-bars{grid-template-columns:1fr}
+}
+
+/* Intro resting states */
+html.intro .nav{opacity:0;translate:0 -9px}
+html.intro .brand-link,html.intro .links a,html.intro .nav .btn,html.intro .burger{opacity:0;translate:0 6px}
+html.intro .h1{opacity:0;translate:0 15px;clip-path:inset(100% 0 -30% 0)}
+html.intro .sub{opacity:0;translate:0 10px}
+html.intro .cta2{opacity:0;translate:0 13px;scale:.985}
+html.intro .ring{opacity:0;translate:0 18px;scale:.99}
+html.intro .browser{opacity:0;translate:0 26px}
+@media (prefers-reduced-motion:reduce){html.intro *{opacity:1!important;translate:none!important;scale:none!important;clip-path:none!important}}
+</style>
+<script>document.documentElement.classList.add('intro');setTimeout(function(){document.documentElement.classList.remove('intro')},4000);</script>
+</head>
+<body id="top">
+<!-- =====================================================================
+     HERO STAGE — FIXED CANVAS + COMPACT FROSTED AI DOCK
+     ===================================================================== -->
+<div class="stage" id="stage">
+<div class="canvas" id="cv">
+  <div class="bg"></div>
+  <div class="stars" id="stA"></div>
+  <div class="stars" id="stB"></div>
+
+  <div class="stack">
+    <div class="nav" id="nav">
+      <a href="#top" class="brand-link" aria-label="SPECO — Spec for You">
+        <img src="/assets/aistudio/speco_logo_dark_transparent.png" alt="SPECO — Spec for You" class="brand-logo-only">
+      </a>
+      <div class="navmenu" id="navmenu">
+        <div class="links" id="links">
+          <a href="#top" class="active">Beranda</a>
+          <a href="#mulai">Simulasi Budget</a>
+          <a href="#cara">Cara Kerja</a>
+          <a href="#kuis">Kuis AI</a>
+          <a href="#contoh-hasil">Skor &amp; Hasil</a>
+          <a href="#brand">Brand Laptop</a>
+          <a href="#tentang">Tentang</a>
+        </div>
+        <a class="btn" href="#mulai">
+          <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>
+          <span id="ctaLabel">Cari Laptop</span>
+        </a>
+      </div>
+      <button class="burger" id="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navmenu">
+        <span></span><span></span><span></span>
+      </button>
+    </div>
+
+    <div class="h1" id="h1a">Laptop yang Pas Buat</div>
+    <div class="h1" id="h1b"><em>Kebutuhan Kuliahmu</em></div>
+    <div class="sub" id="sub1"><b>Rekomendasi laptop berbasis AI</b> yang dihitung objektif sesuai</div>
+    <div class="sub" id="sub2">budget, jurusan kuliah, dan aplikasi harianmu — klik kartu laptop untuk detail.</div>
+    <a class="btn cta2" href="#mulai">
+      <span id="vpLabel">Mulai Simulasi Sekarang</span>
+      <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+    </a>
+  </div>
+
+  <div class="showcase"><div class="ring" id="ring"></div></div>
+
+  <!-- Sleek, Low-Profile Frosted Glass AI Match Dock (No Duplicate Logos or Cut-Off Cards) -->
+  <div class="browser">
+    <div class="bar">
+      <div class="dots"><i style="background:#ee5c62"></i><i style="background:#f6b719"></i><i style="background:#12c02f"></i></div>
+      <div class="omni">
+        <svg width="10" height="10" viewBox="0 0 24 24" fill="none" stroke="#0D9488" stroke-width="2.5"><path d="M12 2v4M12 18v4M4.93 4.93l2.83 2.83M16.24 16.24l2.83 2.83M2 12h4M18 12h4"/></svg>
+        <span>speco.app/ai-scoring-engine</span>
+      </div>
+      <div class="bar-badge"><b></b><span>Mesin Skor AI Aktif</span></div>
+    </div>
+    <div class="dock-body">
+      <div class="dock-top">
+        <div class="dock-label">
+          <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          <span>Simulasi Cepat Profil Jurusan:</span>
+        </div>
+        <div class="dock-presets" id="dockPresets">
+          <button type="button" class="dock-pill active" data-preset="ti">Informatika · Rp8 Jt</button>
+          <button type="button" class="dock-pill" data-preset="dkv">DKV &amp; Desain · Rp12 Jt</button>
+          <button type="button" class="dock-pill" data-preset="bisnis">Bisnis &amp; Akuntansi · Rp6,5 Jt</button>
+          <button type="button" class="dock-pill" data-preset="teknik">Teknik &amp; 3D CAD · Rp15 Jt</button>
+        </div>
+        <a href="#mulai" class="dock-jump">Buka Katalog ↓</a>
+      </div>
+      <div class="dock-meters" id="dockMeters"></div>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- =====================================================================
+     MAIN CONTENT — SPECO TEAL + FROSTED GLASS (KACA BURAM)
+     ===================================================================== -->
+<main>
+
+  <!-- SECTION 1: SATU BUDGET. BANYAK KEMUNGKINAN. -->
+  <section class="sec sec-alt" id="mulai">
+    <div class="orb orb-teal" style="left:-80px;top:40px"></div>
+    <div class="orb orb-sky" style="right:-60px;bottom:20px"></div>
+    <div class="w2">
+      <div class="s1-grid">
+        <div>
+          <div class="kicker-pill">
+            <svg class="ico-svg" viewBox="0 0 24 24"><rect x="2" y="6" width="20" height="12" rx="2"/><circle cx="12" cy="12" r="2"/><path d="M6 12h.01M18 12h.01"/></svg>
+            <span>BUDGET &amp; KEBUTUHAN</span>
+          </div>
+          <h2 class="sec-h2">Satu budget.<br>Banyak <span class="accent">kemungkinan.</span></h2>
+          <p class="sec-lead">Di harga yang sama, pilihan laptop bisa sangat berbeda tergantung kebutuhanmu. Geser budget dan klik kebutuhan utama untuk melihat rekomendasi secara langsung.</p>
+
+          <div class="budget-widget-card glass-panel">
+            <div class="bw-label">Budget kamu</div>
+            <div class="bw-val" id="bgv">Rp8.000.000</div>
+            <input id="bg" class="speco-range" type="range" min="6" max="20" step="1" value="8" aria-label="Budget kamu">
+            <div class="bw-minmax"><span>Rp6 jt</span><span>Rp20 jt+</span></div>
+
+            <div class="bw-label">Kebutuhan utama (Klik untuk filter)</div>
+            <div class="need-chips" id="needs">
+              <button type="button" class="n-chip" data-need="Coding" aria-pressed="true">
+                <svg class="ico-svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+                <span>Coding</span>
+              </button>
+              <button type="button" class="n-chip" data-need="Desain" aria-pressed="false">
+                <svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><path d="M2 2l7.586 7.586"/><circle cx="11" cy="11" r="2"/></svg>
+                <span>Desain</span>
+              </button>
+              <button type="button" class="n-chip" data-need="Gaming" aria-pressed="false">
+                <svg class="ico-svg" viewBox="0 0 24 24"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="4"/></svg>
+                <span>Gaming</span>
+              </button>
+              <button type="button" class="n-chip" data-need="Kuliah" aria-pressed="false">
+                <svg class="ico-svg" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>
+                <span>Kuliah</span>
+              </button>
+              <button type="button" class="n-chip" data-need="Office" aria-pressed="false">
+                <svg class="ico-svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+                <span>Office</span>
+              </button>
+            </div>
+          </div>
+
+          <div class="s1-actions">
+            <a href="#kuis" class="btn-teal-lg">
+              <span>Lihat rekomendasi sekarang</span>
+              <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </a>
+            <a href="#contoh-hasil" class="play-link">
+              <i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></i>
+              <span>Lihat contoh hasil</span>
+            </a>
+          </div>
+        </div>
+
+        <!-- Right 3-Card Frosted Glass Recommendation Showcase -->
+        <div class="s1-showcase glass-panel">
+          <div class="s1-sc-top">
+            <div>
+              <div class="s1-sc-kicker">Contoh hasil rekomendasi interaktif (Klik kartu untuk detail)</div>
+              <div class="s1-sc-title">Paling cocok untuk budget <span id="scBudgetTitle">Rp8.000.000</span></div>
+              <div class="s1-sc-tag" id="scNeedTag"></div>
+            </div>
+          </div>
+
+          <div class="s1-cards-grid" id="scCardsGrid"></div>
+
+          <div class="sc-pager">
+            <div class="sc-dots" id="scDots">
+              <button type="button" class="sc-dot active" data-page="0" aria-label="Halaman 1"></button>
+              <button type="button" class="sc-dot" data-page="1" aria-label="Halaman 2"></button>
+              <button type="button" class="sc-dot" data-page="2" aria-label="Halaman 3"></button>
+            </div>
+            <div class="sc-nav-btns">
+              <span id="scPageLabel" style="font-size:11.5px;color:var(--muted-2);font-weight:700;margin-right:4px">Halaman 1 / 3</span>
+              <button type="button" class="sc-page-btn" id="scPrevBtn" aria-label="Sebelumnya">‹</button>
+              <button type="button" class="sc-page-btn" id="scNextBtn" aria-label="Selanjutnya">›</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Pillars Strip with Consistent SVG Icons -->
+      <div class="s1-pillars">
+        <div class="s1-pillar">
+          <div class="s1-pillar-ico">
+            <svg class="ico-svg-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div>
+            <b>Rekomendasi personal</b>
+            <p>Berdasarkan kebutuhanmu, bukan sekadar harga.</p>
+          </div>
+        </div>
+        <div class="s1-pillar">
+          <div class="s1-pillar-ico">
+            <svg class="ico-svg-lg" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+          </div>
+          <div>
+            <b>Perbandingan objektif</b>
+            <p>Kriteria jelas dan bobotnya bisa kamu lihat.</p>
+          </div>
+        </div>
+        <div class="s1-pillar">
+          <div class="s1-pillar-ico">
+            <svg class="ico-svg-lg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          </div>
+          <div>
+            <b>Hemat waktu</b>
+            <p>5 pertanyaan, langsung dapat pilihan yang sesuai.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 2: CARA KERJA -->
+  <section class="sec" id="cara">
+    <div class="orb orb-sky" style="left:35%;top:10%"></div>
+    <div class="w2">
+      <div class="kicker-pill">
+        <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
+        <span>CARA KERJA</span>
+      </div>
+      <div class="s2-head">
+        <h2 class="sec-h2">Dari kebutuhan hingga<br><span class="accent">laptop</span> yang tepat.</h2>
+        <p class="sec-lead" style="margin:0;max-width:360px">Tiga langkah sederhana untuk menemukan laptop yang benar-benar sesuai denganmu. Klik langkah atau kriteria di bawah untuk detailnya.</p>
+      </div>
+
+      <div class="s2-steps" id="s2Steps">
+        <div class="s2-step-wrap" data-step="0">
+          <div class="s2-topline"></div>
+          <div class="s2-card glass-panel">
+            <div class="s2-num">01</div>
+            <h3>Ceritakan kebutuhanmu</h3>
+            <p>Tentukan budget, jurusan, aktivitas, aplikasi yang kamu pakai, dan hal yang paling kamu prioritaskan.</p>
+          </div>
+        </div>
+        <div class="s2-step-wrap active" data-step="1">
+          <div class="s2-topline"></div>
+          <div class="s2-card glass-panel">
+            <div class="s2-num">02</div>
+            <h3>SPECO menghitung kecocokan</h3>
+            <p>Setiap laptop dibandingkan dengan Profil Kebutuhanmu dan dinilai dengan bobot dari prioritasmu.</p>
+          </div>
+        </div>
+        <div class="s2-step-wrap" data-step="2">
+          <div class="s2-topline"></div>
+          <div class="s2-card glass-panel">
+            <div class="s2-num">03</div>
+            <h3>Dapatkan rekomendasi</h3>
+            <p>Lihat laptop yang paling sesuai, lengkap dengan skor kecocokan, alasan, dan trade-off-nya.</p>
+          </div>
+        </div>
+      </div>
+
+      <div class="s2-banner glass-panel">
+        <div style="max-width:720px;flex:1">
+          <div style="font-size:14.5px;font-weight:700;color:var(--ink-2);line-height:1.55">
+            Tiap kriteria diberi nilai, lalu dikalikan bobot dari prioritasmu. Klik kriteria di bawah untuk melihat bagaimana SPECO menilainya:
+          </div>
+          <div class="s2-tags" id="critTags">
+            <button type="button" class="s2-tag-btn active" data-crit="Performa">Performa</button>
+            <button type="button" class="s2-tag-btn" data-crit="RAM">RAM</button>
+            <button type="button" class="s2-tag-btn" data-crit="Penyimpanan">Penyimpanan</button>
+            <button type="button" class="s2-tag-btn" data-crit="Layar">Layar</button>
+            <button type="button" class="s2-tag-btn" data-crit="Baterai">Baterai</button>
+            <button type="button" class="s2-tag-btn" data-crit="Portabilitas">Portabilitas</button>
+          </div>
+          <div class="s2-crit-desc" id="critDesc">
+            <b>Performa (CPU &amp; GPU):</b> Mengukur skor benchmark multi-core prosesor dan kartu grafis terhadap kebutuhan kompilasi kode, simulasi data, atau rendering 3D jurusanmu.
+          </div>
+        </div>
+        <a href="#kuis" class="btn-teal-lg" style="padding:12px 22px;font-size:13.5px">
+          <span>Mulai Kuis Sekarang</span>
+          <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 3: 5 PERTANYAAN. KURANG DARI 2 MENIT. -->
+  <section class="sec sec-alt" id="kuis">
+    <div class="orb orb-teal" style="right:5%;top:15%"></div>
+    <div class="w2">
+      <div class="s3-grid">
+        <div>
+          <div class="kicker-pill">
+            <svg class="ico-svg" viewBox="0 0 24 24"><path d="M9 11l3 3L22 4"/><path d="M21 12v7a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11"/></svg>
+            <span>KUIS INTERAKTIF</span>
+          </div>
+          <h2 class="sec-h2" style="font-size:clamp(34px,4.5vw,52px)">5 pertanyaan.<br>Kurang dari <span class="accent">2 menit.</span></h2>
+          <p class="sec-lead">Coba langsung di sini. Jawaban yang kamu pilih akan langsung memperbarui kartu Best Match dan tabel bobot skor di bawah secara real-time!</p>
+        </div>
+
+        <div class="quiz-box glass-panel">
+          <div class="qb-meta">
+            <span>Pertanyaan <b id="qStepNum">01</b> / 05</span>
+            <span id="qAnsCount">0 dari 5 terjawab</span>
+          </div>
+          <div class="qb-prog"><i id="qProgBar" style="width:20%"></i></div>
+          <div class="qb-q" id="qTitle">Berapa budget-mu?</div>
+          <div class="qb-opts" id="qOpts"></div>
+          <div class="qb-foot">
+            <button type="button" class="qb-back" id="qBackBtn">← Kembali</button>
+            <div style="display:flex;gap:8px">
+              <button type="button" class="qb-back" id="qResetBtn" style="font-size:12px">Reset</button>
+              <button type="button" class="qb-next" id="qNextBtn">Lewati →</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 4: DARI JAWABANMU, KAMI MENEMUKAN KECOCOKAN -->
+  <section class="sec" id="contoh-hasil">
+    <div class="orb orb-sky" style="left:-50px;bottom:10%"></div>
+    <div class="w2">
+      <div class="s4-grid">
+        <div>
+          <div class="kicker-pill">
+            <svg class="ico-svg" viewBox="0 0 24 24"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+            <span>HASIL ANALISIS AI</span>
+          </div>
+          <h2 class="sec-h2">Dari jawabanmu, kami<br>menemukan <span class="accent">kecocokan.</span></h2>
+          <p class="sec-lead" id="bmLeadText">Contoh untuk mahasiswa Informatika dengan budget Rp8 jt: dari 12 laptop di katalog contoh, 8 cocok, dan satu jadi Best Match.</p>
+
+          <ol class="s4-list">
+            <li>
+              <span class="num">1</span>
+              <div>
+                <b>Budget</b>
+                <span id="bmStepBudget">Rp8 jt, boleh lebih sedikit bila sepadan.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num">2</span>
+              <div>
+                <b>Kebutuhan</b>
+                <span id="bmStepNeed">Kisaran yang pas: semua spek wajib dan disarankan bisa terpenuhi.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num">3</span>
+              <div>
+                <b>Aplikasi</b>
+                <span id="bmStepApps">Programming: VS Code, Docker, Android Studio, Figma.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num">4</span>
+              <div>
+                <b>Penilaian</b>
+                <span>Setiap laptop dinilai pada 6 kriteria, dengan bobot dari prioritasmu.</span>
+              </div>
+            </li>
+            <li>
+              <span class="num">5</span>
+              <div>
+                <b>Rekomendasi</b>
+                <span>Laptop dengan skor tertinggi jadi Best Match, lengkap dengan alasannya.</span>
+              </div>
+            </li>
+          </ol>
+        </div>
+
+        <div class="bm-card glass-panel" id="bmCard">
+          <div class="bm-head">
+            <span class="bm-badge">★ Best Match</span>
+            <img id="bmImg" src="/assets/photos/laptop2.jpg" alt="ASUS Vivobook 14 (M1405)">
+            <span class="bm-ilu">Klik untuk detail lengkap</span>
+          </div>
+          <div class="bm-body">
+            <div class="bm-title" id="bmTitle">ASUS Vivobook 14 (M1405)</div>
+            <div class="bm-sub"><span id="bmPrice">Rp8.299.000</span> · <span>masuk rentang budget</span></div>
+
+            <div class="bm-metric">
+              <div class="bm-m-top"><span>Performa CPU</span><span id="bmCpuVal">88 / 100</span></div>
+              <div class="bm-m-bar"><i id="bmCpuBar" style="width:88%;background:linear-gradient(90deg,var(--teal),var(--sky))"></i></div>
+              <div class="bm-m-bot"><span id="bmCpuLabel">Ryzen 5 7535HS (6-Core)</span><span class="ok">✓ Memenuhi</span></div>
+            </div>
+
+            <div class="bm-metric">
+              <div class="bm-m-top"><span>Kapasitas RAM</span><span id="bmRamVal">16 GB</span></div>
+              <div class="bm-m-bar"><i id="bmRamBar" style="width:100%;background:var(--teal)"></i></div>
+              <div class="bm-m-bot"><span>Dual-Channel Upgradeable</span><span class="ok">✓ Memenuhi</span></div>
+            </div>
+
+            <div class="bm-metric">
+              <div class="bm-m-top"><span>Storage NVMe</span><span id="bmStoVal">512 GB</span></div>
+              <div class="bm-m-bar"><i id="bmStoBar" style="width:100%;background:var(--teal)"></i></div>
+              <div class="bm-m-bot"><span>PCIe 4.0 Cepat</span><span class="ok">✓ Memenuhi</span></div>
+            </div>
+
+            <div class="bm-chips" id="bmChips">
+              <span>VS Code</span>
+              <span>Docker</span>
+              <span>Android Studio</span>
+              <span>Figma</span>
+            </div>
+
+            <div class="bm-score-row">
+              <span>Skor Kecocokan Akhir</span>
+              <b id="bmScore">94%</b>
+            </div>
+            <div class="bm-m-bar" style="height:6px;margin-top:6px"><i id="bmScoreBar" style="width:94%;background:linear-gradient(90deg,var(--teal),var(--sky))"></i></div>
+
+            <ul class="bm-checks" id="bmChecks">
+              <li>Sesuai budget Rp8 juta untuk kuliah 4 tahun</li>
+              <li>RAM 16 GB memenuhi kebutuhan multitasking berat</li>
+              <li>SSD 512 GB cukup untuk proyek dan SDK</li>
+            </ul>
+
+            <button type="button" class="mp-btn" id="bmInspectBtn" style="margin-top:14px;padding:11px">
+              <span>Buka Rincian Spesifikasi &amp; Trade-off Jujur</span>
+              <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 5: KENAPA LAPTOP INI DIREKOMENDASIKAN -->
+  <section class="sec sec-alt" id="hasil">
+    <div class="orb orb-teal" style="left:40%;top:20%"></div>
+    <div class="w2">
+      <div class="s5-grid">
+        <div>
+          <div class="kicker-pill">
+            <svg class="ico-svg" viewBox="0 0 24 24"><line x1="18" y1="20" x2="18" y2="10"/><line x1="12" y1="20" x2="12" y2="4"/><line x1="6" y1="20" x2="6" y2="14"/></svg>
+            <span>BOBOT SKOR TRANSPARAN</span>
+          </div>
+          <h2 class="sec-h2">Kenapa laptop ini<br><span class="accent">direkomendasikan</span></h2>
+          <p class="sec-lead">Setiap kriteria punya bobot. Yang kamu prioritaskan dapat bobot lebih besar, jadi pengaruhnya ke skor akhir juga lebih besar.</p>
+          <p class="sec-lead" style="margin-top:12px" id="wSummaryText">Contoh: <b style="color:var(--ink)">ASUS Vivobook 14 (M1405)</b> mendapat <b style="color:var(--teal)">94%</b> kecocokan untuk mahasiswa Informatika.</p>
+          <a href="#kuis" style="display:inline-flex;align-items:center;gap:6px;margin-top:18px;font-size:13.5px;font-weight:800;color:var(--teal-dark)">
+            <span>Ubah prioritas lewat kuis</span>
+            <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+          </a>
+        </div>
+
+        <div class="w-table-card glass-panel">
+          <div class="w-preset-tabs" id="wTabs">
+            <button type="button" class="w-tab active" data-w="coding">Profil Coding / TI</button>
+            <button type="button" class="w-tab" data-w="desain">Profil Desain / DKV</button>
+            <button type="button" class="w-tab" data-w="kuliah">Profil Kuliah &amp; Riset</button>
+            <button type="button" class="w-tab" data-w="gaming">Profil Gaming / 3D</button>
+          </div>
+          <div class="w-head"><span>Kriteria</span><span>Bobot Prioritas</span><span style="text-align:right">%</span></div>
+          <div id="wRowsContainer"></div>
+          <p style="font-size:11.5px;color:var(--muted-2);margin-top:14px">Klik tab profil di atas untuk melihat perubahan bobot kriteria secara langsung.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SECTION 6: KENAPA SPECO BERBEDA? (SPECO BUKAN TOKO) -->
+  <section class="sec" id="tentang">
+    <div class="orb orb-teal" style="right:-60px;top:60px"></div>
+    <div class="w2">
+      <div class="kicker-pill">
+        <svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        <span>KENAPA SPECO BERBEDA?</span>
+      </div>
+
+      <div class="s6-top">
+        <div>
+          <h2 class="s6-giant">
+            SPECO<br>bukan toko.<br>
+            <span class="thin">Dan itu memang</span>
+            <span class="u-teal">sengaja.</span>
+          </h2>
+          <p class="sec-lead">Kami tidak menjual laptop. Kami membantu kamu memahami dan memilih laptop yang benar-benar cocok dengan kebutuhanmu.</p>
+          <a href="#cara" class="play-link" style="margin-top:22px">
+            <i><svg width="12" height="12" viewBox="0 0 24 24" fill="currentColor"><polygon points="6 4 20 12 6 20 6 4"/></svg></i>
+            <span>Lihat bagaimana SPECO bekerja</span>
+          </a>
+        </div>
+
+        <div class="s6-visual">
+          <div class="s6-aura"></div>
+          <img src="/assets/photos/laptop8.jpg" alt="SPECO Laptop Showcase" class="s6-laptop-img">
+          <div class="s6-float" style="left:6px;top:24px">
+            <i><svg class="ico-svg" viewBox="0 0 24 24"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/><line x1="2" y1="2" x2="22" y2="22"/></svg></i>
+            <span>Tidak ada penjualan<br>langsung.</span>
+          </div>
+          <div class="s6-float" style="right:0;top:88px">
+            <i><svg class="ico-svg" viewBox="0 0 24 24"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg></i>
+            <span>Rekomendasi<br>berdasarkan<br>kebutuhanmu.</span>
+          </div>
+          <div class="s6-float" style="right:20px;bottom:14px">
+            <i><svg class="ico-svg" viewBox="0 0 24 24"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg></i>
+            <span>Penjelasan spesifikasi<br>dengan bahasa<br>sederhana.</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3 Frosted Principle Cards with Crisp SVG Icons -->
+      <div class="s6-cards">
+        <div class="s6-card glass-panel">
+          <div class="s6-c-top"><span>PRINSIP 01</span><span>INDEPENDEN</span></div>
+          <div class="s6-c-body">
+            <div class="s6-c-ico">
+              <svg class="ico-svg-lg" viewBox="0 0 24 24"><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z"/><path d="M3 6h18"/><path d="M16 10a4 4 0 0 1-8 0"/></svg>
+            </div>
+            <div>
+              <h4>Tidak menjual.</h4>
+              <p>Kami tidak memiliki stok atau menjual laptop, sehingga tidak ada brand yang membayar untuk diprioritaskan.</p>
+            </div>
+          </div>
+        </div>
+        <div class="s6-card glass-panel">
+          <div class="s6-c-top"><span>PRINSIP 02</span><span>OBJEKTIF</span></div>
+          <div class="s6-c-body">
+            <div class="s6-c-ico">
+              <svg class="ico-svg-lg" viewBox="0 0 24 24"><path d="m16 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="m2 16 3-8 3 8c-.87.65-1.92 1-3 1s-2.13-.35-3-1Z"/><path d="M7 21h10"/><path d="M12 3v18"/><path d="M3 7h2c2 0 5-1 7-2 2 1 5 2 7 2h2"/></svg>
+            </div>
+            <div>
+              <h4>Tidak berpihak.</h4>
+              <p>Rekomendasi ditentukan oleh kebutuhanmu, bukan kepentingan komisi atau sponsor brand tertentu.</p>
+            </div>
+          </div>
+        </div>
+        <div class="s6-card glass-panel">
+          <div class="s6-c-top"><span>PRINSIP 03</span><span>EDUKATIF</span></div>
+          <div class="s6-c-body">
+            <div class="s6-c-ico">
+              <svg class="ico-svg-lg" viewBox="0 0 24 24"><path d="M2 3h6a4 4 0 0 1 4 4v14a3 3 0 0 0-3-3H2z"/><path d="M22 3h-6a4 4 0 0 0-4 4v14a3 3 0 0 1 3-3h7z"/></svg>
+            </div>
+            <div>
+              <h4>Tidak membingungkan.</h4>
+              <p>Kami menyederhanakan spesifikasi teknis menjadi penjelasan yang jelas, jujur, dan mudah dipahami mahasiswa.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- SECTION 7: STATS STRIP + QUOTE PHOTO -->
+      <div class="s7-strip glass-panel">
+        <div class="s7-stat">
+          <div class="s7-stat-ico">
+            <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><path d="M9.09 9a3 3 0 0 1 5.83 1c0 2-3 3-3 3"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+          </div>
+          <div>
+            <div class="big-n">5</div>
+            <b>pertanyaan</b>
+            <p>untuk memahami kebutuhanmu.</p>
+          </div>
+        </div>
+        <div class="s7-stat">
+          <div class="s7-stat-ico">
+            <svg class="ico-svg" viewBox="0 0 24 24"><polygon points="12 2 2 7 12 12 22 7 12 2"/><polyline points="2 17 12 22 22 17"/><polyline points="2 12 12 17 22 12"/></svg>
+          </div>
+          <div>
+            <div class="big-n">6+</div>
+            <b>faktor</b>
+            <p>yang dipertimbangkan dalam rekomendasi.</p>
+          </div>
+        </div>
+        <div class="s7-stat">
+          <div class="s7-stat-ico">
+            <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+          </div>
+          <div>
+            <div class="big-n">1</div>
+            <b>tujuan</b>
+            <p>menemukan laptop yang paling cocok untukmu.</p>
+          </div>
+        </div>
+        <div class="s7-photo-card">
+          <div class="s7-quote">Bukan sekadar spesifikasi, tapi solusi yang sesuai dengan perjalanan kuliahmu.</div>
+          <img src="/assets/photos/students.jpg" alt="Perjalanan Kuliah Mahasiswa">
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===================================================================
+       NEW SECTION: BRAND LAPTOP DARI LOKAL HINGGA INTERNASIONAL (#brand)
+       =================================================================== -->
+  <section class="sec sec-alt" id="brand">
+    <div class="orb orb-teal" style="left:-40px;top:30px"></div>
+    <div class="orb orb-sky" style="right:-40px;bottom:30px"></div>
+    <div class="w2">
+      <div class="kicker-pill">
+        <svg class="ico-svg" viewBox="0 0 24 24"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+        <span>KATALOG BRAND LOKAL &amp; INTERNASIONAL</span>
+      </div>
+      <div class="s2-head">
+        <div>
+          <h2 class="sec-h2">Semua brand dihitung <span class="accent">adil.</span><br>Dari Lokal hingga Global.</h2>
+        </div>
+        <p class="sec-lead" style="margin:0;max-width:420px">SPECO membandingkan lini laptop resmi di Indonesia — mulai dari brand kebanggaan lokal hingga brand internasional — murni berdasarkan kualitas spesifikasi &amp; purnajual.</p>
+      </div>
+
+      <div class="brand-filter-bar" id="brandFilterBar">
+        <button type="button" class="bf-tab active" data-origin="all">Semua Brand (10)</button>
+        <button type="button" class="bf-tab" data-origin="lokal">Brand Lokal Indonesia (3)</button>
+        <button type="button" class="bf-tab" data-origin="intl">Brand Internasional (7)</button>
+      </div>
+
+      <div class="brands-grid" id="brandsGrid"></div>
+
+      <!-- Interactive Brand Spotlight Panel -->
+      <div class="brand-spotlight glass-panel" id="brandSpotlight"></div>
+    </div>
+  </section>
+
+  <!-- SECTION 8: BOTTOM CTA BANNER -->
+  <section class="sec" id="cta-bottom" style="padding-top:48px;padding-bottom:44px">
+    <div class="w2">
+      <div class="s8-cta">
+        <div class="s8-k1">S P E C O</div>
+        <div class="s8-k2">SIAP MEMULAI?</div>
+        <h2 class="s8-title">
+          Sudah siap menemukan
+          <span>laptop yang benar-benar cocok?</span>
+        </h2>
+        <p class="s8-sub">Jawab 5 pertanyaan sederhana, dan biarkan SPECO membantu menemukan rekomendasi yang sesuai dengan kebutuhanmu.</p>
+        <a href="#kuis" class="btn-teal-lg">
+          <span>Mulai Rekomendasi Sekarang</span>
+          <svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+        </a>
+
+        <div class="s8-perks">
+          <div class="s8-perk"><b>Hanya 5 pertanyaan</b><span>Sekitar 2 menit</span></div>
+          <div class="s8-perk"><b>Gratis digunakan</b><span>Tanpa biaya apa pun</span></div>
+          <div class="s8-perk"><b>10 Brand Lokal &amp; Global</b><span>Tanpa sponsor iklan</span></div>
+        </div>
+
+        <img src="/assets/photos/laptop6.jpg" alt="Laptop Rekomendasi SPECO" class="s8-laptop-bottom">
+      </div>
+    </div>
+  </section>
+</main>
+
+<!-- FOOTER -->
+<footer class="foot">
+  <div class="w2" style="display:flex;justify-content:space-between;align-items:flex-end;flex-wrap:wrap;gap:20px">
+    <div>
+      <img src="/assets/aistudio/speco_logo_dark_transparent.png" alt="SPECO — Spec for You" style="height:36px;width:auto;display:block;margin-bottom:6px">
+      <div style="font-weight:600;color:var(--ink-2)">Spec for You · Platform Rekomendasi Laptop Mahasiswa Indonesia</div>
+    </div>
+    <div style="text-align:right;line-height:1.65">
+      <div style="font-weight:600;color:var(--ink-2)">SPECO tidak menjual laptop, tidak memasang iklan, dan selalu menjelaskan trade-off.</div>
+      <div style="color:var(--muted-2)">Data contoh interaktif: mendukung perbandingan brand Lokal (Axioo, Advan, Zyrex) &amp; Internasional.</div>
+    </div>
+  </div>
+</footer>
+
+<!-- =====================================================================
+     INTERACTIVE DETAIL & COMPARISON MODAL
+     ===================================================================== -->
+<div class="modal-backdrop" id="laptopModal" aria-hidden="true">
+  <div class="modal-card" role="dialog" aria-modal="true" aria-labelledby="mTitle">
+    <div class="modal-top">
+      <div>
+        <div class="kicker-pill" style="margin-bottom:8px">
+          <svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          <span id="mBrandTag">ANALISIS SPESIFIKASI SPECO</span>
+        </div>
+        <h3 id="mTitle" style="font-size:24px;font-weight:800;color:var(--ink)">ASUS Vivobook 14 (M1405)</h3>
+        <div id="mPrice" style="font-size:16px;font-weight:800;color:var(--teal);margin-top:2px">Rp8.299.000</div>
+      </div>
+      <button type="button" class="modal-close" id="modalCloseBtn" aria-label="Tutup">×</button>
+    </div>
+
+    <div class="modal-hero">
+      <img id="mImg" src="/assets/photos/laptop2.jpg" alt="Foto Laptop">
+      <div>
+        <div style="display:flex;align-items:baseline;justify-content:space-between">
+          <span style="font-size:12px;font-weight:700;color:var(--muted)">Skor Kecocokan AI</span>
+          <b id="mScore" style="font-family:'Fraunces',serif;font-size:34px;color:var(--teal)">94%</b>
+        </div>
+        <div class="bm-m-bar" style="height:7px;margin:6px 0 14px"><i id="mScoreBar" style="width:94%;background:linear-gradient(90deg,var(--teal),var(--sky))"></i></div>
+        <p id="mReason" style="font-size:13.5px;color:var(--ink-2);line-height:1.55;font-weight:500"></p>
+        <div style="margin-top:12px;padding:9px 12px;border-radius:10px;background:#FEF3C7;border:1px solid #FDE68A;font-size:12px;color:#92400E;font-weight:600" id="mTradeoff"></div>
+      </div>
+    </div>
+
+    <div class="modal-bars" id="mBars"></div>
+
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-top:22px;padding-top:16px;border-top:1px solid rgba(13,148,136,.15);gap:12px;flex-wrap:wrap">
+      <button type="button" class="n-chip" id="mSaveBtn">
+        <svg class="ico-svg" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+        <span>Simpan ke Favorit</span>
+      </button>
+      <button type="button" class="btn-teal-lg" id="mApplyBtn" style="padding:11px 20px;font-size:13px">
+        <span>Jadikan Best Match di Halaman</span>
+        <svg class="ico-svg" viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"/></svg>
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Floating Favorite / Comparison Counter Button -->
+<button type="button" class="compare-fab" id="compareFab">
+  <svg class="ico-svg" viewBox="0 0 24 24"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>
+  <span>Laptop Disimpan</span>
+  <b id="compareCount">0</b>
+</button>
+
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},cv=$('#cv'),ring=$('#ring'),nav=$('#nav'),burger=$('#burger');
+var K=1;
+
+/* =====================================================================
+   CONSISTENT INLINE SVG ICON LIBRARY (ZERO EMOJIS)
+   ===================================================================== */
+var ICONS={
+  Coding:'<svg class="ico-svg" viewBox="0 0 24 24"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>',
+  Desain:'<svg class="ico-svg" viewBox="0 0 24 24"><path d="M12 19l7-7 3 3-7 7-3-3z"/><path d="M18 13l-1.5-7.5L2 2l3.5 14.5L13 18l5-5z"/><circle cx="11" cy="11" r="2"/></svg>',
+  Gaming:'<svg class="ico-svg" viewBox="0 0 24 24"><line x1="6" y1="12" x2="10" y2="12"/><line x1="8" y1="10" x2="8" y2="14"/><line x1="15" y1="13" x2="15.01" y2="13"/><line x1="18" y1="11" x2="18.01" y2="11"/><rect x="2" y="6" width="20" height="12" rx="4"/></svg>',
+  Kuliah:'<svg class="ico-svg" viewBox="0 0 24 24"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg>',
+  Office:'<svg class="ico-svg" viewBox="0 0 24 24"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>',
+  Heart:'<svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 14c1.49-1.46 3-3.21 3-5.5A5.5 5.5 0 0 0 16.5 3c-1.76 0-3 .5-4.5 2-1.5-1.5-2.74-2-4.5-2A5.5 5.5 0 0 0 2 8.5c0 2.3 1.5 4.05 3 5.5l7 7Z"/></svg>'
+};
+
+/* Subtle atmospheric specks */
+function stars(el,n,bl,a0,a1){
+  var s=[];
+  for(var i=0;i<n;i++){
+    s.push((Math.random()*100)+'vw '+(Math.random()*100)+'vh '+bl+'px 0 rgba(13,148,136,'+(a0+Math.random()*(a1-a0))+')');
+  }
+  el.style.boxShadow=s.join(',');
+}
+stars($('#stA'),110,0,.06,.18);
+stars($('#stB'),14,1.2,.14,.28);
+
+/* Ten laptop creatives (including Local & International brands) using real verified laptop photos */
+var DATA=[
+  {cat:'KULIAH · CODING',t1:'ASUS Vivobook 14',t2:'Coding Edition',score:94,s1:'Ryzen 5 7535HS · 16 GB',s2:'512 GB NVMe · IPS FHD',price:'Rp8.299.000',tag:'Best Match TI',accent:'#0D9488',img:'/assets/photos/laptop2.jpg',reason:'Prosesor Ryzen 5 H-Series dan RAM 16 GB sangat responsif untuk VS Code, Docker, dan kompilasi proyek kuliah.',tradeoff:'Cakupan warna layar standar 45% NTSC (kurang ideal untuk cetak grafis profesional).'},
+  {cat:'BRAND LOKAL · WORK',t1:'Advan Workplus',t2:'Ryzen 5 6600H',score:93,s1:'Ryzen 5 6600H · 16 GB',s2:'512 GB NVMe · 14" FHD',price:'Rp7.199.000',tag:'Value Lokal Terbaik',accent:'#0D9488',img:'/assets/photos/laptop5.jpg',reason:'Brand lokal Indonesia dengan performa prosesor kelas H-Series dan RAM 16 GB LPDDR5 di harga Rp7 jutaan.',tradeoff:'Speaker standar dan jaringan service center tidak sebanyak brand global.'},
+  {cat:'DESAIN & KREATIF',t1:'Zenbook 14 OLED',t2:'100% DCI-P3',score:95,s1:'Core Ultra 5 · 16 GB',s2:'Layar 2.8K OLED 120Hz',price:'Rp12.999.000',tag:'Akurasi Warna',accent:'#7C3AED',img:'/assets/photos/laptop1.jpg',reason:'Panel 2.8K OLED 100% DCI-P3 terkalibrasi Pantone dengan baterai awet seharian untuk mahasiswa DKV & Arsitektur.',tradeoff:'RAM tersolder (onboard) sehingga tidak bisa di-upgrade di kemudian hari.'},
+  {cat:'BRAND LOKAL · GAMING',t1:'Axioo Pongo 725',t2:'GeForce RTX 2050',score:91,s1:'Core i7-12650H · 16 GB',s2:'RTX 2050 4GB · 144Hz',price:'Rp9.999.000',tag:'Lokal Kencang',accent:'#0284C7',img:'/assets/photos/laptop3.jpg',reason:'Laptop gaming/render kebanggaan lokal dengan Core i7 H-Series dan GPU diskrit di bawah Rp10 juta.',tradeoff:'Bobot 2,1 kg dan baterai sekitar 3,5 jam untuk pemakaian non-stop.'},
+  {cat:'GAME & RENDER 3D',t1:'ASUS TUF A15',t2:'GeForce RTX 4050',score:96,s1:'Ryzen 7 · RTX 4050 6GB',s2:'16 GB DDR5 · 144Hz',price:'Rp15.499.000',tag:'Performa Tinggi',accent:'#0284C7',img:'/assets/photos/laptop3.jpg',reason:'Kombinasi Ryzen 7 dan RTX 4050 6GB melibas AutoCAD, Blender, Lumion, dan eksperimen Machine Learning.',tradeoff:'Adaptor charger cukup besar dibawa ke kampus setiap hari.'},
+  {cat:'KULIAH HARIAN',t1:'Acer Aspire Lite',t2:'Ringan & Awet',score:90,s1:'Core i5 · RAM 16 GB',s2:'SSD 512 GB · 1,35 kg',price:'Rp7.599.000',tag:'Favorit Kampus',accent:'#059669',img:'/assets/photos/laptop4.jpg',reason:'Bobot ringan 1,35 kg dengan slot RAM dan SSD yang mudah di-upgrade untuk pemakaian hingga lulus.',tradeoff:'Belum dilengkapi backlit keyboard pada beberapa varian batch.'},
+  {cat:'BEST VALUE AI',t1:'IdeaPad Slim 5',t2:'Skor 92% Cocok',score:92,s1:'Ryzen 7 · 16 GB LPDDR5',s2:'Layar 100% sRGB · 512GB',price:'Rp8.799.000',tag:'Pilihan Editor',accent:'#0D9488',img:'/assets/photos/laptop6.jpg',reason:'Bodi metal tangguh, layar 100% sRGB nyaman di mata, dan performa tinggi untuk coding maupun desain.',tradeoff:'Tidak memiliki port RJ-45 Ethernet bawaan (perlu dongle USB-C).'},
+  {cat:'BRAND LOKAL · HEMAT',t1:'Axioo Hype 5 AMD',t2:'Ryzen 5 5500U',score:89,s1:'Ryzen 5 5500U · 8 GB',s2:'256 GB NVMe · Upgradeable',price:'Rp5.699.000',tag:'Ramah Kantong',accent:'#D97706',img:'/assets/photos/laptop7.jpg',reason:'Solusi paling hemat untuk mahasiswa baru yang butuh prosesor 6-core kencang dengan budget di bawah Rp6 juta.',tradeoff:'Layar masih panel standar dan baterai 4–5 jam.'},
+  {cat:'ULTRA PORTABEL',t1:'MacBook Air M2',t2:'Baterai 18 Jam',score:93,s1:'Chip M2 · Unified RAM',s2:'Layar Liquid Retina',price:'Rp13.999.000',tag:'Super Awet',accent:'#0284C7',img:'/assets/photos/laptop8.jpg',reason:'Daya tahan baterai hingga 18 jam tanpa kipas bising, sangat ideal untuk mobilitas tinggi di kampus.',tradeoff:'Kurang cocok untuk aplikasi teknik sipil/mesin yang wajib Windows.'},
+  {cat:'DATA SCIENCE & AI',t1:'Legion Slim 5',t2:'Workstation Kampus',score:96,s1:'Ryzen 7 · RTX 4060 8GB',s2:'RAM 16 GB · Coldfront',price:'Rp17.899.000',tag:'ML & Rendering',accent:'#0D9488',img:'/assets/photos/laptop10.jpg',reason:'VRAM 8 GB dan layar 165Hz presisi tinggi untuk mahasiswa AI, Deep Learning, dan animasi 3D.',tradeoff:'Harga berada di kelas premium mahasiswa.'}
+];
+
+/* =====================================================================
+   HERO BOTTOM FROSTED DOCK: LIVE INTERACTIVE PRESETS (NO DUPLICATION)
+   ===================================================================== */
+var DOCK_DATA={
+  ti:[
+    {label:'Performa CPU/IDE',val:'94%',w:94,sub:'Ryzen 5/7 H-Series · Docker lancar'},
+    {label:'Kapasitas RAM',val:'16 GB',w:100,sub:'Dual-Channel multitasking'},
+    {label:'Efisiensi Budget',val:'92%',w:92,sub:'Optimal di Rp7,5 – Rp8,8 juta'},
+    {label:'Kandidat Terbaik',val:'Vivobook 14',w:94,sub:'Skor tertinggi dari 12 kandidat'}
+  ],
+  dkv:[
+    {label:'Akurasi Layar',val:'100% DCI-P3',w:98,sub:'Panel OLED 2.8K Pantone Validated'},
+    {label:'Performa Render',val:'91%',w:91,sub:'Core Ultra / RTX Studio siap pakai'},
+    {label:'Kapasitas RAM',val:'16 GB',w:100,sub:'Lancar Figma, Adobe CC & Blender'},
+    {label:'Kandidat Terbaik',val:'Zenbook OLED',w:95,sub:'Skor tertinggi untuk DKV'}
+  ],
+  bisnis:[
+    {label:'Daya Tahan Baterai',val:'10+ Jam',w:93,sub:'Aman seharian kuliah tanpa colokan'},
+    {label:'Portabilitas',val:'1,32 kg',w:95,sub:'Tipis & ringan masuk tas kampus'},
+    {label:'Efisiensi Harga',val:'96%',w:96,sub:'Hemat di rentang Rp5,8 – Rp7,2 juta'},
+    {label:'Kandidat Terbaik',val:'Advan / Acer',w:91,sub:'Value terbaik untuk produktivitas'}
+  ],
+  teknik:[
+    {label:'GPU Diskrit 3D',val:'RTX 4050/4060',w:96,sub:'VRAM 6–8 GB untuk AutoCAD & SolidWorks'},
+    {label:'Sistem Pendingin',val:'Dual-Fan',w:92,sub:'Stabil saat render beban penuh'},
+    {label:'Upgradeability',val:'2x Slot',w:95,sub:'RAM & SSD bisa ditambah hingga 32 GB'},
+    {label:'Kandidat Terbaik',val:'ASUS TUF A15',w:96,sub:'Workstation mahasiswa teknik'}
+  ]
+};
+
+var dockMeters=$('#dockMeters');
+function renderDock(key){
+  var items=DOCK_DATA[key]||DOCK_DATA.ti;
+  dockMeters.innerHTML=items.map(function(m){
+    return '<div class="d-meter">'+
+      '<div class="dm-head"><span>'+m.label+'</span><b>'+m.val+'</b></div>'+
+      '<div class="dm-bar"><i style="width:'+m.w+'%"></i></div>'+
+      '<div class="dm-sub">'+m.sub+'</div>'+
+    '</div>';
+  }).join('');
+}
+renderDock('ti');
+
+[].forEach.call(document.querySelectorAll('#dockPresets .dock-pill'),function(btn){
+  btn.addEventListener('click',function(){
+    [].forEach.call(document.querySelectorAll('#dockPresets .dock-pill'),function(b){b.classList.toggle('active',b===btn)});
+    renderDock(btn.getAttribute('data-preset'));
+  });
+});
+
+/* =====================================================================
+   INTERACTIVE MODAL & FAVORITE SYSTEM
+   ===================================================================== */
+var savedSet={};
+var modal=$('#laptopModal'),currentModalItem=DATA[0];
+
+function updateSavedCounter(){
+  var count=Object.keys(savedSet).length;
+  var fab=$('#compareFab'),cnt=$('#compareCount');
+  cnt.textContent=count;
+  fab.classList.toggle('show',count>0);
+}
+
+function openLaptopModal(item){
+  currentModalItem=item;
+  $('#mBrandTag').textContent=(item.cat||'ANALISIS SPESIFIKASI')+' · '+(item.tag||'SPECO AI');
+  $('#mTitle').textContent=item.t1+(item.t2?' — '+item.t2:'');
+  $('#mPrice').textContent=item.price;
+  $('#mImg').src=item.img;
+  $('#mScore').textContent=item.score+'%';
+  $('#mScoreBar').style.width=item.score+'%';
+  $('#mReason').textContent=item.reason||'Dinilai objektif berdasarkan kecocokan spesifikasi terhadap beban aplikasi kuliahmu.';
+  $('#mTradeoff').textContent='Trade-off Jujur: '+(item.tradeoff||'Perhatikan ketersediaan stok warna di kota kamu.');
+
+  var bars=[
+    {k:'Performa Prosesor',v:item.score},
+    {k:'Kapasitas RAM & Multitasking',v:Math.min(100,item.score+3)},
+    {k:'Kualitas Layar & Visual',v:Math.max(82,item.score-3)},
+    {k:'Value terhadap Budget',v:Math.min(98,item.score+1)}
+  ];
+  $('#mBars').innerHTML=bars.map(function(b){
+    return '<div class="m-bar-item"><div class="m-bar-head"><span>'+b.k+'</span><b>'+b.v+'/100</b></div><div class="m-bar-track"><i style="width:'+b.v+'%"></i></div></div>';
+  }).join('');
+
+  var isSaved=!!savedSet[item.t1];
+  var saveBtn=$('#mSaveBtn');
+  saveBtn.setAttribute('aria-pressed',isSaved?'true':'false');
+  saveBtn.querySelector('span').textContent=isSaved?'Tersimpan di Favorit ✓':'Simpan ke Favorit';
+
+  modal.classList.add('open');
+  modal.setAttribute('aria-hidden','false');
+}
+
+function closeLaptopModal(){
+  modal.classList.remove('open');
+  modal.setAttribute('aria-hidden','true');
+}
+
+$('#modalCloseBtn').addEventListener('click',closeLaptopModal);
+modal.addEventListener('click',function(e){if(e.target===modal)closeLaptopModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&modal.classList.contains('open'))closeLaptopModal()});
+
+$('#mSaveBtn').addEventListener('click',function(){
+  var k=currentModalItem.t1;
+  if(savedSet[k])delete savedSet[k];else savedSet[k]=currentModalItem;
+  openLaptopModal(currentModalItem);
+  updateSavedCounter();
+  if(window.refreshShowcaseCards)window.refreshShowcaseCards();
+});
+
+$('#mApplyBtn').addEventListener('click',function(){
+  applyBestMatch(currentModalItem);
+  closeLaptopModal();
+  location.hash='#contoh-hasil';
+});
+
+$('#compareFab').addEventListener('click',function(){
+  var keys=Object.keys(savedSet);
+  if(keys.length>0)openLaptopModal(savedSet[keys[keys.length-1]]);
+});
+
+function applyBestMatch(item){
+  $('#bmImg').src=item.img;
+  $('#bmTitle').textContent=item.t1+(item.t2?' ('+item.t2+')':'');
+  $('#bmPrice').textContent=item.price;
+  $('#bmScore').textContent=item.score+'%';
+  $('#bmScoreBar').style.width=item.score+'%';
+  $('#bmCpuVal').textContent=item.score+' / 100';
+  $('#bmCpuBar').style.width=item.score+'%';
+  $('#bmCpuLabel').textContent=item.s1||'Spesifikasi Terverifikasi';
+  $('#wSummaryText').innerHTML='Contoh: <b style="color:var(--ink)">'+item.t1+'</b> mendapat <b style="color:var(--teal)">'+item.score+'%</b> kecocokan sesuai profil pilihanmu.';
+  currentModalItem=item;
+}
+
+$('#bmInspectBtn').addEventListener('click',function(){
+  openLaptopModal(currentModalItem);
+});
+$('#bmCard .bm-head').addEventListener('click',function(){
+  openLaptopModal(currentModalItem);
+});
+
+/* =====================================================================
+   3D CAROUSEL RING — CLICKABLE REAL LAPTOP CARDS
+   ===================================================================== */
+function creative(d){
+  return '<div class="card-photo-wrap"><img class="card-bg-img" src="'+d.img+'" alt="'+d.t1+'"></div>'+
+    '<div class="card-scrim"></div>'+
+    '<div class="c-top"><span class="c-cat">'+d.cat+'</span><span class="c-score" style="background:'+d.accent+'">'+d.score+'%</span></div>'+
+    '<div class="c-title-wrap"><div class="c-title1">'+d.t1+'</div><div class="c-title2">'+d.t2+'</div></div>'+
+    '<div class="c-specs"><div><i style="background:'+d.accent+'"></i><span>'+d.s1+'</span></div><div><i style="background:#64748B"></i><span>'+d.s2+'</span></div></div>'+
+    '<div class="c-foot"><span class="c-price" style="background:'+d.accent+'">'+d.price.replace('.000','rb').replace('Rp','Rp')+'</span><span class="c-tag">'+d.tag+'</span></div>';
+}
+
+var N=37,cards=[];
+for(var i=0;i<N;i++){
+  (function(idx){
+    var c=document.createElement('div');
+    c.className='card';
+    c.innerHTML=creative(DATA[idx])+'<div class="edge"></div>';
+    c.addEventListener('click',function(){
+      openLaptopModal(DATA[idx]);
+    });
+    ring.appendChild(c);
+    cards.push(c);
+  })(i%DATA.length);
+}
+
+var R=891,STEP=360/N,phase=-2,RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function placeCards(){
+  for(var i=0;i<N;i++){
+    var a=(((i*STEP+phase)%360)+540)%360-180,el=cards[i];
+    if(Math.abs(a)>42){el.style.visibility='hidden';continue}
+    el.style.visibility='visible';
+    var r=a*Math.PI/180,c=Math.cos(r);
+    el.style.transform='translate3d('+R*Math.sin(r)+'px,0,'+R*(1-c)+'px) rotateY('+(-a)+'deg)';
+    el.style.filter='brightness('+(.92+.28*(1/c-1))+')';
+  }
+}
+var last=0;
+function tick(t){
+  if(!last)last=t;
+  var dt=Math.min((t-last)/1000,.1);
+  last=t;
+  if(!RM)phase-=1.9*dt;
+  placeCards();
+  requestAnimationFrame(tick);
+}
+document.addEventListener('visibilitychange',function(){last=0});
+
+/* Fullscreen-safe scale law */
+function resize(){
+  var vw=innerWidth,vh=innerHeight,W=1172,ramp=0,ss=0,rs=1,st=0;
+  $('#stage').style.height=vh+'px';
+  if(vw<=1080){
+    W=920+(Math.max(vw,701)-701)*(1172-920)/(1080-701);
+    if(vh>vw*1.15)W=Math.min(W,900);
+    ramp=Math.min(1,(1080-vw)/120);
+    if(vw<701)W=640;
+  }
+  K=Math.min(vw/W,vh/690);
+  var fill=Math.max(0,vh/K-690);
+  if(fill>0&&ramp>0){
+    ss=Math.min(fill*.55,420)*ramp;
+    rs=1+Math.min(fill/1100,.75)*ramp;
+    st=Math.max(0,(219.5-125*rs+ss)/2-28)*ramp;
+    fill-=ss;
+  }
+  var s=cv.style;
+  s.setProperty('--k',K);
+  s.setProperty('--fill',fill+'px');
+  s.setProperty('--stshift',st+'px');
+  s.setProperty('--sshift',ss+'px');
+  s.setProperty('--rs',rs);
+  if(vw>1080&&nav.classList.contains('open'))toggle(false);
+  placeCards();
+}
+function toggle(o){nav.classList.toggle('open',o);burger.setAttribute('aria-expanded',o)}
+burger.addEventListener('click',function(e){e.stopPropagation();toggle(!nav.classList.contains('open'))});
+document.addEventListener('click',function(e){if(!nav.contains(e.target)||e.target.closest('.links a'))toggle(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('open')){toggle(false);burger.focus()}});
+
+/* Highlight active navigation item on click */
+[].forEach.call(document.querySelectorAll('#links a'),function(link){
+  link.addEventListener('click',function(){
+    [].forEach.call(document.querySelectorAll('#links a'),function(a){a.classList.toggle('active',a===link)});
+  });
+});
+
+addEventListener('resize',resize);
+if(window.visualViewport)visualViewport.addEventListener('resize',resize);
+resize();
+document.fonts.ready.then(resize);
+setTimeout(resize,400);
+requestAnimationFrame(tick);
+
+/* Entrance choreography */
+(function(){
+  var H=document.documentElement;
+  if(!H.classList.contains('intro')||RM||!Element.prototype.animate){H.classList.remove('intro');return}
+  var D=innerWidth<=700?.66:1,E='cubic-bezier(.16,1,.3,1)',S='cubic-bezier(.22,.61,.36,1)',n=0,lastA=null,lt=0;
+  function play(el,y,dur,del,ease,sc,clip){
+    if(!el)return;
+    var f={opacity:0,translate:'0 '+y*D+'px'},t={opacity:1,translate:'0 0'};
+    if(sc){f.scale=sc;t.scale='1'}
+    if(clip){f.clipPath='inset(100% 0 -30% 0)';t.clipPath='inset(-30% 0 -30% 0)'}
+    var a=el.animate([f,t],{duration:dur,delay:del,easing:ease,fill:'both'});
+    a.id='intro:'+n++;
+    if(del+dur>lt){lt=del+dur;lastA=a}
+  }
+  function settle(){
+    document.getAnimations().forEach(function(a){if(String(a.id).indexOf('intro:')===0)a.cancel()});
+    H.classList.remove('intro');
+  }
+  var q=function(s){return $(s)};
+  play(q('.nav'),-9,620,60,E);
+  play(q('.brand-link'),6,520,150,S);
+  [].forEach.call(document.querySelectorAll('.links a'),function(a,i){play(a,6,460,215+i*35,S)});
+  play(burger,6,460,300,S);
+  play(q('.nav .btn'),6,500,400,S);
+  play($('#h1a'),15,900,340,E,0,1);
+  play($('#h1b'),15,900,430,E,0,1);
+  play($('#sub1'),10,620,620,E);
+  play($('#sub2'),10,620,675,E);
+  play(q('.cta2'),13,620,760,E,'.985');
+  play(ring,18,950,650,E,'.99');
+  play(q('.browser'),26,900,840,E);
+  if(lastA)lastA.finished.then(settle,settle);else settle();
+})();
+
+/* =====================================================================
+   SECTION 1: LIVE 3-CARD RECOMMENDATION SHOWCASE WITH PAGINATION & MODAL
+   ===================================================================== */
+(function(){
+  var g=document.getElementById.bind(document),
+      r=g('bg'),o=g('bgv'),scTitle=g('scBudgetTitle'),scTag=g('scNeedTag'),grid=g('scCardsGrid'),
+      pageLabel=g('scPageLabel'),
+      need='Coding',page=0;
+
+  var NEED_LABELS={
+    Coding:'Untuk coding & pemrograman',
+    Desain:'Untuk desain grafis & UI/UX',
+    Gaming:'Untuk gaming & render 3D',
+    Kuliah:'Untuk tugas kuliah & riset',
+    Office:'Untuk produktivitas & office'
+  };
+
+  var CATALOG=[
+    // Page 1..3 items dynamically sorted by budget & need
+    {t1:'ASUS Vivobook 14 (M1405)',t2:'Coding Edition',price:'Rp8.299.000',minB:7,maxB:10,score:94,img:'/assets/photos/laptop2.jpg',specs:['Ryzen 5 7535HS','16 GB RAM','512 GB SSD','Radeon 660M'],reason:'Sangat ideal untuk kompilasi kode, Docker, dan multitasking puluhan tab.',tradeoff:'Layar standar IPS 45% NTSC.'},
+    {t1:'Lenovo IdeaPad Slim 5 14',t2:'Gen 9 Metal',price:'Rp8.799.000',minB:8,maxB:11,score:92,img:'/assets/photos/laptop6.jpg',specs:['Ryzen 7 8845HS','16 GB LPDDR5','512 GB SSD','100% sRGB'],reason:'Layar 100% sRGB akurat dan prosesor Ryzen 7 seri terbaru.',tradeoff:'RAM onboard tidak bisa ditambah.'},
+    {t1:'Advan Workplus 14',t2:'Brand Lokal Terbaik',price:'Rp7.199.000',minB:6,maxB:9,score:91,img:'/assets/photos/laptop5.jpg',specs:['Ryzen 5 6600H','16 GB LPDDR5','512 GB NVMe','FHD IPS'],reason:'Brand lokal dengan performa prosesor H-series paling tinggi di kelas harganya.',tradeoff:'Webcam masih resolusi 720p.'},
+    {t1:'Acer Aspire Lite 14',t2:'Upgradeable Edition',price:'Rp6.799.000',minB:6,maxB:8,score:90,img:'/assets/photos/laptop4.jpg',specs:['Core i5-1235U','16 GB Dual RAM','512 GB SSD','1,35 kg Ringan'],reason:'Dua slot RAM & SSD terbuka lebar untuk upgrade selama masa kuliah.',tradeoff:'Bodi polikarbonat standar.'},
+    {t1:'Axioo Hype 5 AMD X3',t2:'Brand Lokal Hemat',price:'Rp5.799.000',minB:6,maxB:7,score:89,img:'/assets/photos/laptop7.jpg',specs:['Ryzen 5 5500U','8 GB / 16 GB RAM','256 GB NVMe','Bodi Ringan'],reason:'Pilihan lokal paling ramah kantong mahasiswa dengan CPU 6-core.',tradeoff:'Kecerahan layar 250 nits.'},
+    {t1:'ASUS Zenbook 14 OLED',t2:'UX3405 AI Edition',price:'Rp12.999.000',minB:11,maxB:20,score:96,img:'/assets/photos/laptop1.jpg',specs:['Core Ultra 5 125H','16 GB LPDDR5X','512 GB SSD','2.8K OLED 120Hz'],reason:'Layar OLED terbaik dengan bobot hanya 1,2 kg dan baterai tahan 15 jam.',tradeoff:'Harga di atas Rp12 juta.'},
+    {t1:'ASUS TUF Gaming A15',t2:'FA507 RTX 4050',price:'Rp14.999.000',minB:12,maxB:20,score:95,img:'/assets/photos/laptop3.jpg',specs:['Ryzen 7 7435HS','16 GB DDR5','512 GB SSD','RTX 4050 6GB'],reason:'GPU RTX 4050 6GB siap melibas game AAA, Blender, dan AutoCAD.',tradeoff:'Bobot 2,2 kg.'},
+    {t1:'Axioo Pongo 725',t2:'Lokal Gaming i7',price:'Rp9.999.000',minB:9,maxB:13,score:92,img:'/assets/photos/laptop10.jpg',specs:['Core i7-12650H','16 GB RAM','512 GB NVMe','RTX 2050 4GB'],reason:'Laptop gaming/render lokal dengan prosesor Core i7 H-Series di bawah Rp10 juta.',tradeoff:'Baterai sekitar 3,5 jam.'},
+    {t1:'Apple MacBook Air M2',t2:'13.6" Liquid Retina',price:'Rp13.999.000',minB:12,maxB:20,score:94,img:'/assets/photos/laptop8.jpg',specs:['Apple M2 8-Core','16 GB Unified','256 GB SSD','Baterai 18 Jam'],reason:'Baterai paling awet dan layar super tajam untuk koding maupun desain.',tradeoff:'Hanya 2 port Thunderbolt.'}
+  ];
+
+  function fmt(n){return 'Rp'+String(n*1000000).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+
+  function getOrderedList(b){
+    var copy=CATALOG.slice();
+    copy.sort(function(a,c){
+      var aFit=(b>=a.minB&&b<=a.maxB)?1:0;
+      var cFit=(b>=c.minB&&b<=c.maxB)?1:0;
+      if(aFit!==cFit)return cFit-aFit;
+      return c.score-a.score;
+    });
+    return copy;
+  }
+
+  function renderShowcase(){
+    var b=+r.value;
+    var formatted=fmt(b);
+    o.textContent=formatted;
+    scTitle.textContent=formatted;
+    scTag.innerHTML=(ICONS[need]||ICONS.Coding)+'<span>'+(NEED_LABELS[need]||'Untuk '+need)+'</span>';
+
+    var ordered=getOrderedList(b);
+    var start=(page%3)*3;
+    var slice=ordered.slice(start,start+3);
+
+    pageLabel.textContent='Halaman '+(page+1)+' / 3';
+    [].forEach.call(document.querySelectorAll('#scDots .sc-dot'),function(d,i){
+      d.classList.toggle('active',i===page);
+    });
+
+    grid.innerHTML=slice.map(function(item,idx){
+      var isSaved=!!savedSet[item.t1];
+      var adjScore=Math.min(98,item.score+(need==='Coding'&&idx===0?1:0));
+      return '<div class="mini-prod'+(idx===0&&page===0?' featured':'')+'" data-idx="'+(start+idx)+'">'+
+        '<div>'+
+          (idx===0&&page===0?'<span class="mp-top-badge">★ Paling cocok</span>':'')+
+          '<div class="mp-thumb" data-open="'+(start+idx)+'">'+
+            '<img src="'+item.img+'" alt="'+item.t1+'">'+
+            '<div class="mp-thumb-meta">'+
+              '<span>Foto Asli</span>'+
+              '<button type="button" class="mp-fav-btn'+(isSaved?' saved':'')+'" data-fav="'+item.t1+'" aria-label="Simpan favorit">'+ICONS.Heart+'</button>'+
+            '</div>'+
+          '</div>'+
+          '<div class="mp-name" data-open="'+(start+idx)+'">'+item.t1+'</div>'+
+          '<div class="mp-price">'+item.price+'</div>'+
+          '<div class="mp-match-row"><span>Kecocokan '+need+'</span><b>'+adjScore+'%</b></div>'+
+          '<div class="mp-bar"><i style="width:'+adjScore+'%"></i></div>'+
+          '<ul class="mp-specs">'+
+            item.specs.map(function(s){return '<li>'+s+'</li>'}).join('')+
+          '</ul>'+
+        '</div>'+
+        '<button type="button" class="mp-btn" data-open="'+(start+idx)+'">'+
+          '<span>Lihat detail</span>'+
+          '<svg class="ico-svg" viewBox="0 0 24 24"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>'+
+        '</button>'+
+      '</div>';
+    }).join('');
+
+    // Attach click handlers for detail modal and favorite button
+    [].forEach.call(grid.querySelectorAll('[data-open]'),function(el){
+      el.addEventListener('click',function(){
+        var item=ordered[+el.getAttribute('data-open')];
+        if(item)openLaptopModal({
+          cat:'REKOMENDASI '+need.toUpperCase(),
+          t1:item.t1,t2:item.t2,price:item.price,score:item.score,
+          img:item.img,s1:item.specs[0]+' · '+item.specs[1],
+          reason:item.reason,tradeoff:item.tradeoff,tag:need
+        });
+      });
+    });
+
+    [].forEach.call(grid.querySelectorAll('[data-fav]'),function(btn){
+      btn.addEventListener('click',function(e){
+        e.stopPropagation();
+        var name=btn.getAttribute('data-fav');
+        var found=ordered.filter(function(x){return x.t1===name})[0];
+        if(savedSet[name])delete savedSet[name];
+        else if(found)savedSet[name]=found;
+        updateSavedCounter();
+        renderShowcase();
+      });
+    });
+  }
+
+  window.refreshShowcaseCards=renderShowcase;
+
+  r.addEventListener('input',function(){page=0;renderShowcase()});
+  [].forEach.call(document.querySelectorAll('#needs .n-chip'),function(btn){
+    btn.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#needs .n-chip'),function(x){
+        x.setAttribute('aria-pressed',x===btn);
+      });
+      need=btn.getAttribute('data-need')||'Coding';
+      page=0;
+      renderShowcase();
+    });
+  });
+
+  $('#scPrevBtn').addEventListener('click',function(){page=(page+2)%3;renderShowcase()});
+  $('#scNextBtn').addEventListener('click',function(){page=(page+1)%3;renderShowcase()});
+  [].forEach.call(document.querySelectorAll('#scDots .sc-dot'),function(dot){
+    dot.addEventListener('click',function(){
+      page=+dot.getAttribute('data-page');
+      renderShowcase();
+    });
+  });
+
+  renderShowcase();
+})();
+
+/* =====================================================================
+   SECTION 2: INTERACTIVE STEPS & 6 CRITERIA EXPLANATION
+   ===================================================================== */
+(function(){
+  var CRIT_INFO={
+    Performa:'<b>Performa (CPU &amp; GPU):</b> Mengukur skor benchmark multi-core prosesor dan kartu grafis terhadap kebutuhan kompilasi kode, simulasi data, atau rendering 3D jurusanmu.',
+    RAM:'<b>Kapasitas &amp; Kecepatan RAM:</b> Menilai kecukupan memori (minimal 16 GB disarankan untuk coding/desain) serta dukungan Dual-Channel dan slot upgrade.',
+    Penyimpanan:'<b>Penyimpanan (SSD NVMe):</b> Mengukur kapasitas (256 GB / 512 GB / 1 TB) dan kecepatan baca-tulis PCIe Gen 4 untuk membuka proyek besar dengan cepat.',
+    Layar:'<b>Kualitas Layar:</b> Menilai resolusi (FHD / 2.8K), akurasi warna (100% sRGB / DCI-P3 untuk mahasiswa desain), dan tingkat kecerahan.',
+    Baterai:'<b>Daya Tahan Baterai:</b> Menghitung kapasitas Whr dan efisiensi daya prosesor agar tahan dipakai kuliah seharian di kampus tanpa terikat colokan.',
+    Portabilitas:'<b>Portabilitas &amp; Bobot:</b> Menilai bobot laptop (di bawah 1,4 kg sangat ideal untuk mobilitas tinggi) serta kelengkapan port USB-C / HDMI.'
+  };
+  [].forEach.call(document.querySelectorAll('#critTags .s2-tag-btn'),function(btn){
+    btn.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#critTags .s2-tag-btn'),function(b){b.classList.toggle('active',b===btn)});
+      var k=btn.getAttribute('data-crit');
+      $('#critDesc').innerHTML=CRIT_INFO[k]||CRIT_INFO.Performa;
+    });
+  });
+
+  [].forEach.call(document.querySelectorAll('#s2Steps .s2-step-wrap'),function(w){
+    w.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#s2Steps .s2-step-wrap'),function(x){x.classList.toggle('active',x===w)});
+    });
+  });
+})();
+
+/* =====================================================================
+   SECTION 5: INTERACTIVE WEIGHT TABLE TABS
+   ===================================================================== */
+var WEIGHT_PROFILES={
+  coding:[
+    {k:'Performa CPU',w:85,p:'35%'},
+    {k:'Sesuai Budget',w:65,p:'25%'},
+    {k:'Kapasitas RAM',w:48,p:'15%'},
+    {k:'Storage NVMe',w:34,p:'10%'},
+    {k:'Portabilitas',w:34,p:'10%'},
+    {k:'Layar',w:18,p:'5%'}
+  ],
+  desain:[
+    {k:'Akurasi Layar',w:88,p:'35%'},
+    {k:'Performa GPU/CPU',w:68,p:'25%'},
+    {k:'Kapasitas RAM',w:48,p:'15%'},
+    {k:'Sesuai Budget',w:34,p:'10%'},
+    {k:'Storage NVMe',w:34,p:'10%'},
+    {k:'Portabilitas',w:18,p:'5%'}
+  ],
+  kuliah:[
+    {k:'Sesuai Budget',w:86,p:'35%'},
+    {k:'Baterai & Bobot',w:68,p:'25%'},
+    {k:'Kapasitas RAM',w:46,p:'15%'},
+    {k:'Performa Harian',w:34,p:'10%'},
+    {k:'Storage SSD',w:34,p:'10%'},
+    {k:'Layar',w:18,p:'5%'}
+  ],
+  gaming:[
+    {k:'GPU & Pendingin',w:90,p:'40%'},
+    {k:'Performa CPU',w:65,p:'25%'},
+    {k:'RAM & Storage',w:45,p:'15%'},
+    {k:'Layar 144Hz+',w:32,p:'10%'},
+    {k:'Sesuai Budget',w:20,p:'5%'},
+    {k:'Portabilitas',w:18,p:'5%'}
+  ]
+};
+
+function renderWeightRows(profileKey){
+  var rows=WEIGHT_PROFILES[profileKey]||WEIGHT_PROFILES.coding;
+  $('#wRowsContainer').innerHTML=rows.map(function(r,i){
+    return '<div class="w-row"'+(i===rows.length-1?' style="border-bottom:none"':'')+'>'+
+      '<span>'+r.k+'</span>'+
+      '<div class="w-bar"><i style="width:'+r.w+'%"></i></div>'+
+      '<span class="w-pct">'+r.p+'</span>'+
+    '</div>';
+  }).join('');
+}
+renderWeightRows('coding');
+
+[].forEach.call(document.querySelectorAll('#wTabs .w-tab'),function(tab){
+  tab.addEventListener('click',function(){
+    [].forEach.call(document.querySelectorAll('#wTabs .w-tab'),function(t){t.classList.toggle('active',t===tab)});
+    renderWeightRows(tab.getAttribute('data-w'));
+  });
+});
+
+/* =====================================================================
+   SECTION 3: INTERACTIVE 5-QUESTION QUIZ CONNECTED TO SECTION 4 & 5
+   ===================================================================== */
+(function(){
+  var QUESTIONS=[
+    {q:'Berapa budget-mu?',opts:['< Rp6 jt','Rp6–8 jt','Rp8–10 jt','Rp10–15 jt','Rp15 jt+']},
+    {q:'Apa jurusan atau bidang kuliahmu?',opts:['Informatika / Ilmu Komputer','Desain / Arsitektur','Teknik / Sains','Bisnis / Ekonomi','Sosial / Hukum']},
+    {q:'Aktivitas utama yang paling sering kamu lakukan?',opts:['Coding & Web Dev','Desain Grafis & Video','Gaming & 3D Render','Tugas Kuliah & Riset','Olah Data & Office']},
+    {q:'Berapa ukuran dan bobot laptop yang kamu sukai?',opts:['Tipis & Ringan (<1,4 kg)','Standar 14 inci','Layar Lega 15–16 inci','Bebas, utamakan performa']},
+    {q:'Apa prioritas nomor satu buatmu?',opts:['Performa Kencang','Baterai Tahan Seharian','Layar Akurat (OLED/sRGB)','Harga Paling Hemat','RAM & Storage Lega']}
+  ];
+  var step=0,answers=[null,null,null,null,null];
+  var elStep=document.getElementById('qStepNum'),
+      elCount=document.getElementById('qAnsCount'),
+      elProg=document.getElementById('qProgBar'),
+      elTitle=document.getElementById('qTitle'),
+      elOpts=document.getElementById('qOpts'),
+      btnBack=document.getElementById('qBackBtn'),
+      btnReset=document.getElementById('qResetBtn'),
+      btnNext=document.getElementById('qNextBtn');
+
+  function syncQuizToBestMatch(){
+    var bAns=answers[0]||'Rp8–10 jt';
+    var jAns=answers[1]||'Informatika / Ilmu Komputer';
+    var aAns=answers[2]||'Coding & Web Dev';
+
+    $('#bmLeadText').textContent='Hasil kuis untuk mahasiswa '+jAns+' dengan budget '+bAns+': ditemukan kandidat terbaik yang memenuhi seluruh kebutuhanmu.';
+    $('#bmStepBudget').textContent=bAns+', dioptimalkan agar value paling sepadan.';
+    $('#bmStepNeed').textContent='Disesuaikan untuk fokus '+aAns+' ('+(answers[4]||'Performa & RAM')+').';
+
+    var chosen=DATA[0];
+    if(bAns==='< Rp6 jt')chosen=DATA[7]; // Axioo Hype 5
+    else if(jAns.indexOf('Desain')>=0||aAns.indexOf('Desain')>=0)chosen=DATA[2]; // Zenbook OLED
+    else if(aAns.indexOf('Gaming')>=0||bAns==='Rp15 jt+')chosen=DATA[4]; // ASUS TUF A15
+    else if(bAns==='Rp6–8 jt')chosen=DATA[1]; // Advan Workplus
+
+    applyBestMatch(chosen);
+  }
+
+  function renderQ(){
+    var cur=QUESTIONS[step];
+    var answeredCount=answers.filter(Boolean).length;
+    elStep.textContent='0'+(step+1);
+    elCount.textContent=answeredCount+' dari 5 terjawab';
+    elProg.style.width=((step+1)*20)+'%';
+    elTitle.textContent=cur.q;
+    btnBack.style.visibility=step===0?'hidden':'visible';
+    btnNext.textContent=step===4?'Lihat Hasil Rekomendasi →':(answers[step]?'Lanjut →':'Lewati →');
+
+    elOpts.innerHTML=cur.opts.map(function(opt){
+      var sel=answers[step]===opt?' selected':'';
+      return '<button type="button" class="qb-opt'+sel+'" data-val="'+opt+'">'+opt+'</button>';
+    }).join('');
+
+    [].forEach.call(elOpts.querySelectorAll('.qb-opt'),function(b){
+      b.addEventListener('click',function(){
+        answers[step]=b.getAttribute('data-val');
+        syncQuizToBestMatch();
+        renderQ();
+        setTimeout(function(){
+          if(step<4){step++;renderQ();}
+          else{location.hash='#contoh-hasil';}
+        },220);
+      });
+    });
+  }
+
+  btnBack.addEventListener('click',function(){
+    if(step>0){step--;renderQ();}
+  });
+  btnReset.addEventListener('click',function(){
+    step=0;answers=[null,null,null,null,null];renderQ();
+  });
+  btnNext.addEventListener('click',function(){
+    if(step<4){step++;renderQ();}
+    else{syncQuizToBestMatch();location.hash='#contoh-hasil';}
+  });
+  renderQ();
+})();
+
+/* =====================================================================
+   NEW SECTION: BRAND LAPTOP DARI LOKAL HINGGA INTERNASIONAL (#brand)
+   ===================================================================== */
+(function(){
+  var BRAND_LOGOS={
+    axioo:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#F8FAFC"/><circle cx="29" cy="24" r="10" stroke="#0284C7" stroke-width="4"/><circle cx="47" cy="24" r="10" stroke="#E11D48" stroke-width="4"/><circle cx="47" cy="11" r="2.6" fill="#E11D48"/><text x="40" y="43" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="8.5" fill="#0F172A" letter-spacing="1.5">AXIOO</text></svg>',
+    advan:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#FFF1F2"/><path d="M18 33L30 13L38 13L26 33Z" fill="#E11D48"/><path d="M32 33L40 19L47 33Z" fill="#0F172A"/><circle cx="56" cy="17" r="4" fill="#E11D48"/><text x="40" y="43" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="900" font-size="8.5" fill="#BE123C" letter-spacing="1.6">ADVAN</text></svg>',
+    zyrex:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#EFF6FF"/><path d="M22 14H56L34 30H58" stroke="#1D4ED8" stroke-width="4.2" stroke-linecap="round" stroke-linejoin="round"/><circle cx="24" cy="30" r="3" fill="#0EA5E9"/><text x="40" y="43" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="8.5" fill="#1E3A8A" letter-spacing="1.8">ZYREX</text></svg>',
+    asus:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#EFF6FF"/><text x="40" y="29" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="900" font-style="italic" font-size="18.5" fill="#00539B" letter-spacing="0.5">ASUS</text><line x1="10" y1="21.5" x2="70" y2="21.5" stroke="#EFF6FF" stroke-width="2.1"/></svg>',
+    lenovo:'<svg viewBox="0 0 80 48" fill="none"><rect x="6" y="11" width="68" height="26" rx="5" fill="#E2231A"/><text x="40" y="28.5" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="800" font-size="14.5" fill="#FFFFFF" letter-spacing="-0.3">Lenovo</text></svg>',
+    acer:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#F7FEE7"/><text x="40" y="30" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="900" font-style="italic" font-size="20" fill="#65A30D" letter-spacing="-0.5">acer</text></svg>',
+    hp:'<svg viewBox="0 0 80 48" fill="none"><circle cx="40" cy="24" r="17" fill="#0096D6"/><path d="M35 10L29 36M39 18L34 36M45 13L39 39M49 18L45 33" stroke="#FFFFFF" stroke-width="3.2" stroke-linecap="round"/></svg>',
+    apple:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#F8FAFC"/><path d="M45.8 25.2c0-3.4 2.8-5.1 2.9-5.2-1.6-2.3-4-2.6-4.9-2.7-2.1-.2-4.1 1.2-5.1 1.2-1.1 0-2.7-1.2-4.4-1.2-2.3 0-4.4 1.3-5.5 3.4-2.4 4.1-.6 10.2 1.7 13.5 1.1 1.6 2.5 3.4 4.3 3.4 1.7-.1 2.4-1.1 4.4-1.1 2.1 0 2.7 1.1 4.5 1.1 1.9 0 3-1.6 4.1-3.3 1.3-1.9 1.8-3.7 1.9-3.8-.1-.1-3.9-1.5-3.9-5.3zM42.4 14.9c.9-1.1 1.6-2.7 1.4-4.3-1.3.1-3 .9-3.9 2-.8.9-1.6 2.5-1.4 4.1 1.5.1 3-.8 3.9-1.8z" fill="#0F172A"/></svg>',
+    msi:'<svg viewBox="0 0 80 48" fill="none"><rect width="80" height="48" rx="8" fill="#FEF2F2"/><path d="M40 7L54 12V24C54 32.5 47.8 38.8 40 41C32.2 38.8 26 32.5 26 24V12L40 7Z" fill="#DC2626"/><text x="40" y="27.5" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="900" font-style="italic" font-size="11.5" fill="#FFFFFF">MSI</text></svg>',
+    dell:'<svg viewBox="0 0 80 48" fill="none"><circle cx="40" cy="24" r="17.5" stroke="#007DB8" stroke-width="2.8" fill="#F0F9FF"/><text x="40" y="27.5" text-anchor="middle" font-family="Plus Jakarta Sans,sans-serif" font-weight="900" font-size="10.5" fill="#007DB8" letter-spacing="0.6">DELL</text></svg>'
+  };
+
+  var BRANDS=[
+    {
+      id:'axioo',name:'Axioo',origin:'lokal',originLabel:'Lokal ID',sub:'PT Tera Data Indonusa Tbk',
+      series:'Hype Series · Pongo Gaming',range:'Rp4,5 jt – Rp13 jt',sc:'170+ Titik Service',
+      desc:'Brand pelopor laptop Indonesia yang sangat populer di kalangan mahasiswa berkat seri Axioo Hype (kuliah hemat) dan Axioo Pongo (gaming & render dengan GPU RTX harga terjangkau).',
+      models:[
+        {t1:'Axioo Pongo 725',t2:'Core i7-12650H · RTX 2050',price:'Rp9.999.000',score:91,img:'/assets/photos/laptop3.jpg',s1:'Core i7-12650H · 16 GB',reason:'Performa i7 H-Series & RTX 2050 terbaik di bawah Rp10 juta.',tradeoff:'Baterai sekitar 3,5 jam.'},
+        {t1:'Axioo Hype 5 AMD X3',t2:'Ryzen 5 5500U · Upgradeable',price:'Rp5.699.000',score:89,img:'/assets/photos/laptop7.jpg',s1:'Ryzen 5 5500U · 8/16 GB',reason:'Laptop mahasiswa 6-core paling ramah kantong.',tradeoff:'Panel layar standar.'}
+      ]
+    },
+    {
+      id:'advan',name:'Advan',origin:'lokal',originLabel:'Lokal ID',sub:'Teknologi Kebanggaan RI',
+      series:'Workplus · Workpro · AI Gen',range:'Rp5,2 jt – Rp11 jt',sc:'Garansi Resmi 1 Tahun',
+      desc:'Brand teknologi lokal Indonesia yang sukses menghadirkan prosesor kelas tinggi (AMD Ryzen 5/7 H-Series & Core Ultra) dengan bodi metal dan RAM 16 GB di harga yang sangat kompetitif.',
+      models:[
+        {t1:'Advan Workplus',t2:'Ryzen 5 6600H · 16GB/512GB',price:'Rp7.199.000',score:93,img:'/assets/photos/laptop5.jpg',s1:'Ryzen 5 6600H · 16 GB LPDDR5',reason:'Juara value di kelas Rp7 jutaan untuk coding dan analisis data.',tradeoff:'Speaker standar.'},
+        {t1:'Advan AI Gen Ultra',t2:'Core Ultra 5 125H · NPU AI',price:'Rp9.799.000',score:92,img:'/assets/photos/laptop6.jpg',s1:'Core Ultra 5 · 16 GB · 100% sRGB',reason:'Prosesor AI generasi terbaru dengan layar akurat 100% sRGB.',tradeoff:'RAM tersolder.'}
+      ]
+    },
+    {
+      id:'zyrex',name:'Zyrex',origin:'lokal',originLabel:'Lokal ID',sub:'PT Zyrexindo Mandiri Buana',
+      series:'Sky 232 · Kintamani · Maveric',range:'Rp3,9 jt – Rp8,5 jt',sc:'Jaringan Nasional',
+      desc:'Produsen laptop dalam negeri yang fokus pada perangkat edukasi ringan dan terjangkau untuk kebutuhan tugas kuliah harian, penulisan skripsi, dan administrasi.',
+      models:[
+        {t1:'Zyrex Sky 232 Prime',t2:'Ringan 1,3 kg · SSD Cepat',price:'Rp4.699.000',score:86,img:'/assets/photos/laptop4.jpg',s1:'RAM 8 GB · SSD 256 GB',reason:'Sangat ringan dibawa kuliah dan hemat biaya untuk jurusan sosial/hukum.',tradeoff:'Bukan untuk aplikasi 3D berat.'},
+        {t1:'Zyrex Maveric AI',t2:'Core i5 · Desain Modern',price:'Rp7.499.000',score:88,img:'/assets/photos/laptop2.jpg',s1:'Core i5 · 16 GB RAM · 512 GB',reason:'Kapasitas memori lega untuk multitasking dokumen dan riset.',tradeoff:'GPU terintegrasi.'}
+      ]
+    },
+    {
+      id:'asus',name:'ASUS',origin:'intl',originLabel:'Global',sub:'No. 1 Consumer Notebook',
+      series:'Vivobook · Zenbook · TUF · ROG',range:'Rp5,7 jt – Rp25 jt+',sc:'Service Center Terluas',
+      desc:'Brand internasional dengan lini laptop mahasiswa paling lengkap di Indonesia, mulai dari Vivobook untuk harian, Zenbook OLED untuk kreator, hingga TUF Gaming untuk teknik.',
+      models:[
+        {t1:'ASUS Vivobook 14 (M1405)',t2:'Ryzen 5 7535HS · 16 GB',price:'Rp8.299.000',score:94,img:'/assets/photos/laptop2.jpg',s1:'Ryzen 5 7535HS · 16 GB · 512 GB',reason:'Best Match mahasiswa Informatika di budget Rp8 jutaan.',tradeoff:'Layar 45% NTSC.'},
+        {t1:'ASUS Zenbook 14 OLED',t2:'Core Ultra 5 · 2.8K OLED',price:'Rp12.999.000',score:96,img:'/assets/photos/laptop1.jpg',s1:'Core Ultra 5 · 16 GB · OLED 120Hz',reason:'Visual terbaik dan baterai tahan seharian.',tradeoff:'RAM tidak bisa di-upgrade.'}
+      ]
+    },
+    {
+      id:'lenovo',name:'Lenovo',origin:'intl',originLabel:'Global',sub:'Smarter Technology for All',
+      series:'IdeaPad · ThinkBook · Yoga · LOQ',range:'Rp5,9 jt – Rp24 jt+',sc:'2–3 Tahun Garansi + ADP',
+      desc:'Dikenal dengan kenyamanan keyboard terbaik untuk mengetik skripsi berjam-jam serta perlindungan Accidental Damage Protection (ADP) pada seri IdeaPad Slim 5, Yoga, dan Legion.',
+      models:[
+        {t1:'Lenovo IdeaPad Slim 5 14',t2:'Ryzen 7 · 100% sRGB',price:'Rp8.799.000',score:92,img:'/assets/photos/laptop6.jpg',s1:'Ryzen 7 · 16 GB LPDDR5 · 512 GB',reason:'Bodi metal tangguh dengan layar 100% sRGB nyaman di mata.',tradeoff:'Tanpa port LAN RJ-45.'},
+        {t1:'Lenovo Legion Slim 5',t2:'Ryzen 7 · RTX 4060 8GB',price:'Rp17.899.000',score:96,img:'/assets/photos/laptop10.jpg',s1:'Ryzen 7 · RTX 4060 · 165Hz',reason:'Workstation idaman mahasiswa AI dan arsitektur.',tradeoff:'Bobot 2,3 kg.'}
+      ]
+    },
+    {
+      id:'acer',name:'Acer',origin:'intl',originLabel:'Global',sub:'Acer Indonesia Resmi',
+      series:'Aspire Lite · Swift Go · Nitro V',range:'Rp5,8 jt – Rp20 jt+',sc:'Jaringan ACSC Seluruh RI',
+      desc:'Favorit mahasiswa karena kemudahan upgrade RAM/SSD pada seri Aspire Lite serta inovasi layar OLED ringan pada seri Swift Go AI.',
+      models:[
+        {t1:'Acer Aspire Lite 14',t2:'Core i5 · 16 GB Upgradeable',price:'Rp7.599.000',score:90,img:'/assets/photos/laptop4.jpg',s1:'Core i5-1235U · 16 GB · 512 GB',reason:'Mudah di-upgrade dan ringan 1,35 kg untuk dibawa ke kampus.',tradeoff:'Speaker standar.'},
+        {t1:'Acer Swift Go 14 OLED',t2:'Core Ultra 5 · 2.8K OLED',price:'Rp11.999.000',score:94,img:'/assets/photos/laptop9.jpg',s1:'Core Ultra 5 · 16 GB · 512 GB',reason:'Layar OLED tajam dengan harga paling kompetitif di kelasnya.',tradeoff:'RAM onboard.'}
+      ]
+    },
+    {
+      id:'hp',name:'HP',origin:'intl',originLabel:'Global',sub:'Hewlett-Packard Company',
+      series:'Laptop 14s · Pavilion Plus · Victus',range:'Rp6,2 jt – Rp21 jt+',sc:'Layanan Pickup & Return',
+      desc:'Menawarkan desain bersih dan profesional untuk mahasiswa bisnis, ekonomi, hingga teknik melalui seri HP Pavilion Plus dan HP Victus Gaming.',
+      models:[
+        {t1:'HP Pavilion Plus 14',t2:'Ryzen 7 7840U · Layar 2.5K',price:'Rp11.499.000',score:92,img:'/assets/photos/laptop5.jpg',s1:'Ryzen 7 · 16 GB · 512 GB SSD',reason:'Bodi full metal tipis dengan webcam 5MP jernih untuk kelas online.',tradeoff:'Port USB-A hanya satu.'},
+        {t1:'HP Victus 15 Gaming',t2:'Core i5-13420H · RTX 4050',price:'Rp13.499.000',score:91,img:'/assets/photos/laptop3.jpg',s1:'Core i5 H · RTX 4050 · 144Hz',reason:'Desain kalem tidak mencolok saat dibawa ke ruang kelas.',tradeoff:'Layar sedikit bergoyang jika terkena angin kencang.'}
+      ]
+    },
+    {
+      id:'apple',name:'Apple',origin:'intl',originLabel:'Global',sub:'Apple Silicon M-Series',
+      series:'MacBook Air M2/M3 · MacBook Pro',range:'Rp13,5 jt – Rp30 jt+',sc:'Authorized Reseller Resmi',
+      desc:'Standar emas efisiensi daya baterai hingga 18 jam dan ekosistem macOS yang sangat disukai mahasiswa Ilmu Komputer, UI/UX, dan Komunikasi.',
+      models:[
+        {t1:'MacBook Air 13" M2',t2:'Chip M2 · Baterai 18 Jam',price:'Rp13.999.000',score:93,img:'/assets/photos/laptop8.jpg',s1:'Apple M2 · Liquid Retina · 1,24 kg',reason:'Tidak perlu bawa charger ke kampus, hening tanpa kipas.',tradeoff:'Kurang cocok untuk software teknik Windows.'},
+        {t1:'MacBook Air 13" M3',t2:'Chip M3 · Dual Display Support',price:'Rp16.499.000',score:95,img:'/assets/photos/laptop1.jpg',s1:'Apple M3 · 16 GB Unified · 512 GB',reason:'Performa single-core super cepat untuk Xcode dan kompilasi.',tradeoff:'Harga premium.'}
+      ]
+    },
+    {
+      id:'msi',name:'MSI',origin:'intl',originLabel:'Global',sub:'Micro-Star International',
+      series:'Modern 14 · Thin 15 · Cyborg 15',range:'Rp6,4 jt – Rp22 jt+',sc:'Garansi Resmi 2 Tahun',
+      desc:'Populer lewat seri MSI Modern 14 yang ringan dengan engsel 180 derajat dan seri Cyborg 15 transparan untuk mahasiswa teknik dan game developer.',
+      models:[
+        {t1:'MSI Modern 14 C12MO',t2:'Core i5-1235U · 16 GB RAM',price:'Rp7.699.000',score:89,img:'/assets/photos/laptop4.jpg',s1:'Core i5 · 16 GB · 512 GB NVMe',reason:'Keyboard nyaman dengan travel distance 1,5mm untuk ngetik laporan.',tradeoff:'Baterai 39Whr standar.'},
+        {t1:'MSI Cyborg 15 AI',t2:'Core Ultra 7 · RTX 4060',price:'Rp16.999.000',score:93,img:'/assets/photos/laptop10.jpg',s1:'Core Ultra 7 · RTX 4060 · 144Hz',reason:'Bobot di bawah 2 kg untuk ukuran laptop RTX 4060.',tradeoff:'TGP GPU 45W efisiensi.'}
+      ]
+    },
+    {
+      id:'dell',name:'Dell',origin:'intl',originLabel:'Global',sub:'Dell Technologies',
+      series:'Inspiron 14 · Latitude · XPS',range:'Rp7,9 jt – Rp26 jt+',sc:'Layanan ProSupport Onsite',
+      desc:'Terkenal dengan durabilitas tinggi dan layanan purnajual ProSupport yang bisa dipanggil ke kos/rumah mahasiswa jika terjadi kendala perangkat keras.',
+      models:[
+        {t1:'Dell Inspiron 14 5430',t2:'Core i5-1340P · 16 GB LPDDR5',price:'Rp10.499.000',score:91,img:'/assets/photos/laptop6.jpg',s1:'Core i5-1340P · 16 GB · FHD+ 16:10',reason:'Rasio layar 16:10 lega dan layanan garansi onsite terbaik.',tradeoff:'Harga sedikit di atas kompetitor.'},
+        {t1:'Dell G15 Gaming',t2:'Ryzen 7 · RTX 4050 6GB',price:'Rp15.299.000',score:92,img:'/assets/photos/laptop3.jpg',s1:'Ryzen 7 · 16 GB DDR5 · RTX 4050',reason:'Konstruksi kokoh dengan pendingin Alienware-inspired.',tradeoff:'Bobot cukup berat 2,6 kg.'}
+      ]
+    }
+  ];
+
+  var curOrigin='all',selectedBrand=BRANDS[0];
+  var grid=$('#brandsGrid'),spot=$('#brandSpotlight');
+
+  function renderBrands(){
+    var filtered=BRANDS.filter(function(b){return curOrigin==='all'||b.origin===curOrigin});
+    if(filtered.indexOf(selectedBrand)<0)selectedBrand=filtered[0];
+
+    grid.innerHTML=filtered.map(function(b){
+      var act=b.id===selectedBrand.id?' active':'';
+      var logoSvg=BRAND_LOGOS[b.id]||'';
+      return '<div class="brand-card'+act+'" data-bid="'+b.id+'">'+
+        '<div>'+
+          '<div class="bc-top">'+
+            '<span class="bc-origin '+b.origin+'">'+b.originLabel+'</span>'+
+            '<span style="font-size:11px;font-weight:800;color:var(--teal)">Lihat Seri →</span>'+
+          '</div>'+
+          '<div class="bc-brand-row">'+
+            '<div class="bc-logo-box" aria-hidden="true">'+logoSvg+'</div>'+
+            '<div>'+
+              '<div class="bc-name">'+b.name+'</div>'+
+              '<span class="bc-sub-badge">'+(b.sub||'')+'</span>'+
+            '</div>'+
+          '</div>'+
+          '<div class="bc-series">'+b.series+'</div>'+
+        '</div>'+
+        '<div class="bc-foot"><span>'+b.range+'</span></div>'+
+      '</div>';
+    }).join('');
+
+    [].forEach.call(grid.querySelectorAll('.brand-card'),function(card){
+      card.addEventListener('click',function(){
+        var id=card.getAttribute('data-bid');
+        selectedBrand=BRANDS.filter(function(x){return x.id===id})[0]||BRANDS[0];
+        renderBrands();
+      });
+    });
+
+    renderSpotlight();
+  }
+
+  function renderSpotlight(){
+    var b=selectedBrand;
+    var logoSvg=BRAND_LOGOS[b.id]||'';
+    spot.innerHTML=
+      '<div>'+
+        '<div style="display:flex;align-items:center;gap:14px;margin-bottom:12px">'+
+          '<div class="bs-logo-lg" aria-hidden="true">'+logoSvg+'</div>'+
+          '<div>'+
+            '<div style="display:flex;align-items:center;gap:8px;margin-bottom:4px">'+
+              '<span class="bc-origin '+b.origin+'">'+(b.origin==='lokal'?'Brand Lokal Indonesia':'Brand Internasional Resmi')+'</span>'+
+              '<span style="font-size:11.5px;font-weight:700;color:var(--teal-dark)">'+b.sc+'</span>'+
+            '</div>'+
+            '<h3 style="font-size:24px;font-weight:800;color:var(--ink);line-height:1.15">Lini Mahasiswa '+b.name+'</h3>'+
+          '</div>'+
+        '</div>'+
+        '<p style="font-size:13.5px;color:var(--muted);line-height:1.6;margin-top:6px">'+b.desc+'</p>'+
+        '<div style="margin-top:12px;font-size:12px;font-weight:700;color:var(--ink-2)">Rentang Harga: <span style="color:var(--teal)">'+b.range+'</span> · Klik seri di kanan untuk lihat detail skor AI.</div>'+
+      '</div>'+
+      '<div class="bs-models">'+
+        b.models.map(function(m,idx){
+          return '<div class="bs-model-card" data-midx="'+idx+'">'+
+            '<img src="'+m.img+'" alt="'+m.t1+'">'+
+            '<div style="flex:1;min-width:0">'+
+              '<div style="display:flex;justify-content:space-between;align-items:center;gap:6px">'+
+                '<b style="font-size:13px;color:var(--ink);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">'+m.t1+'</b>'+
+                '<span style="background:var(--teal);color:#FFF;font-size:10px;font-weight:800;padding:2px 7px;border-radius:6px;flex-shrink:0">'+m.score+'%</span>'+
+              '</div>'+
+              '<div style="font-size:11.5px;color:var(--muted);margin-top:2px">'+m.t2+'</div>'+
+              '<div style="display:flex;justify-content:space-between;align-items:center;margin-top:6px">'+
+                '<span style="font-size:12px;font-weight:800;color:var(--teal-dark)">'+m.price+'</span>'+
+                '<span style="font-size:11px;font-weight:700;color:var(--ink-2)">Detail →</span>'+
+              '</div>'+
+            '</div>'+
+          '</div>';
+        }).join('')+
+      '</div>';
+
+    [].forEach.call(spot.querySelectorAll('.bs-model-card'),function(mc){
+      mc.addEventListener('click',function(){
+        var m=b.models[+mc.getAttribute('data-midx')];
+        if(m)openLaptopModal({
+          cat:b.origin==='lokal'?'BRAND LOKAL INDONESIA':'BRAND INTERNASIONAL',
+          t1:m.t1,t2:m.t2,price:m.price,score:m.score,img:m.img,s1:m.s1,
+          reason:m.reason,tradeoff:m.tradeoff,tag:b.name
+        });
+      });
+    });
+  }
+
+  [].forEach.call(document.querySelectorAll('#brandFilterBar .bf-tab'),function(tab){
+    tab.addEventListener('click',function(){
+      [].forEach.call(document.querySelectorAll('#brandFilterBar .bf-tab'),function(t){t.classList.toggle('active',t===tab)});
+      curOrigin=tab.getAttribute('data-origin');
+      renderBrands();
+    });
+  });
+
+  renderBrands();
+})();
+
+})();
+</script>
+</body>
+</html>

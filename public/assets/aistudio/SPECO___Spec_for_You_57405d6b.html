@@ -1,0 +1,312 @@
+<!doctype html>
+<html lang="id">
+<head>
+<meta charset="utf-8">
+<title>SPECO — Spec for You</title>
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;1,600&display=swap" rel="stylesheet">
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+html{scroll-behavior:smooth}html,body{background:#F7FAFF}body{overflow-x:hidden}
+body{font-family:Poppins,Inter,system-ui,sans-serif;color:#0B1220;-webkit-font-smoothing:antialiased}
+a{text-decoration:none;color:inherit}
+.stage{position:relative;height:100vh;overflow:hidden;background:#F7FAFF}
+.canvas{position:absolute;left:50%;top:0;width:1172px;height:657px;transform:translateX(-50%) scale(var(--k,1));transform-origin:50% 0}
+.canvas>*{position:absolute}
+.stack{position:absolute;inset:0;z-index:300}.stack>*{position:absolute}
+.navmenu{display:contents}.burger{display:none}
+.bg{inset:0;background:linear-gradient(180deg,rgba(29,107,255,0) 38%,rgba(29,107,255,.06) 54%,rgba(29,107,255,.09) 68%,rgba(29,107,255,.05) 100%),#F7FAFF}
+.stars{left:0;top:0;width:1px;height:1px;border-radius:50%;background:#1D6BFF}
+/* nav */
+.nav{left:247px;top:3px;width:678px;height:64px;border-radius:32px;z-index:400;background:rgba(255,255,255,.55);border:1px solid rgba(11,18,32,.10);-webkit-backdrop-filter:blur(16px) saturate(140%);backdrop-filter:blur(16px) saturate(140%);box-shadow:0 8px 30px rgba(29,60,140,.08),inset 0 1px 0 rgba(255,255,255,.8)}
+.nav>*{position:absolute}
+.mark{left:21px;top:19px;width:24px;height:24px;filter:drop-shadow(0 0 6px rgba(29,107,255,.45))}
+.wm{left:50px;top:0;white-space:nowrap}.wm>*{position:absolute}
+.wm .kick{left:3px;top:20px;font-size:4.4px;font-weight:600;letter-spacing:.10em;color:#0B1220;opacity:.8;line-height:1}
+.wm .name{left:0;top:26px;transform-origin:0 50%;font-weight:900;font-size:22px;line-height:1;letter-spacing:-.01em;color:#0B1220}
+.links{position:absolute;left:156px;top:0;height:62px;transform-origin:0 50%;display:flex;align-items:center;gap:24px}
+.links a{font-size:12.5px;font-weight:400;color:rgba(11,18,32,.88);white-space:nowrap;transition:opacity .25s}.links a:hover{opacity:.6}
+/* badge — pixel contract A */
+.badge{left:462px;top:95px;width:250px;height:39px;border-radius:12px;z-index:300;border:1px solid rgba(11,18,32,.10);background:linear-gradient(to top,rgba(29,107,255,.18) 0,rgba(29,107,255,.12) 2px,rgba(29,107,255,.06) 6px,rgba(255,255,255,.6) 9px,rgba(255,255,255,.6) 100%);-webkit-backdrop-filter:blur(12px);backdrop-filter:blur(12px);box-shadow:inset 0 1px 0 rgba(255,255,255,.8)}
+.badge i{position:absolute;left:4px;top:4px;width:29px;height:29px;border-radius:8px;display:grid;place-items:center;background:linear-gradient(to top,#6FB0FF 0,#2F7BFF 4px,#1D55D8 8px,#143C9E 16px,#0E2A72 29px);box-shadow:inset 1px 0 0 rgba(255,255,255,.35),inset -1px 0 0 rgba(255,255,255,.35),0 0 6px rgba(29,107,255,.25),0 3px 8px -5px rgba(29,107,255,.6)}
+.badge i svg{width:14px;height:16px;position:relative;top:-1px}
+.badge b{position:absolute;left:45px;transform-origin:0 50%;top:0;height:39px;display:flex;align-items:center;font-size:13px;font-weight:400;color:rgba(11,18,32,.92);white-space:nowrap;padding-top:1.5px}
+/* glow button — pixel contract B (light) */
+.btn{display:grid;place-items:center;color:#0B1220;position:relative;overflow:hidden;background:linear-gradient(to top,#1D6BFF 1px,#3F86FF 3px,#7DB0FF 6px,#A9CBFF 10px,#CFE1FF 16px,#E6F0FF 24px,#F6F9FF 34px,#FFF 100%);box-shadow:inset 0 3px 3px -2px rgba(255,255,255,.6),inset 1px 0 0 rgba(29,107,255,.14),inset -1px 0 0 rgba(29,107,255,.14),var(--hair,0 1px 0 rgba(29,107,255,.35)),1px 0 0 rgba(29,107,255,.14),-1px 0 0 rgba(29,107,255,.14),0 0 8px rgba(29,107,255,.10),0 2px 5px -3px rgba(29,107,255,.45);transition:transform .25s,box-shadow .25s,filter .25s}
+.btn::before{content:"";position:absolute;left:22%;right:38%;top:.8px;height:1.9px;z-index:1;filter:blur(.55px);background:linear-gradient(90deg,rgba(29,107,255,0),rgba(29,107,255,.5) 34%,rgba(29,107,255,.7) 50%,rgba(29,107,255,.5) 66%,rgba(29,107,255,0))}
+.btn::after{content:"";position:absolute;inset:0;border-radius:inherit;pointer-events:none;z-index:1;background:linear-gradient(90deg,rgba(29,107,255,.45),rgba(29,107,255,0) 13px),linear-gradient(270deg,rgba(29,107,255,.45),rgba(29,107,255,0) 13px);-webkit-mask:linear-gradient(to top,#000 0,#000 6px,rgba(0,0,0,.4) 12px,rgba(0,0,0,.15) 18px,rgba(0,0,0,.09) 24px,rgba(0,0,0,.02) 30px,rgba(0,0,0,.02) 100%);mask:linear-gradient(to top,#000 0,#000 6px,rgba(0,0,0,.4) 12px,rgba(0,0,0,.15) 18px,rgba(0,0,0,.09) 24px,rgba(0,0,0,.02) 30px,rgba(0,0,0,.02) 100%)}
+.btn span{position:relative;z-index:2;display:block;line-height:1}
+.btn:hover{transform:translateY(-1px);filter:brightness(1.03);box-shadow:inset 0 1px 0 #fff,0 6px 22px rgba(29,107,255,.35)}
+.nav .btn{position:absolute;left:530.7px;top:10.5px;width:125.5px;height:39.5px;border-radius:14px;font-size:14px;font-weight:500;letter-spacing:-.005em}
+.cta2{left:526px;top:349px;width:121px;height:54.5px;--hair:0 0 0 transparent;border-radius:13px;font-size:17px;font-weight:500;letter-spacing:-.01em;z-index:300}
+.cta2::before{display:none}
+/* type */
+.h1{left:586px;transform:translateX(-50%);white-space:nowrap;line-height:1;font-weight:900;font-size:54px;letter-spacing:-.004em;word-spacing:.175em;text-transform:uppercase;color:#0B1220;text-shadow:0 0 34px rgba(29,107,255,.12);z-index:300}
+.sub{left:586px;transform:translateX(-50%);white-space:nowrap;line-height:1;font-size:13.2px;color:#5B6472;z-index:300}
+.sub b{font-weight:600;color:#0B1220}
+/* ring */
+.showcase{left:0;top:0;width:1172px;height:0}
+.ring{left:0;top:0;width:1172px;height:657px;z-index:5;perspective:891px;perspective-origin:586px 918px;transform-style:preserve-3d;pointer-events:none}
+.card{position:absolute;left:586px;top:616px;width:130px;height:300px;margin:-150px 0 0 -65px;border-radius:12px;overflow:hidden;background:#E8F0FF;box-shadow:0 24px 46px rgba(29,60,140,.22),0 3px 8px rgba(29,60,140,.15);backface-visibility:hidden;will-change:transform}
+.card .edge{position:absolute;inset:0;border-radius:12px;box-shadow:inset 0 0 0 1px rgba(11,18,32,.10),inset 0 16px 30px rgba(255,255,255,.35)}
+.cv{position:absolute;left:0;right:0;padding:0 10px}.fill{position:absolute;inset:0}
+.t-big{font-weight:900;text-transform:uppercase;line-height:.96;letter-spacing:-.015em;white-space:nowrap;transform:scaleX(.875);transform-origin:left center}
+.lp{position:absolute;left:9px;right:9px}
+.ls{height:64px;border:4px solid #1B2133;border-radius:7px 7px 0 0;box-sizing:border-box}
+.lb{height:5px;background:linear-gradient(#DDE1EA,#9AA2B1);border-radius:0 0 8px 8px;margin:0 -5px}
+/* browser */
+.browser{left:165px;top:558px;width:842px;height:calc(99px + var(--fill,0px));border-radius:28px 28px 0 0;overflow:hidden;z-index:100;box-shadow:0 -14px 44px rgba(29,60,140,.22)}
+.browser::before{content:"";position:absolute;left:0;right:0;top:42px;bottom:0;background:rgba(235,242,255,.9)}
+.bar{position:absolute;left:0;top:0;width:100%;height:42px;background:linear-gradient(180deg,rgba(255,255,255,.82),rgba(240,246,255,.9))}
+.dots{position:absolute;left:27px;top:16px;display:flex;gap:2.6px}.dots i{width:7.6px;height:7.6px;border-radius:50%}
+.omni{position:absolute;left:246px;top:7px;width:336px;height:26px;border-radius:5px;background:#fff;box-shadow:inset 0 0 0 1px rgba(11,18,32,.08);display:flex;align-items:center;justify-content:center;gap:6px;font-size:9.5px;color:#5B6472}
+.page{position:absolute;left:7px;right:6px;top:42px;bottom:0;background:#fff;color:#111;overflow:hidden;border-radius:10px 10px 0 0}
+.ann{position:absolute;left:0;top:0;width:100%;height:16px;background:#0B1B3A;display:grid;place-items:center;border-radius:10px 10px 0 0;font-size:5px;letter-spacing:.06em;color:#DCE9FF}
+.shoplogo{position:absolute;left:50%;transform:translateX(-50%);top:24px;text-align:center}
+.shoplogo em{display:block;font-family:"Playfair Display",serif;font-style:normal;font-weight:600;font-size:15px;letter-spacing:.14em;line-height:1}
+.shoplogo i{display:block;font-style:normal;font-size:5px;letter-spacing:.3em;color:#3a3a3a;margin-top:3px}
+.pagebody{position:absolute;left:0;right:0;top:62px;bottom:0;background:#fff;overflow:hidden}
+.pghero{position:relative;margin:0 26px;height:158px;border-radius:7px;overflow:hidden;background:linear-gradient(120deg,#E3EDFF,#B9D2FF)}
+.pghero .copy{position:absolute;left:22px;top:50%;transform:translateY(-50%);color:#0B1220}
+.pghero u{display:block;text-decoration:none;font-size:4.6px;letter-spacing:.26em;text-transform:uppercase;opacity:.8}
+.pghero em{display:block;font-family:"Playfair Display",serif;font-style:normal;font-weight:600;font-size:15px;line-height:1.12;margin-top:6px}
+.pghero i{display:inline-block;font-style:normal;margin-top:10px;padding:5px 13px;border-radius:20px;background:#0B1B3A;color:#fff;font-size:5.2px;font-weight:600;letter-spacing:.06em}
+.pgsec{display:flex;align-items:baseline;justify-content:space-between;margin:16px 26px 9px}
+.pgsec b{font-family:"Playfair Display",serif;font-weight:600;font-size:9px}.pgsec u{text-decoration:none;font-size:4.6px;letter-spacing:.14em;color:#8a8a8a;text-transform:uppercase}
+.pggrid{display:grid;grid-template-columns:repeat(4,1fr);gap:14px;margin:0 26px}
+.pgcard .pt{position:relative;height:0;padding-bottom:84%;border-radius:6px;overflow:hidden;background:linear-gradient(150deg,#EAF2FF,#D3E2FF)}
+.pgcard .pt .lp{left:14%;right:14%;top:22%}.pgcard .pt .ls{height:30px;border-width:2px}
+.pgcard .tag{position:absolute;left:6px;top:6px;padding:2px 5px;border-radius:3px;background:#1D6BFF;color:#fff;font-size:3.8px;font-weight:600;letter-spacing:.1em;z-index:2}
+.pgcard b{display:block;margin-top:6px;font-size:5.4px;font-weight:600}
+.pgcard i{display:block;font-style:normal;margin-top:2px;font-size:4.6px;color:#16A34A;font-weight:600}
+.pgcard s{display:block;margin-top:3px;font-size:5.6px;font-weight:700;text-decoration:none}
+.pgstrip{display:flex;justify-content:space-between;margin:16px 26px 0;padding:9px 0;border-top:1px solid #E3EBF7;border-bottom:1px solid #E3EBF7}
+.pgstrip span{font-size:4.4px;letter-spacing:.12em;color:#5B6472;text-transform:uppercase}
+.wa{position:fixed;right:16px;bottom:24px;width:56px;height:56px;border-radius:50%;background:#25d366;display:grid;place-items:center;z-index:300;box-shadow:0 8px 20px rgba(29,60,140,.3)}
+.wa svg{width:31px;height:31px}
+.wa::after{content:"";position:absolute;inset:0;border-radius:50%;border:2px solid rgba(37,211,102,.5);animation:pulse 2.8s ease-out infinite}
+@keyframes pulse{0%{transform:scale(1);opacity:.75}70%{transform:scale(1.4);opacity:0}100%{opacity:0}}
+/* narrow nav */
+@media (max-width:1080px){
+.burger{display:grid;place-content:center;gap:4px;position:absolute;right:12px;top:11px;width:42px;height:42px;padding:0;border:0;border-radius:14px;background:transparent;cursor:pointer}
+.burger span{display:block;width:19px;height:1.6px;border-radius:2px;background:#0B1220;transition:transform .28s,opacity .18s}
+.burger:focus-visible{outline:2px solid rgba(29,107,255,.7);outline-offset:2px}
+.nav.open .burger span:nth-child(1){transform:translateY(5.6px) rotate(45deg)}.nav.open .burger span:nth-child(2){opacity:0}.nav.open .burger span:nth-child(3){transform:translateY(-5.6px) rotate(-45deg)}
+.navmenu{display:block;position:absolute;left:0;right:0;top:74px;padding:12px;border-radius:22px;border:1px solid rgba(11,18,32,.10);background:rgba(255,255,255,.96);box-shadow:0 26px 60px rgba(29,60,140,.22);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .24s,transform .28s,visibility .28s}
+.nav.open .navmenu{opacity:1;visibility:visible;transform:none}
+.links{position:static;display:flex;flex-direction:column;align-items:stretch;height:auto;gap:2px;transform:none!important}
+.links a{font-size:15px;padding:11px 14px;border-radius:12px}
+.nav .btn{position:static;width:100%;height:46px;margin-top:10px;font-size:15px}
+.nav{left:286px;width:620px}.badge{left:448px;width:277px}
+.stack{transform:translateY(var(--stshift,0px))}.showcase{transform:translateY(var(--sshift,0px))}
+.ring{transform:scale(var(--rs,1));transform-origin:586px 595px}}
+@media (prefers-reduced-motion:reduce){.wa::after{animation:none}.navmenu,.burger span{transition:none}}
+.w2{max-width:1200px;margin:0 auto;padding:0 32px}
+.sec{position:relative;background:#fff;padding:88px 0}
+.tint{background:linear-gradient(#EAF3FF,#CFE3FF)}
+.lab2{display:flex;justify-content:space-between;font-size:12px;font-weight:700;letter-spacing:2px;color:#5B6472}
+.big{font-weight:800;font-size:clamp(34px,5vw,60px);line-height:1.04;letter-spacing:-.03em}.big em{font-style:normal;color:#1D6BFF}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:48px;margin-top:28px;align-items:end}
+.two p{color:#5B6472;font-size:16px;line-height:1.7;margin-bottom:14px}
+.h3{font-weight:800;font-size:clamp(28px,3.6vw,40px);letter-spacing:-.02em;line-height:1.1;text-align:center}
+.sub2{color:#5B6472;text-align:center;max-width:560px;margin:12px auto 0;line-height:1.6}
+.k2{background:#fff;border:1px solid #DCE6F5;border-radius:22px;padding:24px}
+.ico{width:40px;height:40px;border-radius:12px;background:#E6F0FF;color:#1D6BFF;display:flex;align-items:center;justify-content:center;font-weight:800;margin-bottom:14px}
+.t2{font-weight:800;font-size:18px;margin-bottom:6px}.p2{color:#5B6472;font-size:14px;line-height:1.6}
+.btn.lg{display:inline-grid;height:54px;padding:0 30px;border-radius:14px;font-size:16px;font-weight:500}
+.g3{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin-top:40px}
+.cmp{display:grid;grid-template-columns:1.3fr 1fr;gap:20px;margin-top:48px;align-items:end}
+.pm{border:9px solid #0B1220;border-radius:34px;background:#fff;padding:16px;width:100%}
+.bar2{height:7px;border-radius:7px;background:#E3EAF6;margin:6px 0 12px}.bar2 i{display:block;height:7px;border-radius:7px;background:#1D6BFF}
+.chip2{display:inline-block;padding:9px 16px;border-radius:999px;border:1px solid #C9D6EC;font:500 14px Poppins,sans-serif;background:#fff;cursor:pointer;margin:0 8px 8px 0;color:#0B1220}
+.chip2[aria-pressed=true]{background:#1D6BFF;border-color:#1D6BFF;color:#fff}
+input[type=range]{width:100%;accent-color:#1D6BFF;height:28px}
+details{border-bottom:1px solid #DCE6F5;padding:18px 0}summary{font-weight:700;cursor:pointer;font-size:16px}details p{margin:10px 0 0;color:#5B6472;font-size:15px;line-height:1.6}
+.foot{background:#0B1F4A;color:#C7D2EA;padding:32px 0;font-size:13px}
+@media(max-width:700px){.cmp{grid-template-columns:1fr}.sec{padding:64px 0}}
+/* intro resting states (individual props so they compose with transform) */
+html.intro .nav{opacity:0;translate:0 -9px}
+html.intro .mark,html.intro .wm,html.intro .links a,html.intro .nav .btn,html.intro .burger{opacity:0;translate:0 6px}
+html.intro .badge{opacity:0;translate:0 11px;scale:.985}
+html.intro .h1{opacity:0;translate:0 15px;clip-path:inset(100% 0 -30% 0)}
+html.intro .sub{opacity:0;translate:0 10px}
+html.intro .cta2{opacity:0;translate:0 13px;scale:.985}
+html.intro .ring{opacity:0;translate:0 18px;scale:.99}
+html.intro .browser{opacity:0;translate:0 26px}
+html.intro .wa{opacity:0;scale:.88}
+@media (prefers-reduced-motion:reduce){html.intro *{opacity:1!important;translate:none!important;scale:none!important;clip-path:none!important}}
+</style>
+<script>document.documentElement.classList.add('intro');setTimeout(function(){document.documentElement.classList.remove('intro')},4000);</script>
+</head>
+<body>
+<div class="stage" id="stage">
+<div class="canvas" id="cv">
+<div class="bg"></div><div class="stars" id="stA"></div><div class="stars" id="stB"></div>
+<div class="stack">
+<div class="nav" id="nav">
+<svg class="mark" viewBox="0 0 48 48" fill="none"><defs><linearGradient id="sw" x1="8" y1="8" x2="40" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7FB2FF"/><stop offset=".5" stop-color="#1D6BFF"/><stop offset="1" stop-color="#0B2A7A"/></linearGradient><linearGradient id="sw2" x1="40" y1="10" x2="10" y2="40" gradientUnits="userSpaceOnUse"><stop stop-color="#7FB2FF"/><stop offset="1" stop-color="#1D6BFF" stop-opacity=".25"/></linearGradient></defs><g transform="rotate(-32 24 24)"><ellipse cx="24" cy="24" rx="18.5" ry="9.6" stroke="url(#sw2)" stroke-width="3.1" stroke-linecap="round" stroke-dasharray="58 30" stroke-dashoffset="14"/><circle cx="41.4" cy="20.6" r="3.1" fill="#7FB2FF"/></g><circle cx="24" cy="24" r="6.6" fill="url(#sw)"/><circle cx="24" cy="24" r="2.6" fill="#fff"/></svg>
+<div class="wm"><div class="kick">LAPTOP</div><div class="name" id="wmName">SPECO</div></div>
+<div class="navmenu" id="navmenu"><div class="links" id="links"><a href="#">Beranda</a><a href="#cara">Cara kerja</a><a href="#mulai">Rekomendasi</a><a href="#hasil">Bandingkan</a><a href="#faq">Bantuan</a></div>
+<a class="btn" href="#mulai"><span id="ctaLabel">Cari laptop baru</span></a></div>
+<button class="burger" id="burger" type="button" aria-label="Buka menu" aria-expanded="false" aria-controls="navmenu"><span></span><span></span><span></span></button>
+</div>
+<div class="badge"><i><svg viewBox="5 1 14 22" preserveAspectRatio="none" fill="rgba(255,255,255,.22)" stroke="rgba(255,255,255,.9)" stroke-width="1.6" stroke-linejoin="round"><path d="M13.9 1.6 5.5 13.6a.7.7 0 0 0 .6 1.1h4.2l-1 7.7a.7.7 0 0 0 1.25.55l8.3-12.1a.7.7 0 0 0-.6-1.1h-4.2l1-7.7a.7.7 0 0 0-1.25-.55Z"/></svg></i><b id="badgeTxt">Dipilih AI, khusus mahasiswa TI</b></div>
+<div class="h1" id="h1a">Laptop yang pas buat</div>
+<div class="h1" id="h1b">Kuliahmu</div>
+<div class="sub" id="sub1"><b>Rekomendasi laptop berbasis AI</b> dihitung sesuai</div>
+<div class="sub" id="sub2">budget, jurusan, dan kebutuhanmu.</div>
+<a class="btn cta2" href="#mulai"><span id="vpLabel">Mulai cari</span></a>
+</div>
+<div class="showcase"><div class="ring" id="ring"></div></div>
+<div class="browser">
+<div class="bar"><div class="dots"><i style="background:#ee5c62"></i><i style="background:#f6b719"></i><i style="background:#12c02f"></i></div>
+<div class="omni"><svg width="9" height="9" viewBox="0 0 24 24" fill="none" stroke="#5B6472" stroke-width="2.4"><circle cx="11" cy="11" r="7"/><path d="M20 20l-3.8-3.8"/></svg><span>speco.app/rekomendasi</span></div></div>
+<div class="page"><div class="ann">Data contoh (demo) · harga dan skor bukan data aktual</div>
+<div class="shoplogo"><em>SPECO</em><i>SPEC FOR YOU</i></div>
+<div class="pagebody">
+<div class="pghero"><div class="copy"><u>Hasil rekomendasi</u><em>Paling cocok untuk<br>budget Rp8.000.000.</em><i>LIHAT DETAIL</i></div>
+<div class="lp" style="left:auto;right:40px;width:150px;top:44px"><div class="ls" style="height:84px;background:linear-gradient(135deg,#4C8DFF,#1B3FA8)"></div><div class="lb"></div></div></div>
+<div class="pgsec"><b>Best match</b><u>lihat semua</u></div>
+<div class="pggrid">
+<div class="pgcard"><div class="pt"><span class="tag">BEST</span><div class="lp"><div class="ls" style="background:linear-gradient(135deg,#4C8DFF,#1B3FA8)"></div><div class="lb"></div></div></div><b>ASUS Vivobook 14</b><i>94% cocok</i><s>Rp 8.299.000</s></div>
+<div class="pgcard"><div class="pt"><div class="lp"><div class="ls" style="background:linear-gradient(135deg,#8B5CFF,#2A1578)"></div><div class="lb"></div></div></div><b>Lenovo IdeaPad Slim 5</b><i>92% cocok</i><s>Rp 8.799.000</s></div>
+<div class="pgcard"><div class="pt"><div class="lp"><div class="ls" style="background:linear-gradient(135deg,#FFB36B,#C2410C)"></div><div class="lb"></div></div></div><b>Acer Aspire Lite 14</b><i>90% cocok</i><s>Rp 7.599.000</s></div>
+<div class="pgcard"><div class="pt"><span class="tag">HEMAT</span><div class="lp"><div class="ls" style="background:linear-gradient(135deg,#34D399,#065F46)"></div><div class="lb"></div></div></div><b>Zenbook Go 14</b><i>88% cocok</i><s>Rp 6.999.000</s></div>
+</div>
+<div class="pgstrip"><span>Skor kecocokan</span><span>Alasan yang jelas</span><span>Trade-off jujur</span><span>Tanpa iklan</span></div>
+</div></div></div>
+</div>
+<a class="wa" href="#" aria-label="Chat"><svg viewBox="0 0 32 32"><path fill="#fff" d="M16 4C9.4 4 4 9.1 4 15.4c0 2.2.7 4.2 1.8 6L4.5 27l5.9-1.5c1.7.9 3.5 1.4 5.6 1.4 6.6 0 12-5.100 12-11.500S22.600 4 16 4Zm-4 7.500c.3-.7.6-.7.9-.7h.7c.2 0 .5.1.7.6l.9 2.100c.1.2.1.4 0 .6l-.5.7c-.2.2-.3.4-.1.7.9 1.500 2.100 2.500 3.600 3.200.3.1.5.1.7-.1l.8-1c.2-.3.4-.3.7-.2l2.100 1c.3.1.5.2.5.4 0 .5-.2 1.300-1 1.800-.8.5-1.800.6-3 .3-2.800-.8-5.200-2.800-6.600-5.400-.6-1.100-1-2.400-.1-3.600Z"/></svg></a>
+</div>
+<main>
+<section class="sec" id="tentang"><div class="w2">
+<div class="lab2"><span>TENTANG SPECO</span><span>01</span></div>
+<div class="two"><h2 class="big">Rekomendasi laptop yang <em>pas</em>, dari budget sampai kebutuhan.</h2>
+<div><p>SPECO adalah platform rekomendasi laptop berbasis AI untuk mahasiswa. Kamu ceritakan budget dan kebutuhan, kami menghitung kecocokan tiap laptop.</p><p>Kami tidak menjual laptop dan tidak memasang iklan, jadi hasilnya murni untuk kamu, lengkap dengan alasan dan trade-off.</p><a class="btn lg" href="#mulai"><span>Mulai Rekomendasi</span></a></div></div>
+<div class="cmp"><div style="background:#DCE6F5;border-radius:28px;height:300px;display:flex;align-items:center;justify-content:center;color:#5B6472;font-size:14px;text-align:center;padding:20px">Foto mahasiswa memakai laptop (placeholder)</div>
+<div style="display:grid;gap:20px"><div style="background:#0B1F4A;color:#fff;border-radius:28px;padding:24px"><div style="font-size:12px;color:#8FB0FF">Hasil rekomendasi</div><div style="font-size:32px;font-weight:800;margin-top:8px">94% cocok</div><div style="font-size:13px;color:#C7D2EA;margin-top:4px">ASUS Vivobook 14</div></div><div class="k2"><div class="t2">5 pertanyaan</div><div class="p2">Kurang dari 2 menit</div></div></div></div>
+</div></section>
+<section class="sec tint" id="fitur"><div class="w2">
+<div class="h3">Bangun keputusan beli yang lebih tepat</div><p class="sub2">SPECO membuat memilih laptop terasa sederhana: jelas, terukur, dan jujur.</p>
+<div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:20px;margin-top:48px;align-items:stretch">
+<div style="display:grid;gap:20px"><div class="k2"><div class="ico">%</div><div class="t2">Skor Kecocokan</div><div class="p2">Tiap laptop diberi skor sesuai budget dan kebutuhanmu.</div></div><div class="k2"><div class="ico">?</div><div class="t2">Alasan yang Jelas</div><div class="p2">Kamu tahu kenapa sebuah laptop direkomendasikan.</div></div></div>
+<div style="background:#1D6BFF;border-radius:28px;padding:28px 22px;display:flex;align-items:center"><div class="pm"><div style="font-size:11px;color:#5B6472">Budget kamu</div><div style="font-weight:800;font-size:22px;color:#1D6BFF">Rp8.000.000</div><div class="bar2"><i style="width:40%"></i></div><div style="font-size:12px;font-weight:700">Performa</div><div class="bar2"><i style="width:90%"></i></div><div style="font-size:12px;font-weight:700">RAM</div><div class="bar2"><i style="width:100%"></i></div><div style="background:#E6F0FF;border-radius:12px;padding:10px;font-size:12px;font-weight:700;text-align:center;color:#1D6BFF">Best Match 94%</div></div></div>
+<div style="display:grid;gap:20px"><div class="k2"><div class="ico">!</div><div class="t2">Trade-off Jujur</div><div class="p2">Kekurangan ditampilkan, bukan disembunyikan.</div></div><div class="k2"><div class="ico">3</div><div class="t2">Bandingkan 3 Laptop</div><div class="p2">Simpan favorit dan lihat berdampingan.</div></div></div>
+</div></div></section>
+<section class="sec" id="mulai"><div class="w2">
+<div class="h3">Coba rekomendasinya sekarang</div><p class="sub2">Geser budget dan pilih kebutuhan. Hasil berubah langsung.</p>
+<div class="g3" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr));align-items:start">
+<div class="k2" style="background:#F4F7FC"><div style="font-size:13px;color:#5B6472">Budget kamu</div><div id="bgv" style="font-size:34px;font-weight:800;color:#1D6BFF;margin:4px 0 8px">Rp8.000.000</div><input id="bg" type="range" min="4" max="20" step="1" value="8" aria-label="Budget dalam juta rupiah"><div style="display:flex;justify-content:space-between;font-size:12px;color:#5B6472;margin-bottom:20px"><span>Rp4 jt</span><span>Rp20 jt</span></div><div style="font-size:13px;color:#5B6472;margin-bottom:10px">Kebutuhan utama</div><div id="needs"><button class="chip2" aria-pressed="true">Coding</button><button class="chip2" aria-pressed="false">Desain</button><button class="chip2" aria-pressed="false">Gaming</button><button class="chip2" aria-pressed="false">Kuliah</button><button class="chip2" aria-pressed="false">Office</button></div></div>
+<div class="k2" id="res" style="box-shadow:0 20px 60px rgba(29,60,140,.12)"></div></div>
+<p style="text-align:center;font-size:12px;color:#5B6472;margin-top:20px">Data contoh (demo): harga, skor, dan bobot bukan data aktual.</p></div></section>
+<section class="sec tint" id="cara"><div class="w2"><div class="h3">Cara kerja SPECO</div>
+<div class="g3"><div class="k2"><div class="ico">1</div><div class="t2">Ceritakan kebutuhanmu</div><div class="p2">Budget, jurusan, aplikasi, dan prioritasmu.</div></div><div class="k2"><div class="ico">2</div><div class="t2">AI menghitung kecocokan</div><div class="p2">Setiap laptop dinilai pada 6 kriteria dengan bobot dari prioritasmu.</div></div><div class="k2"><div class="ico">3</div><div class="t2">Dapat rekomendasi</div><div class="p2">Skor, alasan, dan trade-off tampil jelas. Simpan favorit, bandingkan sampai 3.</div></div></div></div></section>
+<section class="sec" id="hasil"><div class="w2"><div class="h3">Kenapa laptop ini direkomendasikan?</div><p class="sub2">Setiap kriteria punya bobot. Yang kamu prioritaskan mendapat bobot lebih besar.</p>
+<div class="g3" style="grid-template-columns:repeat(auto-fit,minmax(320px,1fr))"><div class="k2"><div style="display:flex;justify-content:space-between;align-items:center"><div class="t2" style="margin:0">ASUS Vivobook 14</div><div style="font-size:32px;font-weight:800;color:#1D6BFF">94%</div></div>
+<div style="margin-top:18px;font-size:13px"><div style="display:flex;justify-content:space-between"><span>Performa</span><b>35%</b></div><div class="bar2"><i style="width:90%"></i></div><div style="display:flex;justify-content:space-between"><span>Sesuai budget</span><b>25%</b></div><div class="bar2"><i style="width:96%"></i></div><div style="display:flex;justify-content:space-between"><span>RAM</span><b>15%</b></div><div class="bar2"><i style="width:100%"></i></div><div style="display:flex;justify-content:space-between"><span>Portabilitas</span><b>10%</b></div><div class="bar2"><i style="width:72%;background:#F5B301"></i></div></div></div>
+<div style="display:grid;gap:20px"><div style="background:#1D6BFF;color:#fff;border-radius:28px;padding:28px"><div style="font-size:56px;font-weight:800">94%</div><div style="font-size:15px;line-height:1.6">Kecocokan Best Match untuk mahasiswa Informatika dengan budget Rp8 juta (contoh demo).</div></div><div class="k2" style="background:#FFF6DC;border-color:#F3DFA2"><div class="t2">Trade-off jujur</div><div class="p2">Baterai lebih pendek dibanding laptop tipis lain di kelas harga ini.</div></div></div></div></div></section>
+<section class="sec tint"><div class="w2"><div class="h3">SPECO bukan toko. Dan itu sengaja.</div>
+<div class="g3"><div class="k2"><div class="t2">Tidak menjual</div><div class="p2">Tidak ada stok atau brand yang membayar untuk diprioritaskan.</div></div><div class="k2"><div class="t2">Tidak berpihak</div><div class="p2">Hasil ditentukan kebutuhanmu, bukan kepentingan merek.</div></div><div class="k2"><div class="t2">Selalu transparan</div><div class="p2">Bobot, alasan, dan trade-off selalu bisa kamu lihat.</div></div></div></div></section>
+<section class="sec" id="faq"><div class="w2" style="max-width:820px"><div class="h3" style="margin-bottom:28px">Pertanyaan yang sering muncul</div>
+<details open><summary>Apa itu SPECO?</summary><p>Platform rekomendasi laptop berbasis AI untuk mahasiswa, berdasarkan budget dan kebutuhanmu.</p></details>
+<details><summary>Apakah SPECO menjual laptop?</summary><p>Tidak. SPECO tidak menjual laptop dan tidak menerima bayaran dari merek.</p></details>
+<details><summary>Bagaimana skor dihitung?</summary><p>Tiap laptop dinilai pada 6 kriteria dengan bobot sesuai prioritasmu.</p></details>
+<details><summary>Apakah data saya disimpan?</summary><p>Jawabanmu hanya dipakai untuk menghitung rekomendasi (contoh kebijakan demo).</p></details></div></section>
+<section class="w2" style="padding-bottom:48px"><div style="background:#1D6BFF;color:#fff;border-radius:32px;padding:56px;text-align:center"><div style="font-size:clamp(28px,4vw,40px);font-weight:800;letter-spacing:-1px;line-height:1.1">Siap menemukan laptop yang benar-benar cocok?</div><p style="font-size:16px;margin:14px 0 26px;color:#DCE8FF">Jawab 5 pertanyaan, dapat rekomendasi dalam kurang dari 2 menit.</p><a class="btn lg" href="#mulai"><span>Mulai Rekomendasi</span></a></div></section>
+</main>
+<footer class="foot"><div class="w2" style="display:flex;justify-content:space-between;flex-wrap:wrap;gap:12px"><div><b style="color:#fff;letter-spacing:2px">SPECO</b> · Spec for You · Proyek RPL Kelompok 7A</div><div>Data contoh (demo), bukan data aktual.</div></div></footer>
+<script>
+(function(){
+var $=function(s){return document.querySelector(s)},cv=$('#cv'),ring=$('#ring'),nav=$('#nav'),burger=$('#burger'),links=$('#links');
+var K=1,mob=function(){return innerWidth<=700};
+/* dust specks: one box-shadow list per layer */
+function stars(el,n,bl,a0,a1){var s=[];for(var i=0;i<n;i++)s.push((Math.random()*100)+'vw '+(Math.random()*100)+'vh '+bl+'px 0 rgba(29,107,255,'+(a0+Math.random()*(a1-a0))+')');el.style.boxShadow=s.join(',')}
+stars($('#stA'),150,0,.05,.22);stars($('#stB'),18,1.2,.2,.45);
+/* ten laptop-themed card creatives */
+var DATA=[
+['KULIAH · CODING','Laptop','Coding','#EAF2FF,#CFE0FF','#1D6BFF','#4C8DFF','#1B3FA8','Ryzen 5 · 16 GB','SSD 512 GB','Rp8 jt'],
+['KREATIF','Laptop','Desain','#FFF1E6,#FFD9BD','#E8590C','#FFB36B','#C2410C','Layar akurat warna','GPU Radeon','Rp10 jt+'],
+['MAIN GAME','Laptop','Gaming','#EFE9FF,#D6C9FF','#6D3BFF','#8B5CFF','#2A1578','RTX 4050','Layar 144 Hz','Rp15 jt+'],
+['HARIAN','Laptop','Kuliah','#E6F8EF,#C4EBD8','#0F9D6B','#34D399','#065F46','Ringan · awet','Baterai 10 jam','Rp6 jt'],
+['KANTOR','Laptop','Office','#EEF1F6,#D7DEEA','#334155','#94A3B8','#1E293B','Stabil · tipis','Tahan seharian','Rp7 jt'],
+['BEST MATCH','Skor','94%','#E3EEFF,#B9D2FF','#1D6BFF','#4C8DFF','#0B2A7A','Vivobook 14','16 GB · 512 GB','Rp8,3 jt'],
+['HEMAT','Di bawah','Rp6 jt','#FFF8DB,#FFEBA3','#B45309','#FBBF24','#92400E','Cukup untuk kuliah','Harga bersahabat','< Rp6 jt'],
+['PORTABEL','Tipis','Ringan','#E9F6FF,#C4E4FB','#0284C7','#38BDF8','#075985','Di bawah 1,4 kg','Bawa ke kampus','Rp10 jt'],
+['LAYAR','Layar','OLED','#F5E9FF,#E2C9FF','#9333EA','#C084FC','#581C87','Warna pekat','Nyaman di mata','Rp12 jt'],
+['KREATOR','Kreator','& GPU','#FFE9EE,#FFC7D3','#E11D48','#FB7185','#881337','Render lebih cepat','GPU dedicated','Rp15 jt+']];
+function creative(d){return '<div class="fill" style="background:linear-gradient(168deg,'+d[3]+')"></div>'+
+'<div class="cv" style="top:18px;text-align:right;font-size:3.6px;letter-spacing:.15em;color:#5B6472">'+d[0]+'</div>'+
+'<div class="cv t-big" style="top:32px;font-size:15px;color:#0B1220">'+d[1]+'</div>'+
+'<div class="cv t-big" style="top:48px;font-size:15px;color:'+d[4]+'">'+d[2]+'</div>'+
+'<div class="lp" style="top:98px"><div class="ls" style="background:linear-gradient(135deg,'+d[5]+','+d[6]+')"></div><div class="lb"></div></div>'+
+'<div class="cv" style="top:186px;font-size:5.2px;font-weight:700;line-height:1.7;color:#0B1220"><div style="color:'+d[4]+'">&#9670; '+d[7]+'</div><div>&#9670; '+d[8]+'</div></div>'+
+'<div style="position:absolute;left:10px;top:236px;padding:5px 11px;border-radius:20px;background:#0B1B3A;font-size:5px;font-weight:600;color:#fff;letter-spacing:.05em">'+d[9]+'</div>'}
+var N=37,cards=[];
+for(var i=0;i<N;i++){var c=document.createElement('div');c.className='card';c.innerHTML=creative(DATA[i%10])+'<div class="edge"></div>';ring.appendChild(c);cards.push(c)}
+/* 3D ring: camera at ring centre, R=perspective=891, step=360/37, cull beyond 42deg */
+var R=891,STEP=360/N,phase=-2,RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
+function placeCards(){for(var i=0;i<N;i++){var a=(((i*STEP+phase)%360)+540)%360-180,el=cards[i];if(Math.abs(a)>42){el.style.visibility='hidden';continue}el.style.visibility='visible';var r=a*Math.PI/180,c=Math.cos(r);el.style.transform='translate3d('+R*Math.sin(r)+'px,0,'+R*(1-c)+'px) rotateY('+(-a)+'deg)';el.style.filter='brightness('+(.84+.5*(1/c-1))+')'}}
+var last=0;function tick(t){if(!last)last=t;var dt=Math.min((t-last)/1000,.1);last=t;if(!RM)phase-=1.9*dt;placeCards();requestAnimationFrame(tick)}
+document.addEventListener('visibilitychange',function(){last=0});
+/* type fitter: exact ink width + cap height + baseline from canvas font metrics */
+var cx=document.createElement('canvas').getContext('2d');
+function capRatio(el){var cs=getComputedStyle(el);cx.font=cs.fontWeight+' 100px '+cs.fontFamily;return(cx.measureText('H').actualBoundingBoxAscent||70)/100}
+function ink(el){return el.getBoundingClientRect().width/K}
+function fitBox(el,tw,tc,pre){pre=pre||'';el.style.transform=pre;el.style.fontSize=(tc/capRatio(el))+'px';el.style.transform=pre+' scaleX('+(tw/ink(el))+')'}
+function baseline(el,y){var cs=getComputedStyle(el),sz=parseFloat(cs.fontSize);cx.font=cs.fontWeight+' '+sz+'px '+cs.fontFamily;var m=cx.measureText('H'),A=m.fontBoundingBoxAscent||sz*.8,D=m.fontBoundingBoxDescent||sz*.2;el.style.top=(y-((sz-(A+D))/2+A))+'px'}
+function centreLabel(btn,el,cap){el.style.top='';var p=document.createElement('i');p.style.cssText='display:inline-block;width:0;height:0';el.appendChild(p);var base=(p.getBoundingClientRect().top-btn.getBoundingClientRect().top)/K;el.removeChild(p);el.style.top=(btn.offsetHeight/2-(base-cap/2)+1.1)+'px'}
+var ids=['h1a','h1b','sub1','sub2','badgeTxt','wmName','ctaLabel','vpLabel'].map(function(x){return document.getElementById(x)});
+function layout(T){T=T||1;var g=function(i){return ids[i]};
+fitBox(g(0),563.5*T,37.2*T,'translateX(-50%)');baseline(g(0),204.5);
+fitBox(g(1),197.5*T,37.2*T,'translateX(-50%)');baseline(g(1),258.5);
+fitBox(g(2),389*T,8.4*T,'translateX(-50%)');baseline(g(2),300.5);
+fitBox(g(3),311*T,8.4*T,'translateX(-50%)');baseline(g(3),316.5);
+fitBox(g(4),184*T,9.4*T,'translate(2px,-1px)');
+fitBox(g(5),51*T,11.4*T);baseline(g(5),38.5);
+fitBox(g(6),87*T,8.9*T);centreLabel(g(6).parentNode,g(6),8.9*T);
+fitBox(g(7),76*T,9.5*T);centreLabel(g(7).parentNode,g(7),9.5*T);
+links.style.transform='';var as=[].slice.call(links.children);
+if(innerWidth>1080){var fs=7.9/capRatio(as[0]);as.forEach(function(a){a.style.fontSize=fs+'px'});links.style.transform='scaleX('+(317/ink(links))+')'}else as.forEach(function(a){a.style.fontSize=''});
+placeCards()}
+/* scale law: k=min(vw/W, vh/560); tablet narrows the design window, then shares spare height 3 ways */
+function resize(){var vw=innerWidth,vh=innerHeight,W=1172,ramp=0,ss=0,rs=1,st=0;$('#stage').style.height=vh+'px';
+if(vw<=1080){W=920+(Math.max(vw,701)-701)*(1172-920)/(1080-701);if(vh>vw*1.15)W=Math.min(W,900);ramp=Math.min(1,(1080-vw)/120);if(vw<701)W=640}
+K=Math.min(vw/W,vh/560);var fill=Math.max(0,vh/K-657);
+if(fill>0&&ramp>0){ss=Math.min(fill*.55,420)*ramp;rs=1+Math.min(fill/1100,.75)*ramp;st=Math.max(0,(219.5-125*rs+ss)/2-28)*ramp;fill-=ss}
+var s=cv.style;s.setProperty('--k',K);s.setProperty('--fill',fill+'px');s.setProperty('--stshift',st+'px');s.setProperty('--sshift',ss+'px');s.setProperty('--rs',rs);
+if(vw>1080&&nav.classList.contains('open'))toggle(false);
+layout(1+.14*ramp)}
+function toggle(o){nav.classList.toggle('open',o);burger.setAttribute('aria-expanded',o)}
+burger.addEventListener('click',function(e){e.stopPropagation();toggle(!nav.classList.contains('open'))});
+document.addEventListener('click',function(e){if(!nav.contains(e.target)||e.target.closest('.links a'))toggle(false)});
+document.addEventListener('keydown',function(e){if(e.key==='Escape'&&nav.classList.contains('open')){toggle(false);burger.focus()}});
+addEventListener('resize',resize);if(window.visualViewport)visualViewport.addEventListener('resize',resize);
+resize();document.fonts.ready.then(resize);setTimeout(resize,400);setTimeout(resize,1400);requestAnimationFrame(tick);
+/* entrance: WAAPI with individual translate/scale so it never fights the fitter's transform */
+(function(){var H=document.documentElement;if(!H.classList.contains('intro')||RM||!Element.prototype.animate){H.classList.remove('intro');return}
+var D=innerWidth<=700?.66:1,E='cubic-bezier(.16,1,.3,1)',S='cubic-bezier(.22,.61,.36,1)',n=0,lastA=null,lt=0;
+function play(el,y,dur,del,ease,sc,clip){if(!el)return;var f={opacity:0,translate:'0 '+y*D+'px'},t={opacity:1,translate:'0 0'};if(sc){f.scale=sc;t.scale='1'}if(clip){f.clipPath='inset(100% 0 -30% 0)';t.clipPath='inset(-30% 0 -30% 0)'}var a=el.animate([f,t],{duration:dur,delay:del,easing:ease,fill:'both'});a.id='intro:'+n++;if(del+dur>lt){lt=del+dur;lastA=a}}
+function settle(){document.getAnimations().forEach(function(a){if(String(a.id).indexOf('intro:')===0)a.cancel()});H.classList.remove('intro')}
+var q=function(s){return $(s)};
+play(q('.nav'),-9,620,60,E);play(q('.mark'),6,520,150,S);play(q('.wm'),6,520,185,S);
+[].forEach.call(document.querySelectorAll('.links a'),function(a,i){play(a,6,460,215+i*45,S)});
+play(burger,6,460,300,S);play(q('.nav .btn'),6,500,400,S);
+play(q('.badge'),11,560,270,E,'.985');play($('#h1a'),15,900,380,E,0,1);play($('#h1b'),15,900,470,E,0,1);
+play($('#sub1'),10,620,690,E);play($('#sub2'),10,620,745,E);play(q('.cta2'),13,620,830,E,'.985');
+play(ring,18,950,700,E,'.99');play(q('.browser'),26,900,900,E);play(q('.wa'),0,500,1260,E,'.88');
+if(lastA)lastA.finished.then(settle,settle);else settle()})();
+})();
+</script>
+<script>
+(function(){var g=document.getElementById.bind(document),r=g('bg'),o=g('bgv'),res=g('res'),need='Coding';
+var L=[['ASUS Vivobook Go 14','Core i3 · 8 GB · 256 GB','Rp5.799.000',84,'Hemat dan cukup untuk tugas kuliah harian.','RAM 8 GB terasa sempit untuk banyak aplikasi sekaligus.'],['Acer Aspire Lite 14','Core i5 · 16 GB · 512 GB','Rp7.599.000',90,'RAM 16 GB cukup untuk multitasking.','Grafis terintegrasi, kurang ideal untuk render berat.'],['ASUS Vivobook 14','Ryzen 5 · 16 GB · 512 GB','Rp8.299.000',94,'Seimbang antara performa, RAM, dan harga.','Baterai lebih pendek dibanding laptop tipis lain.'],['Lenovo IdeaPad Slim 5','Ryzen 7 · 16 GB · 512 GB','Rp12.999.000',93,'Performa kuat dengan bodi tipis dan ringan.','Harga naik cukup jauh dari kelas di bawahnya.'],['ASUS TUF A15','Ryzen 7 · RTX 4050 · 16 GB','Rp16.999.000',95,'GPU dedicated untuk gaming dan render.','Lebih berat dan baterainya cepat habis.']];
+var N={Coding:'Cocok untuk VS Code, Docker, dan emulator.',Desain:'Layar dan GPU mendukung Figma dan editing.',Gaming:'Frame rate stabil untuk game populer.',Kuliah:'Ringan dibawa dan awet untuk kelas seharian.',Office:'Stabil untuk dokumen, rapat, dan multitasking.'};
+function f(n){return 'Rp'+String(n*1000000).replace(/\B(?=(\d{3})+(?!\d))/g,'.')}
+function draw(){var b=+r.value;o.textContent=f(b);var i=b<6?0:b<8?1:b<10?2:b<15?3:4,l=L[i],d=2*Math.PI*34;
+res.innerHTML='<div style="display:flex;gap:18px;align-items:center"><svg width="84" height="84" viewBox="0 0 84 84" role="img" aria-label="Kecocokan '+l[3]+' persen"><circle cx="42" cy="42" r="34" fill="none" stroke="#E3EAF6" stroke-width="8"/><circle cx="42" cy="42" r="34" fill="none" stroke="#1D6BFF" stroke-width="8" stroke-linecap="round" stroke-dasharray="'+d*l[3]/100+' '+d+'" transform="rotate(-90 42 42)"/><text x="42" y="48" text-anchor="middle" fill="#0B1220" font-size="20" font-weight="800">'+l[3]+'%</text></svg><div><div style="font-size:12px;font-weight:700;letter-spacing:1px;color:#1D6BFF">BEST MATCH · '+need.toUpperCase()+'</div><div style="font-size:20px;font-weight:800;margin:4px 0">'+l[0]+'</div><div style="font:500 13px JetBrains Mono,monospace;color:#5B6472">'+l[1]+'</div><div style="font-weight:700;margin-top:4px">'+l[2]+'</div></div></div><p class="p2" style="margin-top:18px"><b style="color:#16A34A">Alasan:</b> '+l[4]+' '+N[need]+'</p><p class="p2" style="margin-top:10px;background:#FFF6DC;border-radius:12px;padding:12px"><b>Trade-off:</b> '+l[5]+'</p>'}
+r.addEventListener('input',draw);[].forEach.call(document.querySelectorAll('#needs .chip2'),function(c){c.addEventListener('click',function(){[].forEach.call(document.querySelectorAll('#needs .chip2'),function(x){x.setAttribute('aria-pressed',x===c)});need=c.textContent;draw()})});draw()})();
+</script>
+</body>
+</html>

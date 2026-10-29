@@ -1,0 +1,6 @@
+{
+  "name": "SPECO — Spec for You",
+  "description": "Platform rekomendasi laptop berbasis AI untuk mahasiswa Indonesia berdasarkan budget, jurusan, dan kebutuhan kuliah.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
