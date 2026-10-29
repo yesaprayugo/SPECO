@@ -1099,9 +1099,10 @@ input[type=range].speco-range{
     radial-gradient(circle at 50% 0%, rgba(255,255,255,.92) 0%, rgba(204,251,241,.72) 52%, rgba(186,230,253,.82) 100%);
   border:1px solid rgba(255,255,255,.95);
   outline:1px solid rgba(13,148,136,.24);
-  padding:64px 32px 0;text-align:center;
+  padding:60px 32px 48px;text-align:center;
   box-shadow:0 24px 60px rgba(13,148,136,.12);
 }
+.s8-cta > *:not(.s8-laptop-bottom){position:relative;z-index:2}
 .s8-k1{font-size:11px;font-weight:800;letter-spacing:.35em;color:var(--muted);text-transform:uppercase}
 .s8-k2{font-size:11px;font-weight:800;letter-spacing:.22em;color:var(--teal);text-transform:uppercase;margin-top:10px}
 .s8-title{
@@ -1115,7 +1116,7 @@ input[type=range].speco-range{
   font-size:15px;color:var(--muted);max-width:490px;margin:14px auto 26px;line-height:1.65;
 }
 .s8-perks{
-  display:flex;justify-content:center;gap:32px;margin:28px auto 32px;flex-wrap:wrap;
+  display:flex;justify-content:center;gap:32px;margin:28px auto 0;flex-wrap:wrap;
 }
 .s8-perk{
   background:rgba(255,255,255,.72);-webkit-backdrop-filter:blur(10px);backdrop-filter:blur(10px);
@@ -1124,9 +1125,12 @@ input[type=range].speco-range{
 .s8-perk b{display:block;font-size:13px;font-weight:800;color:var(--ink)}
 .s8-perk span{display:block;font-size:11.5px;color:var(--muted);margin-top:2px}
 .s8-laptop-bottom{
-  max-width:520px;width:100%;height:200px;object-fit:cover;display:block;
-  margin:0 auto;border-radius:18px 18px 0 0;
-  box-shadow:0 -12px 36px rgba(15,23,42,.18);border:4px solid #FFFFFF;border-bottom:none;
+  position:absolute;bottom:0;left:50%;transform:translateX(-50%);
+  width:min(640px, 92%);height:260px;object-fit:cover;object-position:center top;
+  opacity:0.2;pointer-events:none;z-index:1;
+  border:none;box-shadow:none;border-radius:0;
+  -webkit-mask-image:linear-gradient(to top, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
+  mask-image:linear-gradient(to top, rgba(0,0,0,1) 40%, rgba(0,0,0,0) 100%);
 }
 
 .foot{
@@ -1248,10 +1252,10 @@ input[type=range].speco-range{
   .bc-name{font-size:15.5px}
   .bc-sub-badge{font-size:9px}
   .bc-series{font-size:10.5px}
-  .s8-cta{padding:40px 18px 0;border-radius:24px}
-  .s8-perks{gap:10px;margin:20px auto 24px}
+  .s8-cta{padding:36px 18px 32px;border-radius:24px}
+  .s8-perks{gap:10px;margin:20px auto 0}
   .s8-perk{width:100%;padding:10px 14px}
-  .s8-laptop-bottom{height:150px}
+  .s8-laptop-bottom{height:200px;width:100%}
   .foot .w2{flex-direction:column;align-items:flex-start !important;text-align:left !important}
   .foot .w2>div{text-align:left !important}
   .modal-backdrop{padding:12px;align-items:flex-end}
