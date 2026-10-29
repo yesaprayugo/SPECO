@@ -52,7 +52,13 @@ button{font-family:inherit}
 /* =====================================================================
    HERO STAGE — VIBRANT TEAL/SKY LIGHT THEME + FULLSCREEN SAFE SCALE
    ===================================================================== */
-.stage{position:relative;height:100vh;overflow:hidden;background:#EAF6F6}
+.stage{
+  position:relative;height:100vh;overflow:hidden;
+  background:
+    radial-gradient(ellipse 75% 55% at 50% 15%, rgba(20,184,166,.22) 0%, rgba(14,165,233,.12) 48%, transparent 75%),
+    radial-gradient(ellipse 75% 50% at 50% 72%, rgba(13,148,136,.20) 0%, rgba(56,189,248,.12) 55%, transparent 82%),
+    linear-gradient(180deg, #F8FEFD 0%, #EBF8F7 52%, #DFF2F6 100%);
+}
 .canvas{
   position:absolute;left:50%;top:0;width:1172px;height:690px;
   transform:translateX(-50%) scale(var(--k,1));transform-origin:50% 0;
@@ -62,13 +68,7 @@ button{font-family:inherit}
 .stack>*{position:absolute;pointer-events:auto}
 .burger{display:none}
 
-.bg{
-  inset:0;
-  background:
-    radial-gradient(ellipse 68% 52% at 50% 15%, rgba(20,184,166,.22) 0%, rgba(14,165,233,.12) 48%, transparent 75%),
-    radial-gradient(ellipse 65% 48% at 50% 72%, rgba(13,148,136,.20) 0%, rgba(56,189,248,.12) 55%, transparent 82%),
-    linear-gradient(180deg, #F8FEFD 0%, #EBF8F7 52%, #DFF2F6 100%);
-}
+.bg{inset:0;background:transparent;pointer-events:none}
 .stars{left:0;top:0;width:1px;height:1px;border-radius:50%;background:var(--teal)}
 
 /* =====================================================================
@@ -180,27 +180,28 @@ button{font-family:inherit}
 #sub2{top:247px}
 
 /* =====================================================================
-   3D CAROUSEL RING — REAL LAPTOP PHOTOS (INTERACTIVE CLICKABLE)
+   3D CAROUSEL RING — 100% SYMMETRICAL CENTERED AT 586PX + SUBTLE EDGE FADE
    ===================================================================== */
 .showcase{left:0;top:0;width:1172px;height:0}
 .ring{
-  left:0;top:0;width:1172px;height:690px;z-index:50;
+  position:absolute;left:0;top:0;width:1172px;height:690px;z-index:50;
   perspective:891px;perspective-origin:586px 880px;
   transform-style:preserve-3d;pointer-events:none;
 }
 .card{
   position:absolute;left:586px;top:548px;width:136px;height:286px;margin:-143px 0 0 -68px;
-  border-radius:14px;overflow:hidden;background:rgba(255,255,255,.88);
-  box-shadow:0 20px 42px rgba(15,23,42,.16), 0 4px 12px rgba(13,148,136,.10);
-  backface-visibility:hidden;will-change:transform;
+  border-radius:14px;overflow:hidden;background:#FFFFFF;
+  box-shadow:0 18px 38px rgba(15,23,42,.16), 0 4px 12px rgba(13,148,136,.10);
+  -webkit-backface-visibility:hidden;backface-visibility:hidden;
+  will-change:transform,opacity;
   pointer-events:auto;cursor:pointer;
   transition:box-shadow .2s;
 }
 .card:hover{
-  box-shadow:0 24px 50px rgba(13,148,136,.35), 0 0 0 2px var(--teal);
+  box-shadow:0 24px 50px rgba(13,148,136,.38), 0 0 0 2.5px var(--teal);
 }
-.card-photo-wrap{position:absolute;inset:0;width:100%;height:100%;overflow:hidden}
-.card-bg-img{width:100%;height:100%;object-fit:cover;display:block}
+.card-photo-wrap{position:absolute;inset:0;width:100%;height:100%;overflow:hidden;background:#0F172A}
+.card-bg-img{width:100%;height:100%;object-fit:cover;display:block;transform:translateZ(0)}
 .card-scrim{
   position:absolute;inset:0;
   background:linear-gradient(180deg, rgba(15,23,42,.58) 0%, rgba(15,23,42,.08) 38%, rgba(15,23,42,.20) 58%, rgba(255,255,255,.94) 76%, rgba(255,255,255,.98) 100%);
@@ -343,7 +344,7 @@ button{font-family:inherit}
 @media (max-width:1080px){
   .burger{
     display:grid;place-content:center;gap:4px;
-    width:42px;height:42px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer;
+    width:42px;height:42px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer;flex-shrink:0;
   }
   .burger span{display:block;width:19px;height:1.8px;border-radius:2px;background:var(--ink);transition:transform .28s,opacity .18s}
   .burger:focus-visible{outline:2px solid var(--teal);outline-offset:2px}
@@ -351,9 +352,9 @@ button{font-family:inherit}
   .nav.open .burger span:nth-child(2){opacity:0}
   .nav.open .burger span:nth-child(3){transform:translateY(-5.8px) rotate(-45deg)}
   .navmenu{
-    display:block;position:absolute;left:0;right:0;top:70px;padding:14px;margin-left:0;
-    border-radius:18px;border:1px solid rgba(255,255,255,.85);
-    background:rgba(255,255,255,.95);
+    display:block;position:absolute;left:0;right:0;top:68px;padding:14px;margin-left:0;
+    border-radius:18px;border:1px solid rgba(255,255,255,.92);
+    background:rgba(255,255,255,.97);
     -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
     box-shadow:0 26px 60px rgba(15,23,42,.18);
     opacity:0;visibility:hidden;transform:translateY(-8px);
@@ -367,6 +368,90 @@ button{font-family:inherit}
   .stack{transform:translateY(var(--stshift,0px))}
   .showcase{transform:translateY(var(--sshift,0px))}
   .ring{transform:scale(var(--rs,1));transform-origin:586px 548px}
+}
+
+/* =====================================================================
+   NATIVE FLUID MOBILE HERO LAYOUT (<= 768px) — FLEXIBLE & ERGONOMIC
+   ===================================================================== */
+@media (max-width:768px){
+  .stage{
+    height:auto !important;min-height:100svh;overflow-x:hidden;overflow-y:visible;
+    padding:12px 14px 28px;display:flex;flex-direction:column;
+  }
+  .canvas{
+    position:relative;left:auto;top:auto;width:100%;height:auto;
+    transform:none !important;display:flex;flex-direction:column;align-items:center;
+  }
+  .canvas>.bg,.canvas>.stars{position:absolute}
+  .stack{
+    position:relative;inset:auto;width:100%;z-index:300;
+    display:flex;flex-direction:column;align-items:center;
+    transform:none !important;pointer-events:auto;
+  }
+  .stack>*{position:static;transform:none !important}
+  .nav{
+    position:relative !important;left:auto !important;top:auto !important;
+    width:100% !important;height:56px;padding:0 10px 0 14px;border-radius:16px;
+    margin-bottom:20px;
+  }
+  .brand-logo-only{height:32px}
+  .h1{
+    white-space:normal;font-size:clamp(28px,8vw,36px);line-height:1.12;
+    max-width:100%;padding:0 4px;
+  }
+  #h1b{margin-bottom:10px}
+  .sub{
+    white-space:normal;font-size:13.5px;line-height:1.5;max-width:340px;padding:0 6px;
+  }
+  #sub1,#sub2{display:inline}
+  .cta2{
+    margin-top:16px;width:100%;max-width:270px;height:46px;font-size:14px;
+  }
+  .showcase{
+    position:relative !important;left:auto !important;top:auto !important;
+    width:100vw;height:245px;margin:10px -14px 6px;overflow:hidden;
+    transform:none !important;
+  }
+  .ring{
+    position:absolute !important;left:50% !important;top:-305px !important;
+    width:1172px;height:690px;
+    transform:translateX(-50%) scale(0.68) !important;
+    transform-origin:586px 548px !important;
+  }
+  .browser{
+    position:relative !important;left:auto !important;top:auto !important;
+    width:100% !important;height:auto !important;
+    border-radius:18px;border:1px solid rgba(255,255,255,.92);
+    background:rgba(255,255,255,.72);
+    box-shadow:0 14px 32px rgba(13,148,136,.12);
+    margin-top:4px;overflow:hidden;
+  }
+  .bar{position:relative;height:36px;padding:0 12px}
+  .omni{padding:3px 10px;font-size:8.5px}
+  .bar-badge span{display:none}
+  .dock-body{
+    position:relative;left:auto;right:auto;top:auto;bottom:auto;
+    padding:12px;gap:10px;
+  }
+  .dock-top{
+    flex-direction:column;align-items:stretch;gap:8px;
+  }
+  .dock-label{font-size:10px}
+  .dock-presets{
+    justify-content:flex-start;overflow-x:auto;padding-bottom:4px;
+    -webkit-overflow-scrolling:touch;
+  }
+  .dock-pill{font-size:11px;padding:6px 12px;flex-shrink:0}
+  .dock-jump{
+    text-align:center;padding:8px 12px;font-size:11.5px;border-radius:10px;
+  }
+  .dock-meters{
+    grid-template-columns:repeat(2,1fr);gap:8px;margin-top:2px;
+  }
+  .d-meter{padding:8px 10px}
+  .dm-head{font-size:10px}
+  .dm-head b{font-size:10.5px}
+  .dm-sub{font-size:9.5px}
 }
 
 /* =====================================================================
@@ -1074,13 +1159,72 @@ input[type=range].speco-range{
   background:var(--teal);color:#FFFFFF;padding:2px 8px;border-radius:999px;font-size:11.5px;
 }
 
-@media(max-width:900px){
-  .s1-grid,.s2-steps,.s3-grid,.s4-grid,.s5-grid,.s6-top,.s6-cards,.s7-strip,.brand-spotlight{grid-template-columns:1fr}
+@media(max-width:960px){
+  .s1-grid,.s2-steps,.s3-grid,.s4-grid,.s5-grid,.s6-top,.s6-cards,.s7-strip,.brand-spotlight{grid-template-columns:1fr;gap:28px}
   .s1-cards-grid,.bs-models{grid-template-columns:1fr}
-  .brands-grid{grid-template-columns:repeat(2,1fr)}
-  .s1-pillars{grid-template-columns:1fr}
-  .s7-stat{border-right:none;border-bottom:1px solid rgba(13,148,136,.16);padding-bottom:14px}
+  .brands-grid{grid-template-columns:repeat(2,1fr);gap:12px}
+  .s1-pillars{grid-template-columns:1fr;gap:14px;margin-top:28px}
+  .s7-stat{border-right:none;border-bottom:1px solid rgba(13,148,136,.16);padding-bottom:14px;padding-right:0}
   .modal-hero,.modal-bars{grid-template-columns:1fr}
+}
+
+@media(max-width:768px){
+  .sec{padding:56px 0}
+  .w2{padding:0 16px}
+  .sec-h2{font-size:clamp(26px,7vw,34px)}
+  .sec-lead{font-size:14px;line-height:1.6}
+  .budget-widget-card,.s1-showcase,.s2-card,.s2-banner,.quiz-box,.bm-body,.w-table-card,.s6-card,.s7-strip,.brand-spotlight{
+    padding:20px 18px;border-radius:20px;
+  }
+  .bw-val{font-size:28px}
+  .need-chips{gap:8px}
+  .n-chip{flex:1 1 calc(50% - 6px);justify-content:center;padding:10px 12px;font-size:12.5px}
+  .s1-actions{flex-direction:column;align-items:stretch;gap:12px}
+  .btn-teal-lg{width:100%;justify-content:center;padding:13px 20px;font-size:14px}
+  .play-link{justify-content:center}
+  .sc-pager{flex-wrap:wrap;gap:10px}
+  .qb-q{font-size:18px}
+  .qb-opts{grid-template-columns:1fr;gap:10px;margin-bottom:20px}
+  .qb-opt{padding:12px 14px;font-size:13px}
+  .w-head,.w-row{grid-template-columns:102px 1fr 38px;gap:10px;font-size:12.5px}
+  .s6-visual{
+    min-height:auto;flex-direction:column;gap:10px;padding:16px 0;
+  }
+  .s6-aura{width:240px;height:240px}
+  .s6-laptop-img{width:100%;max-width:290px;height:185px;transform:none;margin-bottom:6px}
+  .s6-float{
+    position: static !important;width:100%;padding:10px 14px;
+  }
+  .s6-float br{display:none}
+  .s7-photo-card{
+    height:auto;flex-direction:column;text-align:center;gap:12px;padding:18px;
+  }
+  .s7-quote{max-width:100%;transform:none;font-size:18px}
+  .s7-photo-card img{width:100%;height:140px}
+  .brand-filter-bar{
+    flex-wrap:nowrap;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch;
+  }
+  .bf-tab{flex-shrink:0;font-size:12px;padding:8px 14px}
+  .brands-grid{grid-template-columns:repeat(2,1fr);gap:10px}
+  .brand-card{padding:14px;min-height:120px}
+  .bc-brand-row{gap:8px;margin-top:8px}
+  .bc-logo-box{width:38px;height:36px}
+  .bc-name{font-size:15.5px}
+  .bc-sub-badge{font-size:9px}
+  .bc-series{font-size:10.5px}
+  .s8-cta{padding:40px 18px 0;border-radius:24px}
+  .s8-perks{gap:10px;margin:20px auto 24px}
+  .s8-perk{width:100%;padding:10px 14px}
+  .s8-laptop-bottom{height:150px}
+  .foot .w2{flex-direction:column;align-items:flex-start !important;text-align:left !important}
+  .foot .w2>div{text-align:left !important}
+  .modal-backdrop{padding:12px;align-items:flex-end}
+  .modal-card{padding:20px 18px;border-radius:22px 22px 16px 16px;max-height:88svh}
+  .compare-fab{right:14px;bottom:14px;padding:10px 16px;font-size:12px}
+}
+
+@media(max-width:400px){
+  .brands-grid{grid-template-columns:1fr}
 }
 
 /* Intro resting states */
@@ -1810,18 +1954,26 @@ function stars(el,n,bl,a0,a1){
 stars($('#stA'),110,0,.06,.18);
 stars($('#stB'),14,1.2,.14,.28);
 
-/* Ten laptop creatives (including Local & International brands) using real verified laptop photos */
+/* 18 Distinct Laptop Creatives — Every single card has its own unique verified photograph! */
 var DATA=[
   {cat:'KULIAH · CODING',t1:'ASUS Vivobook 14',t2:'Coding Edition',score:94,s1:'Ryzen 5 7535HS · 16 GB',s2:'512 GB NVMe · IPS FHD',price:'Rp8.299.000',tag:'Best Match TI',accent:'#0D9488',img:'/assets/photos/laptop2.jpg',reason:'Prosesor Ryzen 5 H-Series dan RAM 16 GB sangat responsif untuk VS Code, Docker, dan kompilasi proyek kuliah.',tradeoff:'Cakupan warna layar standar 45% NTSC (kurang ideal untuk cetak grafis profesional).'},
   {cat:'BRAND LOKAL · WORK',t1:'Advan Workplus',t2:'Ryzen 5 6600H',score:93,s1:'Ryzen 5 6600H · 16 GB',s2:'512 GB NVMe · 14" FHD',price:'Rp7.199.000',tag:'Value Lokal Terbaik',accent:'#0D9488',img:'/assets/photos/laptop5.jpg',reason:'Brand lokal Indonesia dengan performa prosesor kelas H-Series dan RAM 16 GB LPDDR5 di harga Rp7 jutaan.',tradeoff:'Speaker standar dan jaringan service center tidak sebanyak brand global.'},
   {cat:'DESAIN & KREATIF',t1:'Zenbook 14 OLED',t2:'100% DCI-P3',score:95,s1:'Core Ultra 5 · 16 GB',s2:'Layar 2.8K OLED 120Hz',price:'Rp12.999.000',tag:'Akurasi Warna',accent:'#7C3AED',img:'/assets/photos/laptop1.jpg',reason:'Panel 2.8K OLED 100% DCI-P3 terkalibrasi Pantone dengan baterai awet seharian untuk mahasiswa DKV & Arsitektur.',tradeoff:'RAM tersolder (onboard) sehingga tidak bisa di-upgrade di kemudian hari.'},
-  {cat:'BRAND LOKAL · GAMING',t1:'Axioo Pongo 725',t2:'GeForce RTX 2050',score:91,s1:'Core i7-12650H · 16 GB',s2:'RTX 2050 4GB · 144Hz',price:'Rp9.999.000',tag:'Lokal Kencang',accent:'#0284C7',img:'/assets/photos/laptop3.jpg',reason:'Laptop gaming/render kebanggaan lokal dengan Core i7 H-Series dan GPU diskrit di bawah Rp10 juta.',tradeoff:'Bobot 2,1 kg dan baterai sekitar 3,5 jam untuk pemakaian non-stop.'},
+  {cat:'BRAND LOKAL · GAMING',t1:'Axioo Pongo 725',t2:'GeForce RTX 2050',score:91,s1:'Core i7-12650H · 16 GB',s2:'RTX 2050 4GB · 144Hz',price:'Rp9.999.000',tag:'Lokal Kencang',accent:'#0284C7',img:'/assets/photos/laptop17.jpg',reason:'Laptop gaming/render kebanggaan lokal dengan Core i7 H-Series dan GPU diskrit di bawah Rp10 juta.',tradeoff:'Bobot 2,1 kg dan baterai sekitar 3,5 jam untuk pemakaian non-stop.'},
   {cat:'GAME & RENDER 3D',t1:'ASUS TUF A15',t2:'GeForce RTX 4050',score:96,s1:'Ryzen 7 · RTX 4050 6GB',s2:'16 GB DDR5 · 144Hz',price:'Rp15.499.000',tag:'Performa Tinggi',accent:'#0284C7',img:'/assets/photos/laptop3.jpg',reason:'Kombinasi Ryzen 7 dan RTX 4050 6GB melibas AutoCAD, Blender, Lumion, dan eksperimen Machine Learning.',tradeoff:'Adaptor charger cukup besar dibawa ke kampus setiap hari.'},
   {cat:'KULIAH HARIAN',t1:'Acer Aspire Lite',t2:'Ringan & Awet',score:90,s1:'Core i5 · RAM 16 GB',s2:'SSD 512 GB · 1,35 kg',price:'Rp7.599.000',tag:'Favorit Kampus',accent:'#059669',img:'/assets/photos/laptop4.jpg',reason:'Bobot ringan 1,35 kg dengan slot RAM dan SSD yang mudah di-upgrade untuk pemakaian hingga lulus.',tradeoff:'Belum dilengkapi backlit keyboard pada beberapa varian batch.'},
   {cat:'BEST VALUE AI',t1:'IdeaPad Slim 5',t2:'Skor 92% Cocok',score:92,s1:'Ryzen 7 · 16 GB LPDDR5',s2:'Layar 100% sRGB · 512GB',price:'Rp8.799.000',tag:'Pilihan Editor',accent:'#0D9488',img:'/assets/photos/laptop6.jpg',reason:'Bodi metal tangguh, layar 100% sRGB nyaman di mata, dan performa tinggi untuk coding maupun desain.',tradeoff:'Tidak memiliki port RJ-45 Ethernet bawaan (perlu dongle USB-C).'},
   {cat:'BRAND LOKAL · HEMAT',t1:'Axioo Hype 5 AMD',t2:'Ryzen 5 5500U',score:89,s1:'Ryzen 5 5500U · 8 GB',s2:'256 GB NVMe · Upgradeable',price:'Rp5.699.000',tag:'Ramah Kantong',accent:'#D97706',img:'/assets/photos/laptop7.jpg',reason:'Solusi paling hemat untuk mahasiswa baru yang butuh prosesor 6-core kencang dengan budget di bawah Rp6 juta.',tradeoff:'Layar masih panel standar dan baterai 4–5 jam.'},
   {cat:'ULTRA PORTABEL',t1:'MacBook Air M2',t2:'Baterai 18 Jam',score:93,s1:'Chip M2 · Unified RAM',s2:'Layar Liquid Retina',price:'Rp13.999.000',tag:'Super Awet',accent:'#0284C7',img:'/assets/photos/laptop8.jpg',reason:'Daya tahan baterai hingga 18 jam tanpa kipas bising, sangat ideal untuk mobilitas tinggi di kampus.',tradeoff:'Kurang cocok untuk aplikasi teknik sipil/mesin yang wajib Windows.'},
-  {cat:'DATA SCIENCE & AI',t1:'Legion Slim 5',t2:'Workstation Kampus',score:96,s1:'Ryzen 7 · RTX 4060 8GB',s2:'RAM 16 GB · Coldfront',price:'Rp17.899.000',tag:'ML & Rendering',accent:'#0D9488',img:'/assets/photos/laptop10.jpg',reason:'VRAM 8 GB dan layar 165Hz presisi tinggi untuk mahasiswa AI, Deep Learning, dan animasi 3D.',tradeoff:'Harga berada di kelas premium mahasiswa.'}
+  {cat:'DATA SCIENCE & AI',t1:'Legion Slim 5',t2:'Workstation Kampus',score:96,s1:'Ryzen 7 · RTX 4060 8GB',s2:'RAM 16 GB · Coldfront',price:'Rp17.899.000',tag:'ML & Rendering',accent:'#0D9488',img:'/assets/photos/laptop10.jpg',reason:'VRAM 8 GB dan layar 165Hz presisi tinggi untuk mahasiswa AI, Deep Learning, dan animasi 3D.',tradeoff:'Harga berada di kelas premium mahasiswa.'},
+  {cat:'LAYAR OLED KREATOR',t1:'Acer Swift Go 14',t2:'2.8K OLED AI',score:94,s1:'Core Ultra 5 · 16 GB',s2:'OLED 90Hz · 1,32 kg',price:'Rp11.999.000',tag:'Visual Tajam',accent:'#4F46E5',img:'/assets/photos/laptop9.jpg',reason:'Layar OLED 2.8K super tajam dan bobot ringan untuk mahasiswa desain komunikasi visual.',tradeoff:'RAM LPDDR5X tersolder di motherboard.'},
+  {cat:'BISNIS & RISET',t1:'HP Pavilion Plus',t2:'Layar 2.5K IPS',score:92,s1:'Ryzen 7 7840U · 16 GB',s2:'Bodi Full Metal · 512GB',price:'Rp11.499.000',tag:'Desain Elegan',accent:'#0D9488',img:'/assets/photos/laptop11.jpg',reason:'Bodi aluminium kokoh dengan kamera 5MP jernih untuk presentasi dan sidang online.',tradeoff:'Hanya memiliki satu port USB-A.'},
+  {cat:'BRAND LOKAL · EDUKASI',t1:'Zyrex Sky 232',t2:'Ringan & Ekonomis',score:87,s1:'RAM 8 GB · SSD 256 GB',s2:'Bobot 1,3 kg · FHD',price:'Rp4.699.000',tag:'Hemat Skripsi',accent:'#059669',img:'/assets/photos/laptop12.jpg',reason:'Laptop lokal ekonomis dan ringan untuk penulisan makalah, jurnal, dan tugas administrasi.',tradeoff:'Kurang cocok untuk editing video berat.'},
+  {cat:'GAMING & TEKNIK',t1:'HP Victus 15',t2:'RTX 4050 144Hz',score:92,s1:'Core i5-13420H · 16 GB',s2:'RTX 4050 · 512 GB SSD',price:'Rp13.499.000',tag:'Kalem & Kencang',accent:'#0284C7',img:'/assets/photos/laptop13.jpg',reason:'Desain minimalis yang sopan dibawa ke ruang kuliah namun bertenaga RTX 4050 untuk praktikum CAD.',tradeoff:'Bobot 2,29 kg.'},
+  {cat:'PRODUKTIVITAS HARIAN',t1:'MSI Modern 14',t2:'Engsel 180 Derajat',score:89,s1:'Core i5-1235U · 16 GB',s2:'512 GB NVMe · Backlit',price:'Rp7.699.000',tag:'Nyaman Ngetik',accent:'#0D9488',img:'/assets/photos/laptop14.jpg',reason:'Keyboard ergonomis dengan backlit putih dan engsel 180° mudah untuk diskusi kelompok.',tradeoff:'Kapasitas baterai 39Whr standar.'},
+  {cat:'ARSITEKTUR & AI',t1:'MSI Cyborg 15 AI',t2:'Futuristic RTX 4060',score:93,s1:'Core Ultra 7 · 16 GB',s2:'RTX 4060 · Bodi Translucent',price:'Rp16.999.000',tag:'Ringan di Kelasnya',accent:'#7C3AED',img:'/assets/photos/laptop15.jpg',reason:'Laptop gaming RTX 4060 dengan bobot di bawah 2 kg yang mudah dibawa ke studio kampus.',tradeoff:'TGP GPU dibatasi 45W untuk efisiensi suhu.'},
+  {cat:'GARANSI ONSITE',t1:'Dell Inspiron 14',t2:'Layar 16:10 Lega',score:91,s1:'Core i5-1340P · 16 GB',s2:'512 GB SSD · ProSupport',price:'Rp10.499.000',tag:'Purnajual Terbaik',accent:'#0284C7',img:'/assets/photos/laptop16.jpg',reason:'Dilengkapi layanan Dell ProSupport yang siap datang ke kos jika ada kendala teknis.',tradeoff:'Harga sedikit lebih tinggi dibanding kompetitor sekelas.'},
+  {cat:'EKOSISTEM PRO',t1:'MacBook Air M3',t2:'Dual Display Support',score:95,s1:'Apple M3 · 16 GB Unified',s2:'512 GB SSD · 18 Jam',price:'Rp16.499.000',tag:'Performa M3',accent:'#0D9488',img:'/assets/photos/laptop18.jpg',reason:'Mendukung dua monitor eksternal dan kompilasi iOS/Web super cepat tanpa suara kipas.',tradeoff:'Harga berada di segmen atas.'}
 ];
 
 /* =====================================================================
@@ -1977,7 +2129,7 @@ function creative(d){
     '<div class="c-foot"><span class="c-price" style="background:'+d.accent+'">'+d.price.replace('.000','rb').replace('Rp','Rp')+'</span><span class="c-tag">'+d.tag+'</span></div>';
 }
 
-var N=37,cards=[];
+var N=36,cards=[],hoverRing=false;
 for(var i=0;i<N;i++){
   (function(idx){
     var c=document.createElement('div');
@@ -1986,6 +2138,8 @@ for(var i=0;i<N;i++){
     c.addEventListener('click',function(){
       openLaptopModal(DATA[idx]);
     });
+    c.addEventListener('mouseenter',function(){hoverRing=true});
+    c.addEventListener('mouseleave',function(){hoverRing=false});
     ring.appendChild(c);
     cards.push(c);
   })(i%DATA.length);
@@ -1994,34 +2148,59 @@ for(var i=0;i<N;i++){
 var R=891,STEP=360/N,phase=-2,RM=matchMedia('(prefers-reduced-motion: reduce)').matches;
 function placeCards(){
   for(var i=0;i<N;i++){
-    var a=(((i*STEP+phase)%360)+540)%360-180,el=cards[i];
-    if(Math.abs(a)>42){el.style.visibility='hidden';continue}
-    el.style.visibility='visible';
+    var a=(((i*STEP+phase)%360)+540)%360-180,absA=Math.abs(a),el=cards[i];
+    if(absA>=43.5){
+      if(el.style.visibility!=='hidden'){
+        el.style.visibility='hidden';
+        el.style.opacity='0';
+        el.style.pointerEvents='none';
+      }
+      continue;
+    }
+    if(el.style.visibility!=='visible')el.style.visibility='visible';
     var r=a*Math.PI/180,c=Math.cos(r);
-    el.style.transform='translate3d('+R*Math.sin(r)+'px,0,'+R*(1-c)+'px) rotateY('+(-a)+'deg)';
-    el.style.filter='brightness('+(.92+.28*(1/c-1))+')';
+    /* Symmetrical left/right view: 100% solid up to 38deg, small subtle fade only at outer 38deg..43.5deg */
+    var op=1;
+    if(absA>38){
+      var t=(43.5-absA)/5.5;
+      op=t*t*(3-2*t);
+    }
+    el.style.opacity=op.toFixed(3);
+    el.style.zIndex=String(Math.round(c*1000));
+    el.style.pointerEvents=absA<41?'auto':'none';
+    el.style.transform='translate3d('+(R*Math.sin(r)).toFixed(2)+'px,0,'+(R*(1-c)).toFixed(2)+'px) rotateY('+(-a).toFixed(2)+'deg)';
   }
 }
 var last=0;
 function tick(t){
   if(!last)last=t;
-  var dt=Math.min((t-last)/1000,.1);
+  var dt=Math.min((t-last)/1000,.05);
   last=t;
-  if(!RM)phase-=1.9*dt;
+  if(!RM)phase-=(hoverRing?0.45:1.75)*dt;
   placeCards();
   requestAnimationFrame(tick);
 }
 document.addEventListener('visibilitychange',function(){last=0});
 
-/* Fullscreen-safe scale law */
+/* Fullscreen-safe scale law + Native Mobile Fluid Mode */
 function resize(){
   var vw=innerWidth,vh=innerHeight,W=1172,ramp=0,ss=0,rs=1,st=0;
+  var s=cv.style;
+  if(vw<=768){
+    $('#stage').style.height='auto';
+    s.removeProperty('--k');
+    s.removeProperty('--fill');
+    s.removeProperty('--stshift');
+    s.removeProperty('--sshift');
+    s.removeProperty('--rs');
+    placeCards();
+    return;
+  }
   $('#stage').style.height=vh+'px';
   if(vw<=1080){
     W=920+(Math.max(vw,701)-701)*(1172-920)/(1080-701);
     if(vh>vw*1.15)W=Math.min(W,900);
     ramp=Math.min(1,(1080-vw)/120);
-    if(vw<701)W=640;
   }
   K=Math.min(vw/W,vh/690);
   var fill=Math.max(0,vh/K-690);
@@ -2031,7 +2210,6 @@ function resize(){
     st=Math.max(0,(219.5-125*rs+ss)/2-28)*ramp;
     fill-=ss;
   }
-  var s=cv.style;
   s.setProperty('--k',K);
   s.setProperty('--fill',fill+'px');
   s.setProperty('--stshift',st+'px');
@@ -2419,7 +2597,7 @@ renderWeightRows('coding');
       series:'Hype Series · Pongo Gaming',range:'Rp4,5 jt – Rp13 jt',sc:'170+ Titik Service',
       desc:'Brand pelopor laptop Indonesia yang sangat populer di kalangan mahasiswa berkat seri Axioo Hype (kuliah hemat) dan Axioo Pongo (gaming & render dengan GPU RTX harga terjangkau).',
       models:[
-        {t1:'Axioo Pongo 725',t2:'Core i7-12650H · RTX 2050',price:'Rp9.999.000',score:91,img:'/assets/photos/laptop3.jpg',s1:'Core i7-12650H · 16 GB',reason:'Performa i7 H-Series & RTX 2050 terbaik di bawah Rp10 juta.',tradeoff:'Baterai sekitar 3,5 jam.'},
+        {t1:'Axioo Pongo 725',t2:'Core i7-12650H · RTX 2050',price:'Rp9.999.000',score:91,img:'/assets/photos/laptop17.jpg',s1:'Core i7-12650H · 16 GB',reason:'Performa i7 H-Series & RTX 2050 terbaik di bawah Rp10 juta.',tradeoff:'Baterai sekitar 3,5 jam.'},
         {t1:'Axioo Hype 5 AMD X3',t2:'Ryzen 5 5500U · Upgradeable',price:'Rp5.699.000',score:89,img:'/assets/photos/laptop7.jpg',s1:'Ryzen 5 5500U · 8/16 GB',reason:'Laptop mahasiswa 6-core paling ramah kantong.',tradeoff:'Panel layar standar.'}
       ]
     },
@@ -2429,7 +2607,7 @@ renderWeightRows('coding');
       desc:'Brand teknologi lokal Indonesia yang sukses menghadirkan prosesor kelas tinggi (AMD Ryzen 5/7 H-Series & Core Ultra) dengan bodi metal dan RAM 16 GB di harga yang sangat kompetitif.',
       models:[
         {t1:'Advan Workplus',t2:'Ryzen 5 6600H · 16GB/512GB',price:'Rp7.199.000',score:93,img:'/assets/photos/laptop5.jpg',s1:'Ryzen 5 6600H · 16 GB LPDDR5',reason:'Juara value di kelas Rp7 jutaan untuk coding dan analisis data.',tradeoff:'Speaker standar.'},
-        {t1:'Advan AI Gen Ultra',t2:'Core Ultra 5 125H · NPU AI',price:'Rp9.799.000',score:92,img:'/assets/photos/laptop6.jpg',s1:'Core Ultra 5 · 16 GB · 100% sRGB',reason:'Prosesor AI generasi terbaru dengan layar akurat 100% sRGB.',tradeoff:'RAM tersolder.'}
+        {t1:'Advan AI Gen Ultra',t2:'Core Ultra 5 125H · NPU AI',price:'Rp9.799.000',score:92,img:'/assets/photos/laptop19.jpg',s1:'Core Ultra 5 · 16 GB · 100% sRGB',reason:'Prosesor AI generasi terbaru dengan layar akurat 100% sRGB.',tradeoff:'RAM tersolder.'}
       ]
     },
     {
@@ -2437,8 +2615,8 @@ renderWeightRows('coding');
       series:'Sky 232 · Kintamani · Maveric',range:'Rp3,9 jt – Rp8,5 jt',sc:'Jaringan Nasional',
       desc:'Produsen laptop dalam negeri yang fokus pada perangkat edukasi ringan dan terjangkau untuk kebutuhan tugas kuliah harian, penulisan skripsi, dan administrasi.',
       models:[
-        {t1:'Zyrex Sky 232 Prime',t2:'Ringan 1,3 kg · SSD Cepat',price:'Rp4.699.000',score:86,img:'/assets/photos/laptop4.jpg',s1:'RAM 8 GB · SSD 256 GB',reason:'Sangat ringan dibawa kuliah dan hemat biaya untuk jurusan sosial/hukum.',tradeoff:'Bukan untuk aplikasi 3D berat.'},
-        {t1:'Zyrex Maveric AI',t2:'Core i5 · Desain Modern',price:'Rp7.499.000',score:88,img:'/assets/photos/laptop2.jpg',s1:'Core i5 · 16 GB RAM · 512 GB',reason:'Kapasitas memori lega untuk multitasking dokumen dan riset.',tradeoff:'GPU terintegrasi.'}
+        {t1:'Zyrex Sky 232 Prime',t2:'Ringan 1,3 kg · SSD Cepat',price:'Rp4.699.000',score:86,img:'/assets/photos/laptop12.jpg',s1:'RAM 8 GB · SSD 256 GB',reason:'Sangat ringan dibawa kuliah dan hemat biaya untuk jurusan sosial/hukum.',tradeoff:'Bukan untuk aplikasi 3D berat.'},
+        {t1:'Zyrex Maveric AI',t2:'Core i5 · Desain Modern',price:'Rp7.499.000',score:88,img:'/assets/photos/laptop20.jpg',s1:'Core i5 · 16 GB RAM · 512 GB',reason:'Kapasitas memori lega untuk multitasking dokumen dan riset.',tradeoff:'GPU terintegrasi.'}
       ]
     },
     {
@@ -2473,8 +2651,8 @@ renderWeightRows('coding');
       series:'Laptop 14s · Pavilion Plus · Victus',range:'Rp6,2 jt – Rp21 jt+',sc:'Layanan Pickup & Return',
       desc:'Menawarkan desain bersih dan profesional untuk mahasiswa bisnis, ekonomi, hingga teknik melalui seri HP Pavilion Plus dan HP Victus Gaming.',
       models:[
-        {t1:'HP Pavilion Plus 14',t2:'Ryzen 7 7840U · Layar 2.5K',price:'Rp11.499.000',score:92,img:'/assets/photos/laptop5.jpg',s1:'Ryzen 7 · 16 GB · 512 GB SSD',reason:'Bodi full metal tipis dengan webcam 5MP jernih untuk kelas online.',tradeoff:'Port USB-A hanya satu.'},
-        {t1:'HP Victus 15 Gaming',t2:'Core i5-13420H · RTX 4050',price:'Rp13.499.000',score:91,img:'/assets/photos/laptop3.jpg',s1:'Core i5 H · RTX 4050 · 144Hz',reason:'Desain kalem tidak mencolok saat dibawa ke ruang kelas.',tradeoff:'Layar sedikit bergoyang jika terkena angin kencang.'}
+        {t1:'HP Pavilion Plus 14',t2:'Ryzen 7 7840U · Layar 2.5K',price:'Rp11.499.000',score:92,img:'/assets/photos/laptop11.jpg',s1:'Ryzen 7 · 16 GB · 512 GB SSD',reason:'Bodi full metal tipis dengan webcam 5MP jernih untuk kelas online.',tradeoff:'Port USB-A hanya satu.'},
+        {t1:'HP Victus 15 Gaming',t2:'Core i5-13420H · RTX 4050',price:'Rp13.499.000',score:91,img:'/assets/photos/laptop13.jpg',s1:'Core i5 H · RTX 4050 · 144Hz',reason:'Desain kalem tidak mencolok saat dibawa ke ruang kelas.',tradeoff:'Layar sedikit bergoyang jika terkena angin kencang.'}
       ]
     },
     {
@@ -2483,7 +2661,7 @@ renderWeightRows('coding');
       desc:'Standar emas efisiensi daya baterai hingga 18 jam dan ekosistem macOS yang sangat disukai mahasiswa Ilmu Komputer, UI/UX, dan Komunikasi.',
       models:[
         {t1:'MacBook Air 13" M2',t2:'Chip M2 · Baterai 18 Jam',price:'Rp13.999.000',score:93,img:'/assets/photos/laptop8.jpg',s1:'Apple M2 · Liquid Retina · 1,24 kg',reason:'Tidak perlu bawa charger ke kampus, hening tanpa kipas.',tradeoff:'Kurang cocok untuk software teknik Windows.'},
-        {t1:'MacBook Air 13" M3',t2:'Chip M3 · Dual Display Support',price:'Rp16.499.000',score:95,img:'/assets/photos/laptop1.jpg',s1:'Apple M3 · 16 GB Unified · 512 GB',reason:'Performa single-core super cepat untuk Xcode dan kompilasi.',tradeoff:'Harga premium.'}
+        {t1:'MacBook Air 13" M3',t2:'Chip M3 · Dual Display Support',price:'Rp16.499.000',score:95,img:'/assets/photos/laptop18.jpg',s1:'Apple M3 · 16 GB Unified · 512 GB',reason:'Performa single-core super cepat untuk Xcode dan kompilasi.',tradeoff:'Harga premium.'}
       ]
     },
     {
@@ -2491,8 +2669,8 @@ renderWeightRows('coding');
       series:'Modern 14 · Thin 15 · Cyborg 15',range:'Rp6,4 jt – Rp22 jt+',sc:'Garansi Resmi 2 Tahun',
       desc:'Populer lewat seri MSI Modern 14 yang ringan dengan engsel 180 derajat dan seri Cyborg 15 transparan untuk mahasiswa teknik dan game developer.',
       models:[
-        {t1:'MSI Modern 14 C12MO',t2:'Core i5-1235U · 16 GB RAM',price:'Rp7.699.000',score:89,img:'/assets/photos/laptop4.jpg',s1:'Core i5 · 16 GB · 512 GB NVMe',reason:'Keyboard nyaman dengan travel distance 1,5mm untuk ngetik laporan.',tradeoff:'Baterai 39Whr standar.'},
-        {t1:'MSI Cyborg 15 AI',t2:'Core Ultra 7 · RTX 4060',price:'Rp16.999.000',score:93,img:'/assets/photos/laptop10.jpg',s1:'Core Ultra 7 · RTX 4060 · 144Hz',reason:'Bobot di bawah 2 kg untuk ukuran laptop RTX 4060.',tradeoff:'TGP GPU 45W efisiensi.'}
+        {t1:'MSI Modern 14 C12MO',t2:'Core i5-1235U · 16 GB RAM',price:'Rp7.699.000',score:89,img:'/assets/photos/laptop14.jpg',s1:'Core i5 · 16 GB · 512 GB NVMe',reason:'Keyboard nyaman dengan travel distance 1,5mm untuk ngetik laporan.',tradeoff:'Baterai 39Whr standar.'},
+        {t1:'MSI Cyborg 15 AI',t2:'Core Ultra 7 · RTX 4060',price:'Rp16.999.000',score:93,img:'/assets/photos/laptop15.jpg',s1:'Core Ultra 7 · RTX 4060 · 144Hz',reason:'Bobot di bawah 2 kg untuk ukuran laptop RTX 4060.',tradeoff:'TGP GPU 45W efisiensi.'}
       ]
     },
     {
@@ -2500,7 +2678,7 @@ renderWeightRows('coding');
       series:'Inspiron 14 · Latitude · XPS',range:'Rp7,9 jt – Rp26 jt+',sc:'Layanan ProSupport Onsite',
       desc:'Terkenal dengan durabilitas tinggi dan layanan purnajual ProSupport yang bisa dipanggil ke kos/rumah mahasiswa jika terjadi kendala perangkat keras.',
       models:[
-        {t1:'Dell Inspiron 14 5430',t2:'Core i5-1340P · 16 GB LPDDR5',price:'Rp10.499.000',score:91,img:'/assets/photos/laptop6.jpg',s1:'Core i5-1340P · 16 GB · FHD+ 16:10',reason:'Rasio layar 16:10 lega dan layanan garansi onsite terbaik.',tradeoff:'Harga sedikit di atas kompetitor.'},
+        {t1:'Dell Inspiron 14 5430',t2:'Core i5-1340P · 16 GB LPDDR5',price:'Rp10.499.000',score:91,img:'/assets/photos/laptop16.jpg',s1:'Core i5-1340P · 16 GB · FHD+ 16:10',reason:'Rasio layar 16:10 lega dan layanan garansi onsite terbaik.',tradeoff:'Harga sedikit di atas kompetitor.'},
         {t1:'Dell G15 Gaming',t2:'Ryzen 7 · RTX 4050 6GB',price:'Rp15.299.000',score:92,img:'/assets/photos/laptop3.jpg',s1:'Ryzen 7 · 16 GB DDR5 · RTX 4050',reason:'Konstruksi kokoh dengan pendingin Alienware-inspired.',tradeoff:'Bobot cukup berat 2,6 kg.'}
       ]
     }
