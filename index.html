@@ -258,7 +258,7 @@ button{font-family:inherit}
    duplicate laptop photos, 100% interactive & clear in fullscreen!
    ===================================================================== */
 .browser{
-  left:156px;top:546px;width:860px;height:calc(144px + var(--fill,0px));
+  left:156px;top:546px;width:860px;height:144px;
   border-radius:22px 22px 0 0;overflow:hidden;z-index:100;
   background:rgba(255,255,255,.42);
   -webkit-backdrop-filter:blur(26px) saturate(180%);
@@ -293,8 +293,8 @@ button{font-family:inherit}
 .bar-badge b{width:5px;height:5px;border-radius:50%;background:var(--teal);display:inline-block}
 .dock-body{
   position:absolute;left:10px;right:10px;top:38px;bottom:0;
-  padding:10px 16px;
-  display:flex;flex-direction:column;justify-content:space-between;
+  padding:8px 16px 10px;
+  display:flex;flex-direction:column;justify-content:flex-start;gap:6px;
 }
 .dock-top{
   display:flex;align-items:center;justify-content:space-between;gap:10px;
@@ -341,7 +341,10 @@ button{font-family:inherit}
 .dm-bar i{display:block;height:100%;background:linear-gradient(90deg,var(--teal),var(--sky));border-radius:4px;transition:width .3s ease}
 .dm-sub{font-size:6.8px;font-weight:600;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 
-@media (max-width:1080px){
+/* =====================================================================
+   NATIVE FLUID MOBILE HERO LAYOUT (<= 768px) — FLEXIBLE & ERGONOMIC
+   ===================================================================== */
+@media (max-width:768px){
   .burger{
     display:grid;place-content:center;gap:4px;
     width:42px;height:42px;padding:0;border:0;border-radius:12px;background:transparent;cursor:pointer;flex-shrink:0;
@@ -352,7 +355,7 @@ button{font-family:inherit}
   .nav.open .burger span:nth-child(2){opacity:0}
   .nav.open .burger span:nth-child(3){transform:translateY(-5.8px) rotate(-45deg)}
   .navmenu{
-    display:block;position:absolute;left:0;right:0;top:68px;padding:14px;margin-left:0;
+    display:block;position:absolute;left:0;right:0;top:64px;padding:14px;margin-left:0;
     border-radius:18px;border:1px solid rgba(255,255,255,.92);
     background:rgba(255,255,255,.97);
     -webkit-backdrop-filter:blur(22px);backdrop-filter:blur(22px);
@@ -364,16 +367,6 @@ button{font-family:inherit}
   .links{display:flex;flex-direction:column;align-items:stretch;height:auto;gap:4px}
   .links a{font-size:15px;padding:11px 14px;border-radius:10px}
   .nav .btn{width:100%;height:46px;margin-top:10px;font-size:15px}
-  .nav{left:276px;width:620px}
-  .stack{transform:translateY(var(--stshift,0px))}
-  .showcase{transform:translateY(var(--sshift,0px))}
-  .ring{transform:scale(var(--rs,1));transform-origin:586px 548px}
-}
-
-/* =====================================================================
-   NATIVE FLUID MOBILE HERO LAYOUT (<= 768px) — FLEXIBLE & ERGONOMIC
-   ===================================================================== */
-@media (max-width:768px){
   .stage{
     height:auto !important;min-height:100svh;overflow-x:hidden;overflow-y:visible;
     padding:12px 14px 28px;display:flex;flex-direction:column;
@@ -2182,40 +2175,24 @@ function tick(t){
 }
 document.addEventListener('visibilitychange',function(){last=0});
 
-/* Fullscreen-safe scale law + Native Mobile Fluid Mode */
+/* Fullscreen-safe scale law + Desktop Mode on Mobile + Native Mobile Fluid Mode */
 function resize(){
-  var vw=innerWidth,vh=innerHeight,W=1172,ramp=0,ss=0,rs=1,st=0;
+  var vw=innerWidth,vh=innerHeight;
   var s=cv.style;
   if(vw<=768){
     $('#stage').style.height='auto';
     s.removeProperty('--k');
-    s.removeProperty('--fill');
-    s.removeProperty('--stshift');
-    s.removeProperty('--sshift');
-    s.removeProperty('--rs');
     placeCards();
     return;
   }
-  $('#stage').style.height=vh+'px';
-  if(vw<=1080){
-    W=920+(Math.max(vw,701)-701)*(1172-920)/(1080-701);
-    if(vh>vw*1.15)W=Math.min(W,900);
-    ramp=Math.min(1,(1080-vw)/120);
-  }
-  K=Math.min(vw/W,vh/690);
-  var fill=Math.max(0,vh/K-690);
-  if(fill>0&&ramp>0){
-    ss=Math.min(fill*.55,420)*ramp;
-    rs=1+Math.min(fill/1100,.75)*ramp;
-    st=Math.max(0,(219.5-125*rs+ss)/2-28)*ramp;
-    fill-=ss;
-  }
+  /* Proportional 1172x690 desktop stage scaling:
+     - On 16:9 / 16:10 desktop monitors, K = vh/690 and stage height = vh (100vh).
+     - On tall portrait viewports (e.g. Desktop Mode on a smartphone where vw ~ 980px, vh ~ 1850px),
+       K = vw/1172 and stage height = 690 * K (~577px), preventing vertical stretching or dock overlap! */
+  K=Math.min(vw/1172,vh/690);
+  $('#stage').style.height=Math.round(690*K)+'px';
   s.setProperty('--k',K);
-  s.setProperty('--fill',fill+'px');
-  s.setProperty('--stshift',st+'px');
-  s.setProperty('--sshift',ss+'px');
-  s.setProperty('--rs',rs);
-  if(vw>1080&&nav.classList.contains('open'))toggle(false);
+  if(vw>768&&nav.classList.contains('open'))toggle(false);
   placeCards();
 }
 function toggle(o){nav.classList.toggle('open',o);burger.setAttribute('aria-expanded',o)}
